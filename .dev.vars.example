@@ -1,0 +1,4 @@
+# Copy to .dev.vars for `npm run preview`. In production set these with `npx wrangler secret put`.
+NEXTJS_ENV=development
+HANDOUT_SECRET=change-me-to-a-long-random-string
+LEAD_WEBHOOK_URL=
