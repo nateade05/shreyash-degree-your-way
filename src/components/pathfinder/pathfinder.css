@@ -1,0 +1,6 @@
+/* Pathfinder soft UI (DESIGN.md "Pathfinder soft UI"): a softer rule on the bone/warm-white ground.
+   Pills, 14px cards and the rest are inline in the generated views. */
+.pf2{--rule:#E5DED5}
+/* The Next button's press scale depends on whether it's blocked (style-active="{{ nextPress }}"). */
+.pf2 .dc-dyn-style-active:not([aria-disabled="true"]):active{transform:scale(0.97) !important}
+.pf2 :is(button,a,input,textarea,label):focus-visible{outline:2px solid var(--blackberry);outline-offset:2px}

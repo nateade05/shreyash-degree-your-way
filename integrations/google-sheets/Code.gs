@@ -37,6 +37,18 @@ var COLUMNS = [
   ['gcse_maths', 'GCSE Maths'],
   ['gcse_english', 'GCSE English'],
   ['tuesday', 'Tuesday afternoon'],
+  ['experience', 'Work experience'],
+  ['extras', 'Outside lessons'],
+  ['tests_done', 'Done before'],
+  ['firm_size', 'Employer type'],
+  ['worry', 'Biggest worry'],
+  ['worry_note', 'Worry (their words)'],
+  ['top_matches', 'Top matches'],
+  ['cv_source', 'CV check: from'],
+  ['cv_file', 'CV file'],
+  ['cv_gaps', 'CV gaps'],
+  ['cv_strengths', 'CV strengths'],
+  ['cv_text', 'CV text'],
   ['page', 'Page'],
   ['utm_source', 'utm_source'],
   ['utm_medium', 'utm_medium'],
@@ -53,6 +65,7 @@ var SOURCE_LABELS = {
   quiz_roadmap: 'Pathfinder roadmap',
   booking: 'Booking',
   school_talk: 'School talk',
+  cv_check: 'Pathfinder CV check',
 };
 
 // Forms that deserve an email the moment they arrive.

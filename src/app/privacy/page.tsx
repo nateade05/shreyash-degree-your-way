@@ -17,8 +17,14 @@ const COLLECT: [string, string, string, string][] = [
   ['Book a free discovery call (pop-up)', 'First name, email, mobile (optional)', 'To arrange and hold the call', 'Consent'],
   [
     'Use the Pathfinder',
-    "Year group, qualifications, subjects, predicted grades, GCSE Maths and English grades, a preference question, your first name, email and (optional) a parent's email",
-    'To produce your roadmap, send it to you, and follow up about the course',
+    "Year group, qualifications, subjects, predicted grades, GCSE Maths and English grades, work experience, activities outside lessons, application stages done before, the kind of employer you prefer, your biggest worry about applying (and anything you write about it), your first name, email and (optional) a parent's email",
+    'To produce your report, send it to you, and follow up about the course',
+    'Consent',
+  ],
+  [
+    'Check your CV in the Pathfinder',
+    'The text of the CV you choose (read on your own device; the file itself is not uploaded), or your answers to four short questions, and the strengths and gaps we find',
+    'To show you the gaps before you apply and to support your applications',
     'Consent',
   ],
   ["Ask for the Parent's Guide", 'Email, mobile', 'To send the guide and follow up', 'Consent'],

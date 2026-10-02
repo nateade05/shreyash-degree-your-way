@@ -50,7 +50,7 @@ edit(V, [
   underForm('unlockGuide', 'var(--muted)'),
 ]);
 
-// The Pathfinder is its own component (PATHFINDER_CLAUDE_CODE.md); swap out the generated quiz.
+// The Pathfinder runs full screen at its own route (src/app/pathfinder), so the shell drops its quiz.
 {
   let s = fs.readFileSync(V, 'utf8');
   const start = s.indexOf('{v.isQuiz ? (');
@@ -59,8 +59,7 @@ edit(V, [
   const endMark = '\n' + indent + ') : null}';
   const end = s.indexOf(endMark, start);
   if (end < 0) throw new Error('end of quiz block not found');
-  s = s.slice(0, start) + '{v.isQuiz ? <Pathfinder pf={v.pf} /> : null}' + s.slice(end + endMark.length);
-  s = s.replace("import { Fragment } from 'react';", "import { Fragment } from 'react';\nimport Pathfinder from './Pathfinder';");
+  s = s.slice(0, start) + s.slice(end + endMark.length);
   fs.writeFileSync(V, s);
 }
 

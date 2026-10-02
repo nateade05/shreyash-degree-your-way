@@ -1,7 +1,6 @@
 /* eslint-disable */
 // Generated from the design prototype by scripts/dc-to-jsx.mjs, then maintained by hand.
 import { Fragment } from 'react';
-import Pathfinder from './Pathfinder';
 
 export default function GetInView({ v }: { v: any }) {
   return (
@@ -2754,7 +2753,7 @@ export default function GetInView({ v }: { v: any }) {
           </>
         ) : null}
         {" "}
-        {v.isQuiz ? <Pathfinder pf={v.pf} /> : null}
+        
         {" "}
         {v.isTerms ? (
           <>

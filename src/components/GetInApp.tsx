@@ -200,59 +200,7 @@ export default class GetInApp extends React.Component<Props, any> {
       [5, 'GCSE Maths and English', q.maths == null && q.english == null ? null : 'Maths ' + (q.maths == null ? '—' : this.Q_VALS[q.maths]) + ' · English ' + (q.english == null ? '—' : this.Q_VALS[q.english])],
       [6, 'Tuesday afternoon', q.tue],
     ].map(([n, label, answer]) => ({ n, label, answer, current: n === step, enabled: n <= (q.furthest || 0) }));
-    const pf = {
-      step, furthest: q.furthest || 0, need, reason, rail,
-      Q1: this.Q1, Q2: this.Q2, Q4: this.Q4, Q6: this.Q6, Q_VALS: this.Q_VALS, groups: this.Q3_GROUPS,
-      answers: { year: q.year, quals: q.quals, grades: q.grades, tue: q.tue, subjects: q.subjects, other: q.other, maths: q.maths, english: q.english },
-      next, back: () => this.quizStepTo(Math.max(1, step - 1)),
-      goStep: n => { if (n >= 1 && n <= (q.furthest || 0)) this.quizStepTo(n); },
-      // Single choice. Questions 1, 2 and 4 move on by themselves after a short beat, so the
-      // selection is seen first; question 6 never does.
-      pick: (key, label) => {
-        clearTimeout(this.qAdv); this.setQ({ [key]: label });
-        if (key === 'tue') return;
-        const at = step; this.qAdv = setTimeout(() => { if ((this.state.quiz || {}).step === at) this.quizStepTo(at + 1); }, 240);
-      },
-      // Reads the current state, not the render-time list, so fast taps are never lost.
-      toggleSubject: label => this.setState(p => { const cur = p.quiz || this.quizDefault(); const on = cur.subjects.includes(label); return { quiz: { ...cur, subjects: on ? cur.subjects.filter(x => x !== label) : [...cur.subjects, label] } }; }),
-      setOther: v => this.setQ({ other: v.slice(0, 60) }),
-      setGcse: (key, i) => this.setQ({ [key]: i }),
-      close: () => { leave(); this.go('home'); },
-      restart: () => { leave(); this.setState({ quiz: this.quizDefault(), wall: {} }); window.scrollTo({ top: 0, behavior: 'instant' }); },
-      courseLink: e => { if (e && (e.metaKey || e.ctrlKey || e.shiftKey)) return; e && e.preventDefault(); leave(); this.go('days'); },
-      result: res && {
-        sector: res.sector, standing: res.standing, body: res.body, also: res.also, rows: rowsOf(res.rows),
-        road: res.road.map(([when, what], i) => ({ n: i + 1, when, what })),
-        otherSectors: Object.keys(this.SECTORS).filter(n => n !== res.sector).map(name => ({ name, rows: rowsOf(this.SECTORS[name].rows) })),
-      },
-      pdf: () => res && this.roadmapPdf(res),
-      callHref: this.wa('Hi Shreyash, I used the DegreeYourWay Pathfinder and would like a free discovery call.' + (res ? '\nMy result: ' + res.head + '\nAlso a fit: ' + res.also : '')),
-      callTap: () => this.push('discovery_call_whatsapp'),
-      wall: {
-        name: w.name || '', email: w.email || '', parent: w.parent || '', nameErr: !!w.nameErr, emailErr: !!w.err,
-        fail: !!w.fail, offline: !!w.offline, busy: !!w.busy, sent: !!w.sent, nameRef: this.wNameRef, emailRef: this.wRef,
-        setName: v => this.setState(p => ({ wall: { ...(p.wall || {}), name: v, nameErr: false } })),
-        setEmail: v => this.setState(p => ({ wall: { ...(p.wall || {}), email: v, err: false } })),
-        setParent: v => this.setState(p => ({ wall: { ...(p.wall || {}), parent: v } })),
-        submit: e => {
-          e.preventDefault();
-          if (this.wBusy) return; // double-submit guard
-          const email = (w.email || '').trim(), name = (w.name || '').trim();
-          const badName = !name, badEmail = !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
-          if (badName || badEmail) { this.setState(p => ({ wall: { ...(p.wall || {}), nameErr: badName, err: badEmail, fail: false, offline: false } }), () => { const r = badName ? this.wNameRef : this.wRef; r.current && r.current.focus(); }); return; }
-          if (!navigator.onLine) { this.setState(p => ({ wall: { ...(p.wall || {}), offline: true, fail: false } })); return; }
-          this.wBusy = true;
-          this.setState(p => ({ wall: { ...(p.wall || {}), busy: true, fail: false, offline: false } }));
-          const q0 = s.quiz || this.quizDefault();
-          this.saveLead('quiz_roadmap', this.quizLead(q0, res, { name, email, parent_email: (w.parent || '').trim(), phone: (s.offer && s.offer.phone) || '' }))
-            .then(() => this.setState(p => ({ wall: { ...(p.wall || {}), sent: true, busy: false, fail: false, err: false } })))
-            .catch(() => this.setState(p => ({ wall: { ...(p.wall || {}), fail: true, busy: false } })))
-            .finally(() => { this.wBusy = false; });
-        },
-      },
-    };
     return {
-      pf,
       isQuiz: s.page === 'quiz', notQuiz: s.page !== 'quiz',
       qFlyCls: s.qFly ? 'is-open' : '', qFlyOpen: s.qFly ? 'true' : 'false',
       qFlyToggle: () => this.setState(p => ({ qFly: !p.qFly })), qFlyClose: () => this.setState({ qFly: false }),
@@ -470,6 +418,8 @@ export default class GetInApp extends React.Component<Props, any> {
   openCal() { const w = window.open(this.calHref(), '_blank', 'noopener'); if (!w) window.location.href = this.calHref(); }
   
   go(page, toBook?) {
+    // PORT: the Pathfinder is a separate full-screen route, outside this shell.
+    if (page === 'quiz') { this.props.navigate(PAGE_PATH.quiz); return; }
     const changing = page !== this.state.page;
     const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     // PORT: keep the URL in step with the page.

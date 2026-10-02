@@ -13,9 +13,13 @@ const REQUIRED: Record<string, string[]> = {
   quiz_roadmap: ['email'],
   booking: ['email'],
   school_talk: ['school', 'name', 'email'],
+  // Pathfinder CV check: the CV text (or four short answers) and the gaps found.
+  cv_check: ['email'],
 };
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const MAX_BYTES = 16_000;
+const MAX_BYTES = 24_000;
+// Most fields are short; CV text from the Pathfinder CV check is allowed more room.
+const LONG_FIELDS: Record<string, number> = { cv_text: 6000 };
 
 type Env = {
   LEAD_WEBHOOK_URL?: string;
@@ -61,7 +65,7 @@ export async function POST(req: Request) {
   // Flatten to short strings so nothing odd reaches the CRM.
   const lead: Record<string, string> = {};
   for (const [k, v] of Object.entries(body).slice(0, 40)) {
-    lead[k.slice(0, 40)] = cell((Array.isArray(v) ? v.join(', ') : v == null ? '' : String(v)).trim().slice(0, 2000));
+    lead[k.slice(0, 40)] = cell((Array.isArray(v) ? v.join(', ') : v == null ? '' : String(v)).trim().slice(0, LONG_FIELDS[k] ?? 2000));
   }
   if (REQUIRED[source].some(k => !lead[k])) return fail('missing_fields', 422);
   if (!EMAIL.test(lead.email)) return fail('bad_email', 422);

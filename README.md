@@ -11,7 +11,7 @@ now DegreeYourWay (applied by `scripts/port-rebrand.mjs`). It uses Next.js (App 
 | `/course` | The course |
 | `/prices` | Prices and booking |
 | `/schools` | For schools |
-| `/pathfinder` | Pathfinder quiz |
+| `/pathfinder` | Pathfinder: full screen, 11 questions, then a report with matches, a 12-month plan, stage tips and a CV check |
 | `/terms` | Terms and the DegreeYourWay Guarantee |
 | `/booked` | "Booked." confirmation; point the booking tool's redirect here |
 | `/privacy` | Privacy policy |
