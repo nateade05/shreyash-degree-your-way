@@ -2,7 +2,7 @@
 
 The DegreeYourWay site (degree apprenticeship application coaching), built from the Claude Design
 handoff `design_handoff_get_in_website`. The design used the working name "Get In"; the brand is
-now DegreeYourWay (applied by `scripts/port-rebrand.mjs`). It uses Next.js (App Router) and TypeScript, and deploys to
+now DegreeYourWay. It uses Next.js (App Router) and TypeScript, and deploys to
 **Cloudflare Workers** through [OpenNext](https://opennext.js.org/cloudflare).
 
 | Route | Page |
@@ -30,6 +30,30 @@ now DegreeYourWay (applied by `scripts/port-rebrand.mjs`). It uses Next.js (App 
   quiz answers and chat survive navigation.
 - `scripts/port.sh` regenerates both views from the design (currently `Get In v12.dc.html`, per
   `UPDATE-v12.md`); `scripts/port-edits.mjs` then applies the production edits.
+
+## Working on this together
+
+1. Install [Node.js](https://nodejs.org) 20 or newer, then clone the repo and install:
+   ```bash
+   git clone https://github.com/sshreyashsingh-crypto/degreeyourway.git
+   cd degreeyourway
+   npm install
+   npm run dev            # http://localhost:3000
+   ```
+2. Work on a branch and open a pull request, so changes are reviewed before they reach `main`:
+   ```bash
+   git checkout -b my-change
+   # edit, then
+   git add -A && git commit -m "Describe the change"
+   git push -u origin my-change
+   ```
+3. Before pushing, check it builds cleanly: `npm run lint` and `npx tsc --noEmit`.
+4. Only someone with access to the Cloudflare account runs `npm run deploy`. Secrets
+   (`HANDOUT_SECRET`, `LEAD_WEBHOOK_URL`) live in Cloudflare, never in the repo.
+
+Most of the page markup is generated from the design files (see "How the port is organised").
+Edit `GetInView.tsx` and the Pathfinder views directly for small copy fixes. For a new design
+handoff, re-run `scripts/port.sh`.
 
 ## Develop
 
@@ -84,14 +108,14 @@ It then:
 1. POSTs it as JSON to `LEAD_WEBHOOK_URL`. The ready-made option is the Google Sheets inbox in
    [`integrations/google-sheets`](integrations/google-sheets/README.md). Zapier, Make, or a
    HubSpot or Airtable webhook also work.
-2. Optionally keeps a copy in Cloudflare KV. Run `npx wrangler kv namespace create LEADS`, then
-   paste the id into `wrangler.jsonc`.
+2. Keeps a copy in Cloudflare KV (the `LEADS` binding in `wrangler.jsonc`). List them with
+   `npx wrangler kv key list --binding LEADS --remote`.
 
 **If neither is set, leads are not stored anywhere.** The logs only record the source and an id,
 never personal details. Set at least one before launch.
 
-Lead sources: `discovery_call`, `popup_pathfinder`, `parents_guide`, `quiz_roadmap`, `booking`,
-`school_talk`.
+Lead sources: `discovery_call`, `popup_pathfinder`, `parents_guide`, `quiz_roadmap`, `cv_check`,
+`booking`, `school_talk`.
 
 ## Before launch (from the handoff)
 
