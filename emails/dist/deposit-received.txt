@@ -1,0 +1,30 @@
+{{{STUDENT_NAME}}}’s place is held
+
+Hi {{{PARENT_NAME}}}, we’ve received your £100 deposit. Thank you.
+
+Place: {{{PLACE}}}
+Deposit: £100, paid. Refundable until the balance is due.
+Balance: {{{BALANCE}}}, due before the course
+Dates: You’ll hear them before anyone else. If they don’t suit you, the deposit is refunded in full.
+Venue: Central London
+Changes: One free move to a later cohort
+
+THE DEADLINE LINE IS OPEN
+
+From today until {{{STUDENT_NAME}}}’s last application deadline, they can message our team on WhatsApp at any time on 07463 870657. We reply within 24 hours, every day, on applications, tests, interviews and assessment centres.
+
+Message the Deadline Line: https://wa.me/447463870657
+
+THE DEGREEYOURWAY GUARANTEE
+
+If {{{STUDENT_NAME}}} attends every module, applies to at least three Level 6 or 7 schemes with an application we’ve reviewed, and gets no offer within twelve months of the course, they get a free place on a later cohort. Read the Guarantee in full (https://degreeyourway.example/terms).
+
+Shreyash
+Founder, DegreeYourWay
+
+--
+
+DegreeYourWay, degree apprenticeship application coaching.
+WhatsApp 07463 870657 | https://degreeyourway.example
+
+You’re getting this because you reserved a place on the DegreeYourWay course.

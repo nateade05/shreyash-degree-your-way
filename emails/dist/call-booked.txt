@@ -1,0 +1,26 @@
+Booked.
+
+Hi {{{NAME}}}, your free call is in the diary.
+
+When: {{{CALL_TIME}}}
+With: Shreyash Singh
+Length: 30 minutes
+Where: {{{CALL_LOCATION}}}
+
+BEFORE THE CALL
+
+1. Bring your child’s subjects and predicted grades, or their results if they’ve left school.
+2. Try the free Pathfinder (https://degreeyourway.example/pathfinder) first. It’s 10 to 12 questions and gives us a ranked list of schemes to start from.
+3. Write down the one thing you most want answered.
+
+Need to move it? Pick another time ({{{RESCHEDULE_URL}}}) or message 07463 870657.
+
+Shreyash
+Founder, DegreeYourWay
+
+--
+
+DegreeYourWay, degree apprenticeship application coaching.
+WhatsApp 07463 870657 | https://degreeyourway.example
+
+You’re getting this because you booked a free call with DegreeYourWay.

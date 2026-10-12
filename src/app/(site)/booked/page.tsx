@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Call booked · DegreeYourWay',
+  title: 'Call booked | DegreeYourWay',
   description: 'Your free 30-minute call is booked.',
   robots: { index: false, follow: true },
 };

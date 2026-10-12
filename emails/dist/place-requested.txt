@@ -1,0 +1,26 @@
+We’ve got your request
+
+Hi {{{PARENT_NAME}}}, thanks for asking to reserve a place for {{{STUDENT_NAME}}}. Here’s what you sent and what happens next.
+
+Place: {{{PLACE}}}
+Course: Two days of preparation in central London
+Dates: Confirmed to deposit holders first
+
+WHAT HAPPENS NEXT
+
+1. We reply on WhatsApp within 24 hours with the next steps and how to pay the £100 deposit.
+2. The deposit holds the seat. It’s refundable until the balance is due.
+3. Deposit holders hear the dates first. If they don’t suit you, the deposit is refunded in full.
+4. The balance of {{{BALANCE}}} is due before the course.
+
+Didn’t press send on WhatsApp? Message us on 07463 870657 and we’ll pick it up from there.
+
+Shreyash
+Founder, DegreeYourWay
+
+--
+
+DegreeYourWay, degree apprenticeship application coaching.
+WhatsApp 07463 870657 | https://degreeyourway.example
+
+You’re getting this because you asked to reserve a place on the DegreeYourWay course.

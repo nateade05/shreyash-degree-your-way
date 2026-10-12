@@ -38,7 +38,7 @@ export default function PathfinderWizardView({ v }: { v: any }) {
           {" "}
           <div style={{ flex: "none", maxWidth: "680px", margin: "0 auto", width: "100%", boxSizing: "border-box", padding: "14px 20px 0", display: "flex", flexDirection: "column", gap: "8px" }}>
             {" "}
-            <div role="progressbar" aria-valuemin={0} aria-valuemax={11} aria-valuenow={v.qNum} aria-label="Questions answered" style={{ display: "grid", gridTemplateColumns: "5fr 3fr 3fr", gap: "6px" }}>
+            <div role="progressbar" aria-valuemin={0} aria-valuemax={v.qMax} aria-valuenow={v.qNum} aria-label="Questions answered" style={{ display: "grid", gridTemplateColumns: v.partCols, gap: "6px" }}>
               {" "}
               {(v.parts || []).map((pt: any, pt_i: number) => (
                 <Fragment key={pt_i}>
@@ -71,7 +71,7 @@ export default function PathfinderWizardView({ v }: { v: any }) {
                 <div style={{ display: "flex", flexDirection: "column", gap: "22px", padding: "12px 0 40px" }}>
                   {" "}
                   <p style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                    Free Pathfinder · about 3 minutes
+                    Free Pathfinder, about 3 minutes
                   </p>
                   {" "}
                   <h1 ref={v.headRef} tabIndex={-1} style={{ margin: "0", outline: "none", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(36px,8.4vw,54px)", lineHeight: "1.04", letterSpacing: "-0.02em", textWrap: "balance" }}>
@@ -79,8 +79,23 @@ export default function PathfinderWizardView({ v }: { v: any }) {
                   </h1>
                   {" "}
                   <p style={{ margin: "0", fontSize: "17px", lineHeight: "1.6", color: "var(--blackberry-soft)", textWrap: "pretty" }}>
-                    Eleven questions about your grades, what you've done and what you want. The report is based on your answers.
+                    About ten questions on your grades, what you've done and what you want. The report is based on your answers.
                   </p>
+                  {" "}
+                  <div role="group" aria-labelledby="pf-intro-q" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <p id="pf-intro-q" style={{ margin: "0 0 4px", fontSize: "16px", fontWeight: "600" }}>
+                      Start here: {v.introQ.charAt(0).toLowerCase() + v.introQ.slice(1)}
+                    </p>
+                    {(v.introOpts || []).map((o: any, o_i: number) => (
+                      <button key={o_i} type="button" onClick={o.pick} style={{ all: "unset", boxSizing: "border-box", width: "100%", minHeight: "56px", padding: "12px 16px", display: "grid", gridTemplateColumns: "minmax(0,1fr) 20px", alignItems: "center", gap: "14px", border: "1px solid var(--rule)", background: "var(--warm-white)", borderRadius: "14px", cursor: "pointer", font: "400 17px/1.35 'Source Sans 3',sans-serif", color: "var(--blackberry)", transition: "border-color 150ms ease-out,background-color 150ms ease-out,transform 120ms ease-out" }} className="dc-pathfinderwizardview-h4 dc-pathfinderwizardview-a5">
+                        <span>{o.label}</span>
+                        <span aria-hidden="true" style={{ color: "var(--oxblood)", fontSize: "18px" }}>→</span>
+                      </button>
+                    ))}
+                    <span style={{ fontSize: "14px", color: "var(--muted)" }}>
+                      Free. You see your best-fit sector before giving any details.
+                    </span>
+                  </div>
                   {" "}
                   <ol style={{ listStyle: "none", margin: "0", padding: "0", borderTop: "1px solid var(--rule)" }}>
                     {" "}
@@ -104,20 +119,6 @@ export default function PathfinderWizardView({ v }: { v: any }) {
                     {" "}
                   </ol>
                   {" "}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "stretch" }}>
-                    {" "}
-                    <button type="button" onClick={v.next} style={{ all: "unset", boxSizing: "border-box", cursor: "pointer", height: "52px", padding: "0 28px", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", background: "var(--oxblood)", color: "var(--warm-white)", borderRadius: "999px", font: "600 15px 'Source Sans 3',sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", transition: "background-color 150ms ease-out,transform 120ms ease-out" }} className="dc-pathfinderwizardview-h2 dc-pathfinderwizardview-a3">
-                      Start
-                      <span aria-hidden="true">
-                        →
-                      </span>
-                    </button>
-                    {" "}
-                    <span style={{ fontSize: "14px", color: "var(--muted)", textAlign: "center" }}>
-                      Free. You see your top match before giving any details.
-                    </span>
-                    {" "}
-                  </div>
                   {" "}
                 </div>
                 {" "}
@@ -159,8 +160,9 @@ export default function PathfinderWizardView({ v }: { v: any }) {
                             {" "}
                             <button type="button" onClick={o.pick} aria-pressed={o.on} style={{ all: "unset", boxSizing: "border-box", width: "100%", minHeight: "56px", padding: "12px 16px", display: "grid", gridTemplateColumns: "minmax(0,1fr) 20px", alignItems: "center", gap: "14px", border: `1px solid ${o.bd}`, boxShadow: `inset 0 0 0 1px ${o.ring}`, background: o.bg, borderRadius: "14px", cursor: "pointer", font: "400 17px/1.35 'Source Sans 3',sans-serif", color: "var(--blackberry)", transition: "border-color 150ms ease-out,background-color 150ms ease-out,transform 120ms ease-out" }} className="dc-pathfinderwizardview-h4 dc-pathfinderwizardview-a5">
                               {" "}
-                              <span style={{ minWidth: "0", textWrap: "pretty" }}>
+                              <span style={{ minWidth: "0", textWrap: "pretty", display: "flex", flexDirection: "column", gap: "2px" }}>
                                 <span className="sc-interp">{o.label}</span>
+                                {o.sub ? <span style={{ fontSize: "15px", lineHeight: "1.4", color: "var(--muted)" }}>{o.sub}</span> : null}
                               </span>
                               {" "}
                               <span aria-hidden="true" style={{ width: "20px", height: "20px", boxSizing: "border-box", borderRadius: o.radius, border: `1px solid ${o.dotBd}`, background: o.dotBg, display: "grid", placeItems: "center", color: "var(--warm-white)", boxShadow: `inset 0 0 0 ${o.dotFill} var(--oxblood)`, transition: "box-shadow 150ms ease-out,border-color 150ms ease-out,background-color 150ms ease-out" }}>
@@ -188,6 +190,7 @@ export default function PathfinderWizardView({ v }: { v: any }) {
                       {" "}
                       <div style={{ display: "flex", flexDirection: "column", gap: "22px" }}>
                         {" "}
+                        {v.showChips ? (<>
                         <span aria-live="polite" style={{ fontSize: "14px", fontWeight: "600", color: v.subCountFg, fontVariantNumeric: "tabular-nums" }}>
                           <span className="sc-interp">{v.subCount}</span>
                         </span>
@@ -232,6 +235,52 @@ export default function PathfinderWizardView({ v }: { v: any }) {
                               <input maxLength={60} value={v.other} onChange={v.setOther} style={{ width: "100%", boxSizing: "border-box", font: "400 16px 'Source Sans 3',sans-serif", height: "48px", padding: "0 14px", border: "1px solid var(--input-border)", background: "var(--warm-white)", color: "var(--blackberry)", borderRadius: "14px" }} />
                             </label>
                           </>
+                        ) : null}
+                        </>) : null}
+                        {v.showGrades ? (
+                          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                            {(v.gradeRows || []).map((r: any) => (
+                              <div key={r.id} style={{ display: "flex", flexDirection: "column", gap: "10px", padding: "10px 0 14px" }}>
+                                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: "12px" }}>
+                                  <span id={r.id} style={{ fontSize: "16px", fontWeight: "600" }}>{r.name}</span>
+                                  <span style={{ fontSize: "14px", color: "var(--muted)", whiteSpace: "nowrap" }}>{r.note}</span>
+                                </div>
+                                {r.hasSize ? (
+                                  <div role="group" aria-label={r.name + " size"} style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: "4px" }}>
+                                    {r.sizes.map((c: any, c_i: number) => (
+                                      <Fragment key={c_i}>
+                                  <button type="button" onClick={c.pick} aria-pressed={c.on} aria-label={c.aria} style={{ all: "unset", boxSizing: "border-box", height: "40px", padding: "0 6px", display: "grid", placeItems: "center", textAlign: "center", border: `1px solid ${c.bd}`, background: c.bg, color: c.fg, borderRadius: "999px", cursor: "pointer", font: "400 14px 'Source Sans 3',sans-serif", fontVariantNumeric: "tabular-nums", transition: "background-color 150ms ease-out,border-color 150ms ease-out,color 150ms ease-out,transform 120ms ease-out" }} className="dc-pathfinderwizardview-h8 dc-pathfinderwizardview-a9">
+                                    <span className="sc-interp">{c.label}</span>
+                                  </button>
+                                      </Fragment>
+                                    ))}
+                                  </div>
+                                ) : null}
+                                <div role="group" aria-labelledby={r.id} style={{ display: "grid", gridTemplateColumns: r.cols, gap: "4px" }}>
+                                  {r.cells.map((c: any, c_i: number) => (
+                                    <Fragment key={c_i}>
+                                  <button type="button" onClick={c.pick} aria-pressed={c.on} aria-label={c.aria} style={{ all: "unset", boxSizing: "border-box", height: "48px", padding: "0 6px", display: "grid", placeItems: "center", textAlign: "center", border: `1px solid ${c.bd}`, background: c.bg, color: c.fg, borderRadius: "999px", cursor: "pointer", font: "400 20px 'Newsreader',serif", fontVariantNumeric: "tabular-nums", transition: "background-color 150ms ease-out,border-color 150ms ease-out,color 150ms ease-out,transform 120ms ease-out" }} className="dc-pathfinderwizardview-h8 dc-pathfinderwizardview-a9">
+                                    <span className="sc-interp">{c.label}</span>
+                                  </button>
+                                    </Fragment>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                            {v.gradesHint ? <p style={{ margin: "0", fontSize: "14px", lineHeight: "1.5", color: "var(--muted)" }}>{v.gradesHint}</p> : null}
+                            {v.showNoPred ? (
+                          <button type="button" onClick={v.toggleNoPred} aria-pressed={v.noPredOn} style={{ all: "unset", boxSizing: "border-box", cursor: "pointer", minHeight: "44px", display: "inline-flex", alignItems: "center", gap: "10px", font: "400 16px 'Source Sans 3',sans-serif", color: "var(--blackberry)" }} className="dc-pathfinderwizardview-a5">
+                            <span aria-hidden="true" style={{ width: "20px", height: "20px", boxSizing: "border-box", borderRadius: "6px", border: `1px solid ${v.noPred ? "var(--oxblood)" : "var(--input-border)"}`, background: v.noPred ? "var(--oxblood)" : "var(--warm-white)", display: "grid", placeItems: "center", color: "var(--warm-white)", flex: "none" }}>
+                              {v.noPred ? (
+                                <svg width="12" height="12" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="28" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="40 144 96 200 224 72"></polyline>
+                                </svg>
+                              ) : null}
+                            </span>
+                            I don't have predicted grades yet
+                          </button>
+                            ) : null}
+                          </div>
                         ) : null}
                         {" "}
                       </div>
@@ -278,6 +327,18 @@ export default function PathfinderWizardView({ v }: { v: any }) {
                         <p style={{ margin: "0", fontSize: "14px", lineHeight: "1.5", color: "var(--muted)" }}>
                           Grade 4 is a standard pass. 9 is the top grade.
                         </p>
+                        {v.showResit ? (
+                          <button type="button" onClick={v.toggleResit} aria-pressed={v.resitOn} style={{ all: "unset", boxSizing: "border-box", cursor: "pointer", minHeight: "44px", display: "inline-flex", alignItems: "center", gap: "10px", font: "400 16px 'Source Sans 3',sans-serif", color: "var(--blackberry)" }} className="dc-pathfinderwizardview-a5">
+                            <span aria-hidden="true" style={{ width: "20px", height: "20px", boxSizing: "border-box", borderRadius: "6px", border: `1px solid ${v.resit ? "var(--oxblood)" : "var(--input-border)"}`, background: v.resit ? "var(--oxblood)" : "var(--warm-white)", display: "grid", placeItems: "center", color: "var(--warm-white)", flex: "none" }}>
+                              {v.resit ? (
+                                <svg width="12" height="12" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="28" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="40 144 96 200 224 72"></polyline>
+                                </svg>
+                              ) : null}
+                            </span>
+                            I'm resitting it
+                          </button>
+                        ) : null}
                         {" "}
                       </div>
                       {" "}
@@ -354,6 +415,11 @@ export default function PathfinderWizardView({ v }: { v: any }) {
             {" "}
             <div style={{ maxWidth: "680px", margin: "0 auto", padding: "10px 20px 14px", display: "flex", flexDirection: "column", gap: "8px" }}>
               {" "}
+              {v.maxNote ? (
+                <span aria-live="polite" style={{ fontSize: "14px", color: "var(--oxblood)", textAlign: "right" }}>
+                  {v.maxNote}
+                </span>
+              ) : null}
               {v.need ? (
                 <>
                   <span id="pf-need" style={{ fontSize: "14px", color: "var(--muted)", textAlign: "right" }}>

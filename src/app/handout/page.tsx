@@ -8,7 +8,7 @@ import { SITE } from '@/lib/site';
 import './handout.css';
 
 export const metadata: Metadata = {
-  title: 'DegreeYourWay · Student handout',
+  title: 'DegreeYourWay | Student handout',
   robots: { index: false, follow: false },
 };
 
@@ -35,7 +35,7 @@ export default async function HandoutPage({ searchParams }: { searchParams: Prom
   if (!ok) {
     return (
       <main className="ho-locked">
-        <p className="ho-k">DegreeYourWay. · Student handout</p>
+        <p className="ho-k">DegreeYourWay. Student handout</p>
         <h1>This link has expired or isn&apos;t valid.</h1>
         <p>
           The handout is sent to schools once a talk is booked. <Link href="/schools">Book a school talk</Link> to get a new link.

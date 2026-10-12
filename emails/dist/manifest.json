@@ -1,0 +1,211 @@
+[
+  {
+    "alias": "call-requested",
+    "name": "DegreeYourWay: Discovery call requested",
+    "trigger": "Lead saved with source discovery_call or popup_pathfinder",
+    "subject": "Your free call with Shreyash",
+    "variables": [
+      {
+        "key": "NAME",
+        "type": "string",
+        "fallback_value": "there"
+      },
+      {
+        "key": "CALL_URL",
+        "type": "string",
+        "fallback_value": "https://wa.me/447463870657?text=Hi%2C%20I%20would%20like%20to%20book%20a%20free%20call."
+      }
+    ],
+    "html": "call-requested.html",
+    "text": "call-requested.txt"
+  },
+  {
+    "alias": "call-booked",
+    "name": "DegreeYourWay: Discovery call booked",
+    "trigger": "Booking tool webhook (Cal.com or Calendly) when a call is booked. Turn off the tool’s own confirmation if you send this.",
+    "subject": "Your free call is booked",
+    "variables": [
+      {
+        "key": "NAME",
+        "type": "string",
+        "fallback_value": "there"
+      },
+      {
+        "key": "CALL_TIME",
+        "type": "string"
+      },
+      {
+        "key": "CALL_LOCATION",
+        "type": "string",
+        "fallback_value": "The link is in your calendar invite"
+      },
+      {
+        "key": "RESCHEDULE_URL",
+        "type": "string",
+        "fallback_value": "https://wa.me/447463870657"
+      }
+    ],
+    "html": "call-booked.html",
+    "text": "call-booked.txt"
+  },
+  {
+    "alias": "parents-guide",
+    "name": "DegreeYourWay: Parent's Guide",
+    "trigger": "Lead saved with source parents_guide",
+    "subject": "Your free Parent’s Guide to degree apprenticeships",
+    "variables": [
+      {
+        "key": "CALL_URL",
+        "type": "string",
+        "fallback_value": "https://wa.me/447463870657?text=Hi%2C%20I%20would%20like%20to%20book%20a%20free%20call."
+      }
+    ],
+    "html": "parents-guide.html",
+    "text": "parents-guide.txt"
+  },
+  {
+    "alias": "pathfinder-report",
+    "name": "DegreeYourWay: Pathfinder results",
+    "trigger": "Lead saved with source quiz_roadmap",
+    "subject": "Your Pathfinder results",
+    "variables": [
+      {
+        "key": "NAME",
+        "type": "string",
+        "fallback_value": "there"
+      },
+      {
+        "key": "RESULT",
+        "type": "string"
+      },
+      {
+        "key": "ALSO",
+        "type": "string",
+        "fallback_value": "See your full report"
+      },
+      {
+        "key": "TOP_MATCHES",
+        "type": "string",
+        "fallback_value": "See your full report"
+      },
+      {
+        "key": "CALL_URL",
+        "type": "string",
+        "fallback_value": "https://wa.me/447463870657?text=Hi%2C%20I%20would%20like%20to%20book%20a%20free%20call."
+      }
+    ],
+    "html": "pathfinder-report.html",
+    "text": "pathfinder-report.txt"
+  },
+  {
+    "alias": "pathfinder-follow-up",
+    "name": "DegreeYourWay: Pathfinder follow-up",
+    "trigger": "Two days after quiz_roadmap, only if no call has been booked and TOP_MATCH is known",
+    "subject": "Which of your matches opens first?",
+    "variables": [
+      {
+        "key": "NAME",
+        "type": "string",
+        "fallback_value": "there"
+      },
+      {
+        "key": "TOP_MATCH",
+        "type": "string"
+      },
+      {
+        "key": "CALL_URL",
+        "type": "string",
+        "fallback_value": "https://wa.me/447463870657?text=Hi%2C%20I%20would%20like%20to%20book%20a%20free%20call."
+      }
+    ],
+    "html": "pathfinder-follow-up.html",
+    "text": "pathfinder-follow-up.txt"
+  },
+  {
+    "alias": "place-requested",
+    "name": "DegreeYourWay: Place requested",
+    "trigger": "Lead saved with source booking (the reserve form)",
+    "subject": "Your place request: what happens next",
+    "variables": [
+      {
+        "key": "PARENT_NAME",
+        "type": "string",
+        "fallback_value": "there"
+      },
+      {
+        "key": "STUDENT_NAME",
+        "type": "string"
+      },
+      {
+        "key": "PLACE",
+        "type": "string",
+        "fallback_value": "Founding, £595"
+      },
+      {
+        "key": "BALANCE",
+        "type": "string",
+        "fallback_value": "£495"
+      }
+    ],
+    "html": "place-requested.html",
+    "text": "place-requested.txt"
+  },
+  {
+    "alias": "deposit-received",
+    "name": "DegreeYourWay: Deposit received",
+    "trigger": "Sent by hand or by the payment provider’s webhook once the £100 deposit is paid",
+    "subject": "Your place is held",
+    "variables": [
+      {
+        "key": "PARENT_NAME",
+        "type": "string",
+        "fallback_value": "there"
+      },
+      {
+        "key": "STUDENT_NAME",
+        "type": "string"
+      },
+      {
+        "key": "PLACE",
+        "type": "string",
+        "fallback_value": "Founding, £595"
+      },
+      {
+        "key": "BALANCE",
+        "type": "string",
+        "fallback_value": "£495"
+      }
+    ],
+    "html": "deposit-received.html",
+    "text": "deposit-received.txt"
+  },
+  {
+    "alias": "school-talk",
+    "name": "DegreeYourWay: School talk requested",
+    "trigger": "Lead saved with source school_talk. HANDOUT_URL is the site address plus the handout link /api/lead returns.",
+    "subject": "Your DegreeYourWay talk request",
+    "variables": [
+      {
+        "key": "NAME",
+        "type": "string",
+        "fallback_value": "there"
+      },
+      {
+        "key": "SCHOOL",
+        "type": "string",
+        "fallback_value": "your school"
+      },
+      {
+        "key": "DATES",
+        "type": "string",
+        "fallback_value": "Not given yet"
+      },
+      {
+        "key": "HANDOUT_URL",
+        "type": "string"
+      }
+    ],
+    "html": "school-talk.html",
+    "text": "school-talk.txt"
+  }
+]

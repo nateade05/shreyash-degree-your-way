@@ -6,7 +6,9 @@
 import React from 'react';
 import PF from '@/lib/pathfinderEngine';
 import { saveLead } from '@/lib/leads';
+import { calUrl, FOUNDER_PHOTO, SITE } from '@/lib/site';
 import PathfinderReportView from './PathfinderReportView';
+import { SAVE_KEY } from './progress';
 
 type Props = {
   report?: any;
@@ -24,7 +26,7 @@ type Props = {
 export default class PathfinderReport extends React.Component<Props, any> {
   [k: string]: any;
   rootRef = React.createRef(); headRef = React.createRef(); nameRef = React.createRef(); emailRef = React.createRef();
-  secMatches = React.createRef(); secPlan = React.createRef(); secPrep = React.createRef(); secWorry = React.createRef(); secBack = React.createRef(); secSave = React.createRef(); secGate = React.createRef(); secCv = React.createRef();
+  secMatches = React.createRef(); secPlan = React.createRef(); secPrep = React.createRef(); secWorry = React.createRef(); secBack = React.createRef(); secSave = React.createRef(); secCall = React.createRef(); secGate = React.createRef(); secCv = React.createRef();
   // PORT: the engine is an imported module, so it's always ready.
   state = { pf: true, w: {}, active: 'matches', saveSeen: false, cv: { mode: 'upload', fileName: '', input: null, ans: {}, status: 'idle', err: '', res: null, prog: 0 } };
 
@@ -68,7 +70,11 @@ export default class PathfinderReport extends React.Component<Props, any> {
   componentDidMount() {
     this.bind();
     const k = this.props.known;
+    let unlocked = null;
+    try { unlocked = JSON.parse(localStorage.getItem(SAVE_KEY + '_w') || 'null'); } catch {}
     if (k && k.email) this.setState({ w: { name: k.name || '', email: k.email, sent: true } });
+    // Unlocked before in this browser: stay unlocked after a refresh.
+    else if (unlocked && unlocked.sent) this.setState({ w: unlocked });
     else if (this.props.startUnlocked) this.setState({ w: { name: 'Amara', email: 'amara@example.com', sent: true } });
   }
   componentWillUnmount() { clearTimeout(this.t); if (this.sc && this.onScroll) this.sc.removeEventListener('scroll', this.onScroll); }
@@ -122,12 +128,12 @@ export default class PathfinderReport extends React.Component<Props, any> {
       secMatches: this.secMatches, secPlan: this.secPlan, secPrep: this.secPrep, secWorry: this.secWorry, secBack: this.secBack, secSave: this.secSave,
       srcText: ai === 'loading' ? 'Personalising your advice…' : ai === 'ai' ? 'Written for your answers' : 'Built from your answers',
       srcDot: ai === 'loading' ? 'var(--input-border)' : 'var(--oxblood)',
-      sector: rep.sector, read: rep.read, also: rep.also, checked: rep.checked,
+      sector: rep.sector, read: w.sent ? rep.read : rep.readShort || rep.read, deadline: rep.deadline || '', also: rep.also, checked: rep.checked,
       hasMeter: rep.standingIdx >= 0,
-      meter: ['Not there yet', 'A few grades short', 'On the bar'].map((label, i) => { const on = i === rep.standingIdx; return { label, cur: on ? 'true' : 'false', bar: on ? 'var(--oxblood)' : 'var(--rule)', fg: on ? 'var(--blackberry)' : 'var(--muted)', w: on ? '600' : '400' }; }),
+      meter: ['Not there yet', 'Close to the bar', 'On the bar'].map((label, i) => { const on = i === rep.standingIdx; return { label, cur: on ? 'true' : 'false', bar: on ? 'var(--oxblood)' : 'var(--rule)', fg: on ? 'var(--blackberry)' : 'var(--muted)', w: on ? '600' : '400' }; }),
       nav: navDefs.map(([k, label, ref]) => { const on = s.active === k; return { label, cur: on ? 'true' : 'false', fg: on ? 'var(--blackberry)' : 'var(--muted)', line: on ? 'var(--blackberry)' : 'transparent', go: () => this.jump(ref) }; }),
       matches: rep.matches.slice(0, (s.more || {}).m || !w.sent ? 99 : 3).map((m, i) => ({ ...m, n: '0' + (i + 1), hasData: !m.unverified && !!m.bar, reasons: m.reasons.map(t => ({ t })), ...fitStyle(m.fit) })),
-      planSub: prof.stage === 'Year 12' ? 'Use this year to build things to write about. You apply next autumn.' : 'From now to your start date. Scheme windows are in the months they open.',
+      planSub: prof.stage === 'Year 12' ? 'Use this year to build things to write about. You apply next autumn.' : prof.stage === 'Left school' ? 'From now to a September start. Some schemes recruit all year, so you can apply in any month.' : 'From now to your start date. Scheme windows are in the months they open.',
       plan: rep.plan.slice(0, (s.more || {}).p || !w.sent ? 99 : 3).map(m => ({ label: m.label, now: !!m.now, items: m.items.map(t => ({ t, w: /^(Apply|Open now)/.test(t) ? '600' : '400' })) })),
       prep: rep.prep.map((p, i) => ({ n: '0' + (i + 1), stage: p.stage, status: p.status, statusFg: p.status === 'Done before' ? 'var(--blackberry)' : 'var(--muted)', tips: p.tips.slice(0, (s.more || {}).s || !w.sent ? 9 : 1).map(t => ({ t })) })),
       hasWorry: !!rep.worry, worryQ: rep.worry ? rep.worry.q : '', worryBody: rep.worry ? rep.worry.body : '',
@@ -137,10 +143,10 @@ export default class PathfinderReport extends React.Component<Props, any> {
       teaser: (() => {
         const top = rep.matches[0], wins = rep.plan.reduce((n, m) => n + m.items.filter(t => /^(Apply|Open now)/.test(t)).length, 0);
         const t = [];
-        if (top) t.push({ a: 'Your top match is ' + top.emp + ',', b: 'plus ' + (rep.matches.length - 1) + ' more, each with why it fits and what it asks for.' });
+        if (top) t.push({ a: 'Why ' + top.emp + ' fits,', b: 'its entry bar and window, plus ' + (rep.matches.length - 1) + ' more matches ranked.' });
         t.push(wins ? { a: wins + ' application windows', b: 'placed month by month in your 12-month plan.' } : { a: 'A month-by-month plan', b: 'from now to your start date.' });
         t.push({ a: 'How to prepare for all four stages,', b: 'based on what you\'ve done before.' });
-        if (rep.worry) t.push({ a: 'An answer to your worry', b: 'about ' + rep.worry.q.charAt(0).toLowerCase() + rep.worry.q.slice(1) + '.' });
+        if (rep.worry) t.push({ a: 'An answer to your worry', b: 'about ' + rep.worry.q.replace(/^My /, 'your ').replace(/^./, c => c.toLowerCase()) + '.' });
         t.push({ a: rep.backups.length + ' backup routes', b: 'if it doesn\'t go to plan.' });
         return t;
       })(),
@@ -160,9 +166,25 @@ export default class PathfinderReport extends React.Component<Props, any> {
         setW({ busy: true, fail: false });
         const fields = { name, email, parent_email: (w.parent || '').trim() };
         const p = this.props.onSave ? this.props.onSave(fields) : this.saveLead('quiz_roadmap', { ...fields, ...PF.leadFields(prof, rep) });
-        Promise.resolve(p).then(() => { setW({ sent: true, busy: false }); PF.push('report_unlocked'); setTimeout(() => this.jump(this.secCv), 80); }).catch(() => setW({ fail: true, busy: false }));
+        Promise.resolve(p).then(() => { setW({ sent: true, busy: false }); try { localStorage.setItem(SAVE_KEY + '_w', JSON.stringify({ name, email, parent: fields.parent_email, sent: true })); } catch {} PF.push('report_unlocked'); setTimeout(() => this.jump(this.secCv), 80); }).catch(() => setW({ fail: true, busy: false }));
       },
       download: () => { PF.pdf(rep, fName); PF.push('roadmap_pdf'); },
+      // Before the unlock, the top match shows its name and fit only; the details stay blurred.
+      topMatch: rep.matches[0] ? { emp: rep.matches[0].emp, scheme: rep.matches[0].scheme, fit: rep.matches[0].fit, ...fitStyle(rep.matches[0].fit) } : null,
+      ...(() => {
+        // Book the free call: the calendar when one is set, with name, email and result filled in; WhatsApp otherwise.
+        const notes = 'Pathfinder: ' + rep.headline + (rep.matches[0] ? ' Top match: ' + rep.matches[0].emp + ', ' + rep.matches[0].scheme + '.' : '');
+        const cal = calUrl({ name: fName, email: fEmail, notes });
+        const n = rep.matches.filter(m => !m.unverified).length;
+        return {
+          callHref: cal || PF.wa('Hi Shreyash, I used the DegreeYourWay Pathfinder and would like a free discovery call.\nMy result: ' + rep.headline + '\nTop match: ' + (rep.matches[0] ? rep.matches[0].emp + ', ' + rep.matches[0].scheme : '')),
+          callNote: cal ? 'Pick a time that suits you. Your details are filled in.' : 'Opens WhatsApp with your result filled in.',
+          callBtn: cal ? 'Pick a time' : 'Book my discovery call',
+          callHead: 'Go through your ' + n + ' matches with Shreyash.',
+          callBody: 'A free 30-minute call. You\'ll leave knowing which scheme to apply to first and what to fix before you do.',
+          photo: FOUNDER_PHOTO, secCall: this.secCall
+        };
+      })(),
       showBar: !w.sent && !s.saveSeen,
       ...(() => {
         const cv = s.cv, C = PF.COURSE, top = rep.matches.filter(m => !m.unverified);
@@ -171,7 +193,6 @@ export default class PathfinderReport extends React.Component<Props, any> {
         const filled = PF.NO_CV_QS.filter(q => (cv.ans[q.id] || '').trim().length >= 8).length;
         const ready = isUp ? !!cv.input : filled >= 2;
         const gaps = cv.res ? cv.res.gaps : [];
-        const areas = [...new Set(gaps.map(g => g.area))];
         const done = cv.status === 'done';
         return {
           secCv: this.secCv,
@@ -179,7 +200,7 @@ export default class PathfinderReport extends React.Component<Props, any> {
           cvIdle: cv.status === 'idle', cvBusy: cv.status === 'checking', cvDone: done,
           cvTabs: [['upload', 'Upload my CV'], ['qs', 'No CV yet']].map(([k, label]) => { const on = cv.mode === k; return { label, sel: on ? 'true' : 'false', bg: on ? 'var(--blackberry)' : 'transparent', fg: on ? 'var(--bone)' : 'var(--blackberry)', pick: () => this.setCv({ mode: k, err: '' }) }; }),
           cvModeUpload: isUp, cvModeQs: !isUp,
-          cvFileLabel: cv.fileName ? cv.fileName + (cv.input ? '' : ' · reading…') : 'Choose your CV',
+          cvFileLabel: cv.fileName ? cv.fileName + (cv.input ? '' : ' (reading…)') : 'Choose your CV',
           cvOnFile: e => this.onFile(e),
           cvQs: PF.NO_CV_QS.map(q => ({ label: q.label, ph: q.ph, val: cv.ans[q.id] || '', set: e => { const v = e.target.value; this.setState(st => ({ cv: { ...st.cv, ans: { ...st.cv.ans, [q.id]: v } } })); } })),
           cvErr: cv.err, cvBtn: isUp ? 'Check my CV' : 'Check my answers',
@@ -190,32 +211,22 @@ export default class PathfinderReport extends React.Component<Props, any> {
           cvNote: cv.note || '',
           cvStrengths: cv.res ? cv.res.strengths.map(t => ({ t })) : [],
           cvGapLabel: gaps.length + ' gap' + (gaps.length === 1 ? '' : 's') + ' to close before you apply',
-          cvGaps: gaps.map((g, i) => ({ n: '0' + (i + 1), title: g.title, detail: g.detail, part: C.parts[g.area].part })),
+          cvGaps: gaps.map((g, i) => ({ n: '0' + (i + 1), title: g.title, detail: g.detail, part: SITE.courseOffer ? C.parts[g.area].part : '' })),
           cvOfferHead: 'Close ' + (gaps.length === 1 ? 'this gap' : 'these ' + gaps.length + ' gaps') + ' before your first application.',
-          cvCallHref: PF.wa('Hi Shreyash, I did the DegreeYourWay Pathfinder and CV check and would like a free discovery call.\nBest fit: ' + rep.sector + '\nMy gaps: ' + gaps.map(g => g.title).join('; ')),
+          cvCallHref: calUrl({ name: fName, email: fEmail, notes: 'Pathfinder CV check. Gaps: ' + gaps.map(g => g.title).join('; ') }) || PF.wa('Hi Shreyash, I did the DegreeYourWay Pathfinder and CV check and would like a free discovery call.\nBest fit: ' + rep.sector + '\nMy gaps: ' + gaps.map(g => g.title).join('; ')),
           cvCallTap: () => PF.push('discovery_call_whatsapp_cv'),
-          price: C.price, deposit: C.deposit, seats: C.seats,
-          cvParts: areas.map(a => C.parts[a]),
-          guarantee: C.guarantee.map(t => ({ t })),
-          bookHref: PF.wa('Hi Shreyash, I\'d like to reserve a place on the DegreeYourWay course (' + C.deposit + ' deposit).\nBest fit: ' + rep.sector + (gaps.length ? '\nGaps to fix: ' + gaps.map(g => g.title).join('; ') : '')),
-          bookTap: e => { PF.push('course_reserve_from_cv'); if (this.props.onBook) { e.preventDefault(); this.props.onBook(); } },
           cvReset: () => { this.setCv({ status: 'idle', res: null, input: null, fileName: '', prog: 0, note: '' }); this.jump(this.secCv); },
           cvBottomTitle: done ? 'You have ' + gaps.length + ' gap' + (gaps.length === 1 ? '' : 's') + ' to close.' : 'Check your CV before you apply.',
-          cvBottomBody: done ? 'Go through them on a free call, or fix every one of them on the course.' : 'Upload it, or answer four questions if you don\'t have one yet. We\'ll show what ' + (emps[0] || 'your top match') + ' will see and what\'s missing.',
+          cvBottomBody: done ? 'Go through them with Shreyash on the free call.' : 'Upload it, or answer four questions if you don\'t have one yet. We\'ll show what ' + (emps[0] || 'your top match') + ' will see and what\'s missing.',
           cvBottomBtn: done ? 'See my gaps' : 'Check my CV',
           toCv: () => this.jump(this.secCv)
         };
       })(),
       ...(() => {
-        const cvDone = s.cv.status === 'done';
-        const at = !w.sent ? 1 : !cvDone ? 2 : 3;
-        const labels = ['Questions', 'Unlock report', 'Check your CV', 'Free call'];
-        const now = [
-          null,
-          ['add your name and email to see the full report.', 'Unlock', () => { this.jump(this.secGate); setTimeout(() => this.nameRef.current && this.nameRef.current.focus({ preventScroll: true }), 450); }],
-          ['check your CV, or answer four questions if you don\'t have one.', 'Check CV', () => this.jump(this.secCv)],
-          ['go through your gaps on a free 30-minute call.', 'See gaps', () => this.jump(this.secCv)]
-        ][at];
+        // Before the unlock there's no "Now" prompt: the result comes first, then the form.
+        const at = !w.sent ? 1 : 2;
+        const labels = ['Questions', 'Unlock report', 'Book a free call'];
+        const now = [null, [null, null, null], ['book a free 30-minute call to go through it.', 'Book', () => this.jump(this.secCall)]][at];
         return {
           journey: labels.map((label, i) => { const done = i < at, cur = i === at; return { label: (done ? '✓ ' : '') + label, cur: cur ? 'step' : 'false', bar: done || cur ? 'var(--oxblood)' : 'var(--rule)', fg: cur ? 'var(--blackberry)' : done ? 'var(--blackberry-soft)' : 'var(--muted)', w: cur ? '600' : '400' }; }),
           nowText: now[0], nowBtn: now[1], nowGo: now[2]
@@ -233,10 +244,10 @@ export default class PathfinderReport extends React.Component<Props, any> {
       })(),
       barText: 'Your full report is waiting.', barBtn: 'Unlock report',
       toSave: () => { this.jump(this.secGate); setTimeout(() => this.nameRef.current && this.nameRef.current.focus({ preventScroll: true }), 450); },
-      callHref: PF.wa('Hi Shreyash, I used the DegreeYourWay Pathfinder and would like a free discovery call.\nMy result: ' + rep.headline + '\nTop match: ' + (rep.matches[0] ? rep.matches[0].emp + ', ' + rep.matches[0].scheme : '')),
       callTap: () => PF.push('discovery_call_whatsapp'),
       goCourse: e => { if (this.props.onCourse) { e.preventDefault(); this.props.onCourse(); } },
-      restart: () => { if (this.props.onRestart) this.props.onRestart(); }
+      restart: () => { if (this.props.onRestart) this.props.onRestart(); },
+      course: SITE.courseOffer
     };
   }
 

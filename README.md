@@ -11,7 +11,7 @@ now DegreeYourWay. It uses Next.js (App Router) and TypeScript, and deploys to
 | `/course` | The course |
 | `/prices` | Prices and booking |
 | `/schools` | For schools |
-| `/pathfinder` | Pathfinder: full screen, 11 questions, then a report with matches, a 12-month plan, stage tips and a CV check |
+| `/pathfinder` | Pathfinder: full screen, 10 to 12 questions (by path), then a report with matches, a 12-month plan, stage tips and a CV check |
 | `/terms` | Terms and the DegreeYourWay Guarantee |
 | `/booked` | "Booked." confirmation; point the booking tool's redirect here |
 | `/privacy` | Privacy policy |
@@ -79,6 +79,27 @@ Set `NEXT_PUBLIC_GTM_ID` to a Google Tag Manager container. The site then shows 
 and GTM only loads after the visitor accepts. A "Cookie settings" link appears in the footer.
 Without it there's no analytics and no banner. Events such as `lead_*`, `call_booked_click`,
 `quiz_complete` and `roadmap_pdf` are pushed to `dataLayer`.
+
+## Deploy to Vercel (current)
+
+Vercel deploys from GitHub automatically: every push to `main` goes live, and every pull request
+gets its own preview link. One-time setup:
+
+1. Sign in at [vercel.com](https://vercel.com) with the GitHub account that owns this repo.
+2. **Add New → Project**, import `degreeyourway`. Vercel detects Next.js; leave the build
+   settings as they are.
+3. Before clicking **Deploy**, open **Environment Variables** and add:
+   - `LEAD_WEBHOOK_URL`: where leads go (see "Where leads go"). **Required**: on Vercel there is
+     no KV backup, so without it leads are lost.
+   - `HANDOUT_SECRET`: any long random string (`openssl rand -hex 32`). Without it, schools
+     don't get the handout link.
+   - Optional: any `NEXT_PUBLIC_*` value from `.env.example`. These are baked in at build time,
+     so redeploy after changing them.
+4. Deploy. The site is live at `https://<project>.vercel.app`. A custom domain can be added later
+   under **Settings → Domains**.
+
+On Vercel, the Cloudflare-only parts (the `LEADS` KV backup and the `LEAD_LIMITER` rate limit)
+are skipped; everything else works the same.
 
 ## Deploy to Cloudflare
 

@@ -1,7 +1,7 @@
 /* Ported verbatim from the design prototype (Get In v11.dc.html). Selectors that matched the raw
    style attribute now match the gi-bgbb / gi-bgbone classes the port adds. */
 :root{--bone:#F4EFE6;--warm-white:#FBF9F5;--blackberry:#30202A;--blackberry-soft:#51444A;--oxblood:#823D48;--loss:#A5352F;--slate:#27313F;--gain:#3E6A4F;--oxblood-hover:#6C303A;--muted:#716769;--rule:#D7CFC6;--soft-tint:#EDE3E2;--input-border:#8F8487;--rule-dark:rgba(251,249,245,0.16);--on-dark-muted:#B9AEB2;--on-dark-body:#E4DCD9;--on-dark-label:#CDBFC3;--input-dark:#3D2C36;--input-border-dark:#6A5560}
-html{scroll-behavior:smooth;scroll-padding-top:var(--gi-head,72px);scroll-snap-type:y proximity;background:var(--bone)}
+html{scroll-behavior:smooth;scroll-padding-top:var(--gi-head,72px);background:var(--bone)}
 body{margin:0;overscroll-behavior-y:none;background:var(--bone);color:var(--blackberry);font-family:'Source Sans 3',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:var(--blackberry)}
 a:hover{color:var(--oxblood)}
@@ -197,7 +197,6 @@ header{transition:box-shadow 200ms ease-out}
   .gi-railmfill{position:absolute;inset:0;background:var(--oxblood);transform-origin:left;transform:scaleX(0)}
 }
 @media (prefers-reduced-motion:reduce){.gi-raildot,.gi-raillab,.gi-railnum{transition:none !important}}
-main>section{scroll-snap-align:start}
 .gi-stgrow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:16px;padding:24px 0}
 .gi-stgbtn{all:unset;cursor:pointer;align-self:flex-start;white-space:nowrap;display:inline-flex;align-items:center;gap:8px;min-height:44px;font:600 12px 'Source Sans 3',sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:var(--blackberry)}
 .gi-stgchev{display:inline-block;font-size:18px;letter-spacing:0;transition:transform 200ms cubic-bezier(.23,1,.32,1)}
@@ -471,6 +470,17 @@ section.gi-bgbb .gi-btn:focus-visible,.gi-offer .gi-btn-ox:focus-visible,.gi-mba
 .dyw-consent .gi-btn{height:44px !important;min-height:44px !important;padding:0 20px !important;font-size:14px !important}
 @media (max-width:640px){.dyw-consent{left:12px;right:12px;bottom:12px}.dyw-consent-acts{width:100%}.dyw-consent-acts>*{flex:1 1 0}}
 
-/* Top-of-page snap point (see Shell.tsx). */
-.gi-snaptop{display:block;height:0;scroll-snap-align:start}
 
+
+/* Secondary hero button: the Pathfinder sits under "Book a free call" as an outline. */
+.gi-pfcta.gi-pfcta-alt{background:transparent !important;color:var(--blackberry) !important;box-shadow:inset 0 0 0 1px var(--blackberry) !important}
+@media (hover:hover) and (pointer:fine){.gi-pfcta.gi-pfcta-alt:hover{background:var(--warm-white) !important}}
+.gi-btn.gi-btn-outline{background:transparent !important;color:var(--blackberry) !important;box-shadow:inset 0 0 0 1px var(--blackberry) !important}
+@media (hover:hover) and (pointer:fine){.gi-btn.gi-btn-outline:hover{background:var(--warm-white) !important}}
+/* Outline button on the dark closing section, same size as the filled one beside it. */
+.gi-btn.gi-btn-ondark{background:transparent !important;color:var(--warm-white) !important;box-shadow:inset 0 0 0 1px var(--on-dark-muted) !important}
+@media (hover:hover) and (pointer:fine){.gi-btn.gi-btn-ondark:hover{background:rgba(251,249,245,0.08) !important}}
+/* "Our team has had offers from": the five logos in one row, wrapping on phones. */
+.gi-offer-logos{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:20px clamp(28px,4vw,56px)}
+.gi-offer-logos img{display:block;height:clamp(26px,2.8vw,36px);width:auto;max-width:150px;object-fit:contain;mix-blend-mode:multiply}
+.gi-offer-logos img.is-square{height:clamp(44px,4.6vw,58px)}

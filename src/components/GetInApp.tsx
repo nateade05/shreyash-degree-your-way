@@ -2,12 +2,12 @@
 // @ts-nocheck -- verbatim port of the prototype's untyped logic class; typed at its boundary (Props).
 'use client';
 // The site's behaviour, ported from the prototype's logic class (`class Component` in
-// Get In v11.dc.html). Copy data, quiz scoring and every handler are kept as they were; the
+// Get In v11.dc.html). Copy data and every handler are kept as they were; the
 // changes for production are marked "PORT:".
 import React from 'react';
 import GetInView from './GetInView';
 import { PAGE_PATH, type Page } from '@/lib/pages';
-import { SITE, whatsappDisplay } from '@/lib/site';
+import { SITE, whatsappDisplay, FOUNDER_PHOTO } from '@/lib/site';
 
 type Props = {
   startPage: Page;
@@ -46,13 +46,13 @@ export default class GetInApp extends React.Component<Props, any> {
       [/£|\b(price|cost|how much|fees?\b|pay|deposit|balance|refund)/, '£595 for the founding cohort (full price £695). £100 refundable deposit now, £495 before the course. With a placement: £950.', 'Reserve a place', 'book'],
       [/\b(date|when|december|where|london|venue|time|hours)/, 'Two days in London, 9.30 to 4.30. Dates and the venue are confirmed when you reserve.', 'See the course', 'days'],
       [/\b(guarantee|no offer|free|money back)/, "Attend both days, apply to three schemes with our review, and if there's no offer within 12 months the next course is free.", 'Read the full guarantee', 'guarantee'],
-      [/\b(online|remote|evening)/, 'The online cohort runs over four evenings and costs £450. It suits students outside London or aged 19–23.', null, null],
+      [/\b(online|remote|evening)/, 'The online cohort runs over four evenings and costs £450. It suits students outside London or aged 19 to 23.', null, null],
       [/\b(support|after|deadline line|whatsapp|help|contact|speak|call)/, 'From booking until their final application deadline, your child can message the founder on WhatsApp. Message 24/7. Replies within 24 hours, every day.', null, null],
       [/\b(parent|attend|watch|stay)/, 'Parents are welcome at the opening briefing on the first morning. After that, the course is for the students.', null, null],
       [/\b(lunch|food|eat)/, 'Lunch is provided both days.', null, null],
-      [/\b(placement|work experience|950)/, '2–3 days in a small local firm on a real brief, ending with a write-up and a reference on their letterhead. £950, five seats.', null, null],
+      [/\b(placement|work experience|950)/, '2 or 3 days in a small local firm on a real brief, ending with a write-up and a reference on their letterhead. £950, five seats.', null, null],
       [/\b(school|teacher|talk)/, 'Schools can book a free 30-minute talk for Year 12 and 13, and a parent evening.', 'For schools', 'schools'],
-      [/\b(who\b|age\b|aged|year \d|year group|old\b|older|sixth|19|gap\b)/, "It's for students in Year 12 or 13, or aged 19–23, applying to degree apprenticeships. Outside London, or 19–23? There is an online cohort, four evenings, £450.", null, null],
+      [/\b(who\b|age\b|aged|year \d|year group|old\b|older|sixth|19|gap\b)/, "It's for students in Year 12 or 13, or aged 19 to 23, applying to degree apprenticeships. Outside London, or 19 to 23? There is an online cohort, four evenings, £450.", null, null],
       [/\b(book|reserve|sign up|join|seat|space)/, 'Tap below to reserve. Your details open in WhatsApp, and the founder replies with the deposit details.', 'Reserve a place', 'book'],
       [/what('s| is) (included|in it|on the course)|include|learn|cover|document|leave with|timetable|schedule|stages?\b|course/, 'Two days of practice for every stage: online tests, a scored video interview, a full mock assessment centre, and their real application reviewed line by line. They leave with six documents, including a route map and a next-step plan.', 'See the course', 'days'],
     ];
@@ -71,147 +71,11 @@ export default class GetInApp extends React.Component<Props, any> {
     else if (act === 'days') { this.setState({ chatOpen: false }); this.go('days'); }
     else if (act === 'guarantee') { this.setState({ chatOpen: false }); this.go('price', 'guarantee'); }
     else if (act === 'schools') { this.setState({ chatOpen: false }); this.go('schools'); }
-    else if (act === 'quiz') { this.setState({ chatOpen: false, quiz: this.quizDefault(), wall: {} }); this.go('quiz'); }
+    else if (act === 'quiz') { this.setState({ chatOpen: false }); this.go('quiz'); }
     else if (act === 'wa') this.openWa('Hi, I have a question about DegreeYourWay: ' + (this.lastQ || ''));
   }
   focusables(root) { return [...root.querySelectorAll('a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(el => el.offsetParent !== null); }
   topOffset() { const hd = document.querySelector('header'); const mb = document.querySelector('.gi-mbar'); const barOn = mb && getComputedStyle(mb).display !== 'none' && this.state.pastHero; return (hd ? hd.offsetHeight : 72) + (barOn ? mb.offsetHeight : 0) + 8; }
-  // ---- Quiz: all quiz rules live here; the template only reads the values quizVals() returns.
-  Q_VALS = ['9', '8', '7', '6', '5', '4', '3', 'Resit'];
-  Q1 = ['Year 12', 'Year 13', 'Left school, aged 19 to 23', 'Other'];
-  Q2 = ['A-levels', 'BTEC', 'T-level', 'A mix', 'Not sure'];
-  Q3 = ['Maths', 'Further Maths', 'Physics', 'Chemistry', 'Biology', 'Computer Science', 'Economics', 'Business', 'Accounting', 'English', 'History', 'Politics', 'Law', 'Psychology', 'Sociology', 'Geography', 'Design and Technology', 'Engineering (BTEC)', 'Health and Social Care', 'Applied Science', 'IT (BTEC)', 'Art or Design', 'A language', 'Other'];
-  Q4 = ['Mostly A* and A', 'Mostly A and B', 'Mostly B and C', 'Mostly C and D', 'D or below', "Don't know yet"];
-  Q6 = ['Work out why a business is losing money', 'Build or fix something that has to work', 'Write code that other people use', 'Argue a case and win it', 'Look after someone who needs help', 'Wear a uniform and keep people safe'];
-  // sector -> grade band needed (index into Q4), minimum GCSE, schemes
-  SECTORS = {
-    'Finance and banking': { band: 1, gcse: 6, rows: [['Barclays', 'Business Banking, Level 6', 'BBB, GCSE Maths 6', 'opens September'], ['Lloyds', 'Apprenticeships', 'GCSE Maths and English 4', 'opens 3 November'], ['JPMorgan', 'Technology and Financial Services', 'BBB with Maths or Computing', 'not yet published']] },
-    'Accountancy and consulting': { band: 2, gcse: 5, rows: [['Deloitte', 'BrightStart', '104 UCAS points', 'not yet published, closes early'], ['KPMG', 'Audit, Tax, Consulting, Technology', '120 UCAS points, GCSE Maths and English 5', 'final-stage days from 17 November'], ['EY', 'Assurance, Consulting, Tax', 'three A-levels, GCSE Maths and English 4', 'not yet published']] },
-    'Technology': { band: 1, gcse: 4, rows: [['Amazon', 'Software Development Engineer, Level 6', 'ABB with Maths or Computer Science', 'opens February'], ['JPMorgan', 'Technology, Level 6', 'BBB with Maths or Computing', 'not yet published'], ['Capgemini', 'Digital and Technology Solutions', 'three A-levels at C, seven GCSEs at 4', 'not yet published']] },
-    'Engineering': { band: 2, gcse: 4, rows: [['BAE Systems', 'Degree apprenticeships', '96 UCAS points, five GCSEs including Maths and English', 'opens January, six weeks'], ['JLR', 'Level 6 Engineering', 'A-level Maths at B plus a STEM subject', 'not yet published'], ['Network Rail', 'Level 6 Engineering', 'BBC with Maths and a science, or DMM BTEC', 'not yet published']] },
-    'Law': { band: 0, gcse: 6, rows: [['Slaughter and May', 'Solicitor apprenticeship', 'AAB, seven GCSEs at 6', '12 October to 6 January'], ['A&O Shearman', 'Solicitor apprenticeship', 'AAB, seven GCSEs at 6', '1 December to 17 February'], ['Weightmans', 'Solicitor apprenticeship', '120 UCAS points, five GCSEs at 4, aged 16 to 21', '28 September to 22 October']] },
-    'Health and public service': { band: 3, gcse: 4, rows: [['NHS', 'Registered Nurse Degree Apprenticeship', 'Level 3 plus Maths and English', 'trust by trust, all year'], ['Police', 'Police Constable Degree Apprenticeship', 'two A-levels or Level 3, GCSE English 4', 'rolling'], ['Civil Service', 'Apprenticeships, Levels 2 to 7', '16 and over', 'advertised through the year']] }
-  };
-  // how strongly each answer points at each sector
-  Q_WEIGHTS = {
-    'Work out why a business is losing money': { 'Accountancy and consulting': 4, 'Finance and banking': 3 },
-    'Build or fix something that has to work': { 'Engineering': 4 },
-    'Write code that other people use': { 'Technology': 4 },
-    'Argue a case and win it': { 'Law': 4 },
-    'Look after someone who needs help': { 'Health and public service': 4 },
-    'Wear a uniform and keep people safe': { 'Health and public service': 4 },
-    'Maths': { 'Finance and banking': 1, 'Accountancy and consulting': 1, 'Engineering': 1, 'Technology': 0.5 },
-    'Further Maths': { 'Engineering': 1, 'Finance and banking': 1, 'Technology': 1 },
-    'Physics': { 'Engineering': 2 }, 'Chemistry': { 'Engineering': 1, 'Health and public service': 1 }, 'Biology': { 'Health and public service': 2 },
-    'Computer Science': { 'Technology': 3 }, 'Economics': { 'Finance and banking': 2, 'Accountancy and consulting': 1 }, 'Business': { 'Accountancy and consulting': 2, 'Finance and banking': 1 },
-    'Accounting': { 'Accountancy and consulting': 3 }, 'English': { 'Law': 1 }, 'History': { 'Law': 2 }, 'Politics': { 'Law': 2, 'Health and public service': 0.5 }, 'Law': { 'Law': 3 },
-    'Psychology': { 'Health and public service': 2, 'Law': 0.5 }, 'Sociology': { 'Health and public service': 2 }, 'Geography': { 'Engineering': 0.5, 'Health and public service': 0.5 },
-    'Design and Technology': { 'Engineering': 2 }, 'Engineering (BTEC)': { 'Engineering': 3 }, 'Health and Social Care': { 'Health and public service': 3 }, 'Applied Science': { 'Health and public service': 1, 'Engineering': 1 },
-    'IT (BTEC)': { 'Technology': 3 }, 'Art or Design': { 'Technology': 1 }, 'A language': { 'Law': 1, 'Accountancy and consulting': 0.5 }
-  };
-  // PORT (Pathfinder redesign, PATHFINDER_CLAUDE_CODE.md): Q3 is shown in four groups with the
-  // same labels; `furthest` lets the answers rail jump back; GCSEs start unanswered.
-  Q3_GROUPS = [
-    ['Maths and sciences', ['Maths', 'Further Maths', 'Physics', 'Chemistry', 'Biology', 'Computer Science']],
-    ['Business and money', ['Economics', 'Business', 'Accounting']],
-    ['Humanities and languages', ['English', 'History', 'Politics', 'Law', 'Psychology', 'Sociology', 'Geography', 'A language']],
-    ['Applied, technical and creative', ['Design and Technology', 'Engineering (BTEC)', 'Health and Social Care', 'Applied Science', 'IT (BTEC)', 'Art or Design', 'Other']],
-  ];
-  quizDefault() { return { step: 0, furthest: 0, year: null, quals: null, subjects: [], other: '', grades: null, maths: null, english: null, tue: null }; }
-  setQ(patch) { this.setState(s => ({ quiz: { ...(s.quiz || this.quizDefault()), ...patch } })); }
-  // Every navigation clears a pending auto-advance and records the furthest question reached.
-  quizStepTo(step) {
-    clearTimeout(this.qAdv);
-    this.setState(s => { const q = s.quiz || this.quizDefault(); return { quiz: { ...q, step, furthest: step >= 1 && step <= 6 ? Math.max(q.furthest || 0, step) : q.furthest || 0 } }; });
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }
-  gcseIdx(v) { return v == null ? 5 : v; } // unanswered falls back to grade 4
-  // The fields every quiz_roadmap lead carries, whichever way it is saved.
-  quizLead(q, res, who) {
-    return { name: who.name || '', email: who.email || '', parent_email: who.parent_email || '', phone: who.phone || '',
-      result: res.head, also: res.also, year: q.year, quals: q.quals,
-      subjects: q.subjects.join(', ') + (q.other ? ' (' + q.other + ')' : ''), grades: q.grades,
-      gcse_maths: this.Q_VALS[this.gcseIdx(q.maths)], gcse_english: this.Q_VALS[this.gcseIdx(q.english)], tuesday: q.tue };
-  }
-  quizResult(q) {
-    const score = {}; Object.keys(this.SECTORS).forEach(k => score[k] = 0);
-    [q.tue, ...q.subjects].forEach(a => { const w = this.Q_WEIGHTS[a] || {}; Object.keys(w).forEach(k => score[k] += w[k]); });
-    const order = Object.keys(score).sort((a, b) => score[b] - score[a]);
-    const sector = order[0], also = order[1], S = this.SECTORS[sector];
-    const band = this.Q4.indexOf(q.grades);
-    const gcse = v => v === 'Resit' ? 3 : Number(v);
-    let standing;
-    if (band === 5) standing = 'grades not entered';
-    else {
-      let gap = band - S.band;
-      if (Math.min(gcse(this.Q_VALS[this.gcseIdx(q.maths)]), gcse(this.Q_VALS[this.gcseIdx(q.english)])) < S.gcse) gap += 1;
-      standing = gap <= 0 ? 'on the bar' : gap === 1 ? 'a few grades short' : 'not there yet';
-    }
-    const list = q.subjects.filter(x => x !== 'Other').concat(q.subjects.includes('Other') && q.other.trim() ? [q.other.trim()] : []);
-    const subj = list.length === 0 ? 'Your subjects' : list.length === 1 ? list[0] : list.slice(0, -1).join(', ') + ' and ' + list[list.length - 1];
-    const one = list.length === 1;
-    const sl = sector.toLowerCase();
-    const body = {
-      'on the bar': 'Your predicted grades and GCSEs meet the usual entry bar for ' + sl + '. ' + subj + (one ? ' points' : ' point') + ' the same way. The competition is about six applicants per place, so the bar gets you in the door, not through it.',
-      'a few grades short': "You're about one grade band below the usual bar for " + sl + '. KPMG and Accenture both say to apply anyway if you\'re a few grades short and have a reason; several others don\'t. Aim your first applications at the schemes with the lower bar in the list below.',
-      'not there yet': 'The usual bar for ' + sl + " is higher than your predictions right now. That's not a no. Level 4 and 5 apprenticeships in the same sector have lower bars and several feed into degree level later. Your second sector may be closer.",
-      'grades not entered': subj + ' and what you enjoy point to ' + sl + '. Add your predicted grades when you have them and this will tell you where you stand against the entry bar.'
-    }[standing];
-    const mock = ['Before any assessment centre:', 'sit a mock, so the real one is not your first.'];
-    const road = {
-      'on the bar': [['This month:', 'read the entry page for each scheme above.'], ['When a window opens:', 'apply in the first week. Several close early.'], mock],
-      'a few grades short': [['This month:', 'ask your teachers what would lift your predictions by one band.'], ['When windows open:', 'apply first to the scheme with the lowest bar above.'], mock],
-      'not there yet': [['This month:', 'look at Level 4 and 5 apprenticeships in ' + sl + '.'], ['Next:', 'check ' + also.toLowerCase() + ' against its entry bar.'], mock],
-      'grades not entered': [['Now:', 'read the entry page for each scheme above.'], ['When you get predictions:', 'run the Pathfinder again.'], mock]
-    }[standing];
-    return { head: sector + ", and you're " + standing + '.', body, also, rows: S.rows, road, sector, standing };
-  }
-  quizVals(s) {
-    const q = s.quiz || this.quizDefault(), w = s.wall || {};
-    const step = q.step;
-    const need = { 1: !q.year, 2: !q.quals, 3: q.subjects.length === 0, 4: !q.grades, 5: q.maths == null || q.english == null, 6: !q.tue }[step] || false;
-    const reason = { 1: 'Pick one to continue', 2: 'Pick one to continue', 3: 'Pick at least one subject', 4: 'Pick one to continue', 5: 'Pick a grade for each', 6: 'Pick one to continue' }[step] || '';
-    const rowsOf = r => r.map(([emp, scheme, bar, win]) => ({ emp, scheme, bar, win }));
-    const res = step === 8 ? this.quizResult(q) : null;
-    const leave = () => { clearTimeout(this.qAdv); clearTimeout(this.qMatch); };
-    const next = () => {
-      if (need) return;
-      if (step === 0) { this.push('quiz_start'); this.quizStepTo(1); return; }
-      if (step < 6) { this.quizStepTo(step + 1); return; }
-      if (step !== 6) return;
-      this.quizStepTo(7); this.push('quiz_complete');
-      const o = s.offer;
-      clearTimeout(this.qMatch);
-      this.qMatch = setTimeout(() => {
-        this.quizStepTo(8);
-        // Details already given in the pop-up: skip the wall and save one lead now.
-        if (o && o.email) {
-          const q0 = this.state.quiz, res0 = this.quizResult(q0);
-          this.saveLead('quiz_roadmap', this.quizLead(q0, res0, { name: o.name, email: o.email, phone: o.phone })).catch(() => this.push('lead_failed'));
-          this.setState(p => ({ wall: { ...(p.wall || {}), name: o.name, email: o.email, sent: true } }));
-        }
-      }, 900);
-    };
-    const rail = [
-      [1, 'Where you are', q.year],
-      [2, 'Qualifications', q.quals],
-      [3, 'Subjects', q.subjects.length ? q.subjects.map(x => x === 'Other' && q.other.trim() ? q.other.trim() : x).join(', ') : null],
-      [4, 'Predicted grades', q.grades],
-      [5, 'GCSE Maths and English', q.maths == null && q.english == null ? null : 'Maths ' + (q.maths == null ? '—' : this.Q_VALS[q.maths]) + ' · English ' + (q.english == null ? '—' : this.Q_VALS[q.english])],
-      [6, 'Tuesday afternoon', q.tue],
-    ].map(([n, label, answer]) => ({ n, label, answer, current: n === step, enabled: n <= (q.furthest || 0) }));
-    return {
-      isQuiz: s.page === 'quiz', notQuiz: s.page !== 'quiz',
-      qFlyCls: s.qFly ? 'is-open' : '', qFlyOpen: s.qFly ? 'true' : 'false',
-      qFlyToggle: () => this.setState(p => ({ qFly: !p.qFly })), qFlyClose: () => this.setState({ qFly: false }),
-      qFlyOpts: this.Q1.map(label => ({ label, pick: () => { this.push('quiz_start_flyout'); this.setState({ qFly: false, wall: {}, quiz: { ...this.quizDefault(), year: label, step: 2, furthest: 1 } }); this.go('quiz'); } })),
-      goQuiz: () => { this.setState({ quiz: this.quizDefault(), wall: {} }); this.go('quiz'); },
-      goQuizLink: e => { if (e && (e.metaKey || e.ctrlKey || e.shiftKey)) return; e.preventDefault(); this.setState({ quiz: this.quizDefault(), wall: {} }); this.go('quiz'); },
-      goDaysLink: e => { if (e && (e.metaKey || e.ctrlKey || e.shiftKey)) return; e.preventDefault(); this.go('days'); }
-    };
-  }
-  wRef = React.createRef();
-  wNameRef = React.createRef();
   tlRef = React.createRef();
   // Auto-peek: the first time a drop-down list scrolls into view, its first item opens for a
   // moment to show the list is expandable, then closes. Skipped if the visitor touches the list.
@@ -303,27 +167,6 @@ export default class GetInApp extends React.Component<Props, any> {
       .then(r => r.ok ? r.json().catch(() => ({})) : Promise.reject(new Error('lead ' + r.status)))
       .then(res => ({ ...lead, ...res }));
   }
-  // Builds a one-page printable roadmap; the browser's print dialog saves it as a PDF.
-  roadmapPdf(res) {
-    const esc = t => String(t).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
-    const rows = res.rows.map(([e, s, b, w]) => '<tr><td><b>' + esc(e) + '</b><br>' + esc(s) + '</td><td>' + esc(b) + '</td><td>' + esc(w) + '</td></tr>').join('');
-    const road = res.road.map(([a, b], i) => '<li><span>0' + (i + 1) + '</span><div><b>' + esc(a) + '</b> ' + esc(b) + '</div></li>').join('');
-    const doc = '<!doctype html><html><head><meta charset="utf-8"><title>DegreeYourWay roadmap</title>'
-      + '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400&family=Source+Sans+3:wght@400;600&display=swap">'
-      + '<style>@page{size:A4;margin:18mm}body{font-family:"Source Sans 3",sans-serif;color:#30202A;margin:0;font-size:11pt;line-height:1.5}h1,h2{font-family:Newsreader,serif;font-weight:400;margin:0}h1{font-size:28pt;line-height:1.05}h2{font-size:15pt;margin:22pt 0 8pt}.k{font-size:8pt;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#716769}.bar{height:3pt;background:#823D48;width:40pt;margin:10pt 0 14pt}p{margin:8pt 0;color:#51444A}table{width:100%;border-collapse:collapse}td{padding:7pt 8pt 7pt 0;border-top:.6pt solid #D7CFC6;vertical-align:top;font-size:10pt}ol{list-style:none;padding:0;margin:0}li{display:flex;gap:10pt;padding:6pt 0;border-top:.6pt solid #D7CFC6}li span{color:#716769;font-weight:600;font-size:9pt;min-width:18pt}.call{margin-top:22pt;background:#30202A;color:#F4EFE6;padding:14pt 16pt}.call h2{margin:0 0 4pt;color:#F4EFE6}.call p{color:#E4DCD9;margin:0}.foot{margin-top:16pt;font-size:8pt;color:#716769}</style></head><body>'
-      + '<div class="k">DegreeYourWay · Your degree apprenticeship roadmap</div><div class="bar"></div>'
-      + '<h1>' + esc(res.head) + '</h1><p>' + esc(res.body) + '</p><p><span class="k">Also a fit</span>&nbsp; ' + esc(res.also) + '</p>'
-      + '<h2>Three schemes to aim for</h2><table>' + rows + '</table>'
-      + '<h2>Your next three steps</h2><ol>' + road + '</ol>'
-      + '<div class="call"><h2>Free discovery call, 30 minutes</h2><p>Talk this roadmap through with Shreyash Singh, who used this process to get offers from Deloitte, Goldman Sachs, PwC and Accenture. Message him on WhatsApp: ' + whatsappDisplay(this.WA) + '.</p></div>'
-      + '<div class="foot">Entry bars and dates checked 24 September 2026. Always check the employer\'s page. Employers make every hiring decision.</div>'
-      + '<script>document.fonts.ready.then(function(){setTimeout(function(){window.print()},300)})<\/script></body></html>';
-    const w = window.open('', '_blank');
-    if (w && w.document) { w.document.open(); w.document.write(doc); w.document.close(); }
-    else { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([doc], { type: 'text/html' })); a.download = 'DegreeYourWay roadmap.html'; a.click(); }
-    this.push('roadmap_pdf');
-  }
-  wRef2 = null;
   railEls = [];
   railFillRef = React.createRef();
   railFillMRef = React.createRef();
@@ -374,22 +217,21 @@ export default class GetInApp extends React.Component<Props, any> {
     setTimeout(() => this.buildRail(), 300);
     setTimeout(() => this.armAutoPeek(), 600);
     // Seat ping: once per visit, after 30s on the site. Slides in, auto-hides after 9s unless hovered.
-    try { if ((this.props.previewPing ?? true) || !sessionStorage.getItem('gi_ping')) this.pingT = setTimeout(() => this.showPing(), 30000); } catch (e) {}
+    try { if (SITE.courseOffer && ((this.props.previewPing ?? true) || !sessionStorage.getItem('gi_ping'))) this.pingT = setTimeout(() => this.showPing(), 30000); } catch (e) {}
     try { const saved = JSON.parse(localStorage.getItem('gi_offer') || 'null'); if (saved) this.setState({ offer: saved, offerDone: true }); const g = JSON.parse(localStorage.getItem('gi_guide') || 'null'); if (g) this.setState({ guideLead: g }); } catch (e) {}
-    if (this.state.chatOpen || this.state.qFly) this.setState({ chatOpen: false, qFly: false });
+    if (this.state.chatOpen) this.setState({ chatOpen: false });
     const tryOffer = () => {
       let seen = false; try { seen = !!sessionStorage.getItem('gi_offer_seen') || !!localStorage.getItem('gi_offer'); } catch (e) {}
       if (this.props.previewOffer ?? true) { seen = false; if (this.state.offerDone) this.setState({ offerDone: false }); }
-      if (seen || this.state.page === 'schools' || this.state.page === 'quiz') return;
+      if (seen || this.state.page === 'schools') return;
       const open = this.openId();
       if (open && open !== 'dlg-chat') { this.offerT = setTimeout(tryOffer, 1000); return; }
       try { sessionStorage.setItem('gi_offer_seen', '1'); } catch (e) {}
-      this.dlg({ chatOpen: false, qFly: false, offerOpen: true }); this.push('offer_shown');
+      this.dlg({ chatOpen: false, offerOpen: true }); this.push('offer_shown');
     };
     this.offerT = setTimeout(tryOffer, 5000);
     this.onRailResize = () => this.buildRail(); window.addEventListener('resize', this.onRailResize);
     this.onTrap = ev => {
-      if (ev.key === 'Escape' && this.state.qFly) { this.setState({ qFly: false }); }
       const id = this.openId();
       if (!id) return;
       if (ev.key === 'Escape') { ev.preventDefault(); this.dlg({ sample: null, guideOpen: false, chatOpen: false, offerOpen: false }); return; }
@@ -440,8 +282,8 @@ export default class GetInApp extends React.Component<Props, any> {
   renderVals() {
     const s = this.state;
     const ink = 'var(--blackberry)', acc = 'var(--blackberry)';
-    const nav = [['home', 'Overview'], ['days', 'The course'], ['price', 'Prices and booking'], ['schools', 'For schools']];
-    const navShort = { home: 'Overview', days: 'Course', price: 'Prices', schools: 'Schools' };
+    const nav = [['home', 'For students'], ['days', 'The course'], ['price', 'Prices and booking'], ['schools', 'For schools']].filter(([id]) => SITE.courseOffer || (id !== 'days' && id !== 'price'));
+    const navShort = { home: 'Students', days: 'Course', price: 'Prices', schools: 'Schools' };
     const stages = [
       ['Application', 9], ['Tests', 7], ['Video interview', 5], ['Assessment centre', 1], ['Offer', 1]
     ];
@@ -498,8 +340,6 @@ export default class GetInApp extends React.Component<Props, any> {
       closeOffer: () => this.dlg({ offerOpen: false }),
       sendOffer: e => {
         e.preventDefault();
-        // Both buttons submit this form, so details are always captured; the one pressed decides what happens next.
-        const wantsQuiz = false;
         const f = new FormData(e.target);
         const nm = String(f.get('name') || '').trim(), em = String(f.get('email') || '').trim();
         const badN = !nm, badE = !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em);
@@ -507,18 +347,21 @@ export default class GetInApp extends React.Component<Props, any> {
         if (this.state.oErr) this.setState({ oErr: null });
         const offer = { name: String(f.get('name') || '').trim(), email: String(f.get('email') || '').trim(), phone: String(f.get('phone') || '').trim(), at: new Date().toISOString() };
         try { localStorage.setItem('gi_offer', JSON.stringify(offer)); } catch (err) {}
-        this.saveLead(wantsQuiz ? 'popup_pathfinder' : 'discovery_call', { name: offer.name, email: offer.email, phone: offer.phone }).catch(() => this.push('lead_failed'));
-        if (wantsQuiz) { this.dlg({ offerOpen: false }); this.setState({ offer, quiz: this.quizDefault(), wall: { name: offer.name, email: offer.email } }); this.go('quiz'); }
-        else { this.setState({ offer, offerDone: true }); this.push('call_request'); }
+        this.saveLead('discovery_call', { name: offer.name, email: offer.email, phone: offer.phone }).catch(() => this.push('lead_failed'));
+        this.setState({ offer, offerDone: true }); this.push('call_request');
       },
       oNameErr: s.oErr && s.oErr.n ? 'true' : 'false', oEmailErr: s.oErr && s.oErr.e ? 'true' : 'false', oHasErr: !!(s.oErr && (s.oErr.n || s.oErr.e)),
       oErrText: s.oErr ? (s.oErr.n && s.oErr.e ? 'Add your first name and email.' : s.oErr.n ? 'Add your first name.' : 'Check your email address.') : '',
-      offerQuiz: () => { this.dlg({ offerOpen: false }); this.setState({ quiz: this.quizDefault(), wall: { name: (s.offer && s.offer.name) || '', email: (s.offer && s.offer.email) || '' } }); this.go('quiz'); },
+      offerQuiz: () => { this.dlg({ offerOpen: false }); this.go('quiz'); },
       myPrice: '£595', mySave: 'Save £100', myPriceNote: 'Founding price. Full price £695.',
       railFillRef: this.railFillRef, railFillMRef: this.railFillMRef, railDark: s.railDark ? 'is-dark' : '',
-      ...this.quizVals(s),
-      railItems: (s.page === 'quiz' ? [] : (s.rail || [])).map((r, i) => { const act = s.railActive || 0; return { label: r.label, num: String(i + 1).padStart(2, '0'), w: Math.max(1, Math.round(r.h / 100)), cls: i === act ? 'is-on' : (i < act ? 'is-past' : ''), cur: i === act ? 'true' : 'false', go: () => this.railGo(i) }; }),
-      chatOpen: s.chatOpen, chatClosed: !s.chatOpen && s.page !== 'quiz',
+      // The Pathfinder is its own route (/pathfinder); these only navigate there.
+      goQuiz: () => this.go('quiz'),
+      goQuizLink: e => { if (e && (e.metaKey || e.ctrlKey || e.shiftKey)) return; e.preventDefault(); this.go('quiz'); },
+      // The home page is short enough not to need the section rail.
+      railItems: (s.page === 'home' ? [] : (s.rail || [])).map((r, i) => { const act = s.railActive || 0; return { label: r.label, num: String(i + 1).padStart(2, '0'), w: Math.max(1, Math.round(r.h / 100)), cls: i === act ? 'is-on' : (i < act ? 'is-past' : ''), cur: i === act ? 'true' : 'false', go: () => this.railGo(i) }; }),
+      // The chat answers from the course facts, so it's off while the course is hidden.
+      course: SITE.courseOffer, chatOpen: s.chatOpen, chatClosed: !s.chatOpen && SITE.courseOffer,
       chatDraft: s.chatDraft, chatLogRef: this.chatLogRef,
       setChatDraft: e => this.setState({ chatDraft: e.target.value }),
       chatSend: e => { e.preventDefault(); this.ask(s.chatDraft); },
@@ -561,13 +404,13 @@ export default class GetInApp extends React.Component<Props, any> {
       ],
       placementSteps: [
         { n: 1, title: 'Brief agreed', body: 'One page, one question, signed off before day one.' },
-        { n: 2, title: '2–3 days in the firm', body: 'Alongside the team, with a named supervisor. Under-18s at our venue or with the owner present.' },
+        { n: 2, title: '2 or 3 days in the firm', body: 'Alongside the team, with a named supervisor. Under-18s at our venue or with the owner present.' },
         { n: 3, title: 'Write-up and reference', body: "Two pages and ten minutes to the owner. Scored by us. A reference on the firm's letterhead." }
       ],
       handoutTap: e => { if (!s.handoutHref) { e.preventDefault(); return; } this.push('school_handout_open'); }, handoutHref: s.handoutHref || '#',
       schoolOffers: [
-        { title: 'The student talk', meta: '30 min · in school', who: 'Year 12 and 13', pts: ['What degree apprenticeships are and what they pay', 'Which employers hire, and when applications open', 'The five stages, and how to prepare for each'] },
-        { title: 'The parent evening', meta: '60 min · in school or online', who: 'Parents of Year 12 and 13', pts: ['How it compares with university, in pounds', 'The application calendar, month by month', 'How to support without taking over'] }
+        { title: 'The student talk', meta: '30 min, in school', who: 'Year 12 and 13', pts: ['What degree apprenticeships are and what they pay', 'Which employers hire, and when applications open', 'The five stages, and how to prepare for each'] },
+        { title: 'The parent evening', meta: '60 min, in school or online', who: 'Parents of Year 12 and 13', pts: ['How it compares with university, in pounds', 'The application calendar, month by month', 'How to support without taking over'] }
       ],
       schoolSteps: [
         { n: 1, title: 'Send your dates', body: 'Use the form below. It takes a minute.' },
@@ -584,8 +427,8 @@ export default class GetInApp extends React.Component<Props, any> {
         color: s.page === id ? ink : 'var(--muted)', border: s.page === id ? acc : 'transparent' })),
       proofs: [
         { title: 'A guarantee, in writing', body: 'Attend everything, apply to three schemes, no offer within 12 months: the next course is free.' },
-        { title: 'A placement and a reference', body: '2–3 days at a small firm on a real brief. Five seats.' },
-        { title: 'Run by degree apprentices from Deloitte, Goldman Sachs, Bloomberg and PwC', body: 'They sat these assessments themselves and work in the field now.' }
+        { title: 'A placement and a reference', body: '2 or 3 days at a small firm on a real brief. Five seats.' },
+        { title: 'Our team has had offers from Deloitte, Goldman Sachs, PwC, Accenture and Dyson', body: 'We sat these assessments ourselves.' }
       ],
       notes: [
         { title: 'The DegreeYourWay Guarantee', body: 'Attend everything, apply to three schemes, no offer within 12 months: the next course is free.' },
@@ -599,7 +442,7 @@ export default class GetInApp extends React.Component<Props, any> {
         const faq = list => list.map(([q, a]) => ({ q, a }));
         return {
           faqTop: faq([
-            ['Who is it for?', 'Students in Year 12 or 13, or aged 19–23, applying to degree apprenticeships, and the parents helping them.'],
+            ['Who is it for?', 'Students in Year 12 or 13, or aged 19 to 23, applying to degree apprenticeships, and the parents helping them.'],
             ['Which schemes does it prepare for?', 'Any scheme with online tests, video interviews and assessment centres: most large employers in finance, tech, engineering and professional services.'],
             ['Does it guarantee an apprenticeship?', 'No. Employers make every hiring decision. We guarantee the preparation, not the outcome.'],
             ["What if my child doesn't know where to apply?", 'Start with the free Pathfinder. In 90 seconds it gives a roadmap with the sector that fits and three schemes.'],
@@ -624,7 +467,7 @@ export default class GetInApp extends React.Component<Props, any> {
             ['Written report', 'Within 48 hours of the weekend.']
           ]),
           whoTeaches: kv([
-            ['Teaches', 'Shreyash Singh, Deloitte degree apprentice 2021–25. He runs both days and the mock assessment centre.'],
+            ['Teaches', 'Shreyash Singh, Deloitte degree apprentice 2021 to 2025. He runs both days and the mock assessment centre.'],
             ['Assesses', 'Working degree apprentices at other schemes.'],
             ['Afterwards', 'The founder answers questions on the Deadline Line.'],
             ['Group size', 'Ten students. One assessor to five students on Sunday.']
@@ -654,7 +497,7 @@ export default class GetInApp extends React.Component<Props, any> {
             'Make a claim within 13 months of the course.',
             'Get one free place on a later cohort, in person or online, at our choice of date.'
           ].map((text, i) => ({ n: i + 1, text, vc: text.includes('[') ? 'var(--on-dark-label)' : 'var(--warm-white)', fs: 'normal' })),
-          fitYes: ['Year 12 or 13, or aged 19–23.', 'Serious about applying to degree apprenticeships.', 'Applying this season, or planning to.', 'Ready to take part fully on both days.', 'Willing to practise and rework their application afterwards.'],
+          fitYes: ['Year 12 or 13, or aged 19 to 23.', 'Serious about applying to degree apprenticeships.', 'Applying this season, or planning to.', 'Ready to take part fully on both days.', 'Willing to practise and rework their application afterwards.'],
           fitNo: ['Looking for a guaranteed job offer.', 'Not willing to practise or rework applications.', 'Outside the entry criteria of the schemes they want.']
         };
       })(),
@@ -703,18 +546,18 @@ export default class GetInApp extends React.Component<Props, any> {
         { n: 3, text: 'No offer within 12 months? Your next course is free.' },
       ].map((g, i) => ({ ...g, bg: i === 3 ? ink : 'var(--warm-white)', fg: i === 3 ? 'var(--warm-white)' : ink, num: i === 3 ? 'var(--on-dark-label)' : acc })),
       faq: [
-        ['Who is this for?', 'Students in Year 12 or 13, or aged 19–23, applying to degree apprenticeships, and the parents helping them.'],
+        ['Who is this for?', 'Students in Year 12 or 13, or aged 19 to 23, applying to degree apprenticeships, and the parents helping them.'],
         ['Which apprenticeship schemes does this prepare students for?', 'Any scheme with online tests, video interviews and assessment centres: most large employers in finance, tech, engineering and professional services.'],
         ['Does this guarantee an apprenticeship?', 'No. Employers make the hiring decision. We guarantee the preparation, not the outcome.'],
         ["What if my child doesn't know which schemes to apply for?", "That's what the Route Map is for: a shortlist of schemes and deadlines within 48 hours."],
-        ['What age or year group is this for?', 'Students in Year 12 or 13, or aged 19–23. Outside London, there is an online cohort over four evenings.'],
+        ['What age or year group is this for?', 'Students in Year 12 or 13, or aged 19 to 23. Outside London, there is an online cohort over four evenings.'],
         ['Where does the weekend take place?', 'In London. The venue is confirmed with your booking.'],
         ['Who runs the course?', 'Shreyash Singh (Deloitte degree apprentice), with assessors who are working degree apprentices.'],
         ["What happens if they don't receive an offer?", 'If they attended everything and applied to three schemes, with no offer within 12 months, the next course is free.'],
         ['Can I speak to someone before booking?', 'Yes. Message the founder on WhatsApp on ' + whatsappDisplay(this.WA) + ', or tap "Questions" at the bottom of the screen.'],
         ['What exactly is included in the £595?', 'Two days: timed tests, a scored video interview, a full mock assessment centre and two application reviews. Plus the Route Map, a written report and the Deadline Line.']
       ].map(([q, a]) => ({ q, a, c: 'var(--blackberry-soft)' })),
-      showBarPage: s.page === 'home' || s.page === 'days',
+      showBarPage: SITE.courseOffer && (s.page === 'home' || s.page === 'days'),
       barT: s.pastHero ? 'translateY(0)' : 'translateY(-100%)', barO: s.pastHero ? 1 : 0, barPE: s.pastHero ? 'auto' : 'none', barHidden: s.pastHero ? 'false' : 'true',
       headShadow: s.scrolled ? '0 1px 0 var(--rule), 0 8px 24px -18px rgba(48,32,42,0.35)' : 'none',
       showProof: !!this.props.showProofPreview,
@@ -737,6 +580,7 @@ export default class GetInApp extends React.Component<Props, any> {
         { a: 'Questions with nobody to ask', b: 'WhatsApp to the founder until the last deadline' }
       ],
       offerFirms: ['Deloitte', 'Goldman Sachs', 'PwC', 'Accenture'],
+      founderPhoto: FOUNDER_PHOTO,
       creds: [
         { k: 'Route in', v: 'Applied from sixth form at 17' },
         { k: 'On the course', v: 'Teaches both days and runs the mock assessment centre' },

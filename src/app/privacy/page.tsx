@@ -4,7 +4,7 @@ import { whatsappDisplay } from '@/lib/site';
 import './privacy.css';
 
 export const metadata: Metadata = {
-  title: 'Privacy policy · DegreeYourWay',
+  title: 'Privacy policy | DegreeYourWay',
   description: 'How DegreeYourWay collects, uses and protects personal information, including information about students under 18.',
 };
 
@@ -65,7 +65,7 @@ export default function PrivacyPage() {
       </header>
 
       <main className="pv-main">
-        <p className="pv-k">DegreeYourWay. · Legal</p>
+        <p className="pv-k">DegreeYourWay. Legal</p>
         <h1>Privacy policy</h1>
         <p className="pv-date">Last updated: 29 September 2026</p>
 
@@ -180,7 +180,8 @@ export default function PrivacyPage() {
         <p>
           We use <strong>essential storage</strong>, which doesn&apos;t need consent: remembering that you&apos;ve closed the
           pop-up or seat notice this visit (<code>sessionStorage</code>), and keeping a copy of forms you&apos;ve sent on your own
-          device so they aren&apos;t lost if the connection drops (<code>localStorage</code>).
+          device so they aren&apos;t lost if the connection drops, and saving your Pathfinder answers so a refresh doesn&apos;t
+          lose them (<code>localStorage</code>, cleared after 30 days or when you start the Pathfinder again).
         </p>
         <p>
           <strong>Analytics cookies</strong> are used only if you accept them in the cookie banner. They stay off until you do,

@@ -1,0 +1,25 @@
+Thanks for booking a talk
+
+Hi {{{NAME}}}, thanks for asking us to speak at {{{SCHOOL}}}. We’ll come back to you with dates.
+
+School: {{{SCHOOL}}}
+Preferred dates: {{{DATES}}}
+Cost: Free
+
+THE STUDENT HANDOUT
+
+Every talk comes with a printable handout for students. It points them to the free Pathfinder, which matches their grades and interests to degree apprenticeship schemes. You can open and print it now. The link works for 30 days.
+
+Open the student handout: {{{HANDOUT_URL}}}
+
+Questions before then? Message 07463 870657 or reply to this email.
+
+Shreyash
+Founder, DegreeYourWay
+
+--
+
+DegreeYourWay, degree apprenticeship application coaching.
+WhatsApp 07463 870657 | https://degreeyourway.example
+
+You’re getting this because you asked for a DegreeYourWay talk on our website.

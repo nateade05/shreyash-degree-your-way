@@ -11,10 +11,6 @@ export default function Shell() {
   const router = useRouter();
   return (
     <>
-      {/* A snap point at the very top: the design snaps sections under the sticky header, and on
-          phones the first load snapped ~16px down (header height not known yet), hiding the top
-          of the price banner. With this the nearest snap point on load is the top of the page. */}
-      <span aria-hidden="true" className="gi-snaptop" />
       <GetInApp
         startPage={pageFromPath(pathname)}
         navigate={path => router.push(path, { scroll: false })}

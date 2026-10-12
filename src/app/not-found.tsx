@@ -5,7 +5,7 @@ export default function NotFound() {
     <main style={{ minHeight: '100vh', background: 'var(--bone)', display: 'flex', alignItems: 'center' }}>
       <div style={{ maxWidth: 560, margin: '0 auto', padding: '0 20px' }}>
         <p style={{ margin: 0, fontSize: 12, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)' }}>
-          DegreeYourWay. · Page not found
+          DegreeYourWay. Page not found
         </p>
         <h1 style={{ margin: '8px 0 16px', fontFamily: "'Newsreader',serif", fontWeight: 400, fontSize: 44, lineHeight: 1.05, letterSpacing: '-0.02em' }}>
           That page doesn&apos;t exist.

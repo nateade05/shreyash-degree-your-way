@@ -1,4 +1,4 @@
-# DegreeYourWay — design rules
+# DegreeYourWay: design rules
 
 The single source of truth for how the DegreeYourWay site looks and behaves. Current build: `Get In v10.dc.html`. Anything new must use these values; if a real gap appears, add the value here in the same change.
 
@@ -6,7 +6,10 @@ The single source of truth for how the DegreeYourWay site looks and behaves. Cur
 
 A parent on their phone, evening, reading carefully before spending £595 on their child. Calm, editorial, trustworthy. Nothing flashy, nothing that feels like a sales funnel.
 
-Register: **Brand**, restrained. Dials: variance 5 · motion 2 · density 4.
+Register: **Brand**, restrained. Dials: variance 5, motion 2, density 4.
+
+## Copy
+No middots (·) or em dashes (—) anywhere in the copy. Use commas, colons or full stops, and "to" for ranges (19 to 23). Page titles use a pipe: "The course | DegreeYourWay". `scripts/port-edits.mjs` strips them from newly ported views.
 
 ## Colour
 
@@ -24,7 +27,7 @@ Tokens live once, in `:root` at the top of the page's style block. Every colour 
 | --rule | #D7CFC6 | Dividers and borders |
 | --soft-tint | #EDE3E2 | Occasional tinted panel |
 | --input-border | #8F8487 | Form field borders (3:1) |
-| On blackberry | --on-dark-body #E4DCD9 · --on-dark-muted #B9AEB2 · --on-dark-label #CDBFC3 · --rule-dark 16% warm white |
+| On blackberry | --on-dark-body #E4DCD9, --on-dark-muted #B9AEB2, --on-dark-label #CDBFC3, --rule-dark 16% warm white |
 
 Rules
 - Roughly 80% bone and warm white, 15% blackberry, 5% oxblood. If a screen looks burgundy, oxblood is overused.
@@ -39,21 +42,21 @@ Rules
 
 | Token | Size | Use |
 | --- | --- | --- |
-| Hero | clamp(52px, 7.4vw, 112px) · 44px under 420px | Overview headline only |
+| Hero | clamp(52px, 7.4vw, 112px), 44px under 420px | Overview headline only |
 | Statement | clamp(44px, 6vw, 88px) | Navy statement headings |
 | H2 | clamp(32px, 3.6vw, 52px) | Every section heading |
 | H2 medium | clamp(34px, 4vw, 58px) | Two promises, guarantee |
 | Sub-head | clamp(26px, 2.4vw, 34px) | Stage names, block titles |
 | Body L | 18px / 1.6 | Section intros |
-| Body | 16–17px / 1.5 | Paragraphs, list rows |
-| Small | 14–15px / 1.5 | Notes, captions |
+| Body | 16 to 17px / 1.5 | Paragraphs, list rows |
+| Small | 14 to 15px / 1.5 | Notes, captions |
 | Label | 12px, 600, uppercase, tracking 0.12em | Section eyebrows, document headers |
 
 Minimum on-screen size: 12px. Buttons: 16px, 600, uppercase, tracking 0.08em.
 
 ## Spacing
 
-Scale (px): 4 · 8 · 12 · 16 · 20 · 24 · 28 · 32 · 40 · 48 · 56 · 64 · 72 · 80 · 96. Nothing in between.
+Scale (px): 4, 8, 12, 16, 20, 24, 28, 32, 40, 48, 56, 64, 72, 80, 96. Nothing in between.
 
 - Page gutter: clamp(20px, 5vw, 64px). Max content width 1280px.
 - Section padding: clamp(52px, 7vw, 96px) top and bottom. Statement sections may go to clamp(64px, 9vw, 136px).
@@ -65,25 +68,25 @@ Scale (px): 4 · 8 · 12 · 16 · 20 · 24 · 28 · 32 · 40 · 48 · 56 · 64 �
 
 ## Components
 
-**Primary button** — accent fill, paper text, 20px × 32px padding (full-width: 24px × 20px). Hover `#234839`, press scale 0.97. One label site-wide: **“Reserve a place — £100 deposit”**. Form submit buttons name the step (“Send details on WhatsApp”, “Book a talk”).
+**Primary button**: accent fill, paper text, 20px × 32px padding (full-width: 24px × 20px). Hover `#234839`, press scale 0.97. One label site-wide: **“Reserve a place: £100 deposit”**. Form submit buttons name the step (“Send details on WhatsApp”, “Book a talk”).
 
-**Text link** — ink, 600, underline offset 4px, trailing “→” that nudges 3px on hover. Min tap height 44px on phones.
+**Text link**: ink, 600, underline offset 4px, trailing “→” that nudges 3px on hover. Min tap height 44px on phones.
 
-**Document preview** — paper, 1px `#D3CCBD` border, 24px padding, header row with label + “View sample →”. Hover/focus: border goes ink. Opens the sample dialog.
+**Document preview**: paper, 1px `#D3CCBD` border, 24px padding, header row with label + “View sample →”. Hover/focus: border goes ink. Opens the sample dialog.
 
-**Dialogs** (sample, guide) — focus moves to the first control on open, Tab is trapped, Esc closes, focus returns to the trigger.
+**Dialogs** (sample, guide): focus moves to the first control on open, Tab is trapped, Esc closes, focus returns to the trigger.
 
-**Chat assistant** — small off-white “Questions” button, bottom-right, 44px tall. No pop-up prompt. Answers come from the site’s own facts; anything else is handed to WhatsApp. Full-width bottom sheet on phones.
+**Chat assistant**: small off-white “Questions” button, bottom-right, 44px tall. No pop-up prompt. Answers come from the site’s own facts; anything else is handed to WhatsApp. Full-width bottom sheet on phones.
 
-**Phone booking bar** — navy, fixed under the header, slides down after the hero on Overview and The course. Shows £595, struck £695 and “Save £100”.
+**Phone booking bar**: navy, fixed under the header, slides down after the hero on Overview and The course. Shows £595, struck £695 and “Save £100”.
 
-**Price** — founding price £595 shown against a struck-through £695 full price with a “Save £100” label. No course dates anywhere until confirmed.
+**Price**: founding price £595 shown against a struck-through £695 full price with a “Save £100” label. No course dates anywhere until confirmed.
 
-**Chart** — university debt bar in --loss red, apprentice pay bar in --gain green.
+**Chart**: university debt bar in --loss red, apprentice pay bar in --gain green.
 
 ## Motion
 
-- 150–250ms, ease-out, opacity and transform only.
+- 150 to 250ms, ease-out, opacity and transform only.
 - FAQ open/close, dialog fade-in, confirmation rise, arrow nudge, page fade (160ms).
 - No scroll-triggered reveals, parallax, counters or loops.
 - `prefers-reduced-motion`: all animation and transitions off.
@@ -104,13 +107,16 @@ Scale (px): 4 · 8 · 12 · 16 · 20 · 24 · 28 · 32 · 40 · 48 · 56 · 64 �
 Live at `/pathfinder` as a full-screen page with its own slim header and Close, and no site header or footer. It's the **guided direction (1a)** from the "DegreeYourWay pathway" handoff, running **without AI**: everything comes from the rule-based engine.
 
 - **Code:**
-  - `src/lib/pathfinderEngine.js` is the engine, ported verbatim: 23 schemes, scoring, matches with reasons, the 12-month plan, stage tips, worry answers, backups, lead fields and the CV gap rules.
+  - `src/lib/pathfinderEngine.js` is the engine, ported from the design: 44 schemes (21 added and checked 12 October 2026; UCAS points marked `est.` are estimates where the employer publishes none), scoring, matches with reasons, the 12-month plan, stage tips, worry answers, backups, lead fields and the CV gap rules.
   - `src/components/pathfinder/PathfinderWizard.tsx` and `PathfinderReport.tsx` are the logic classes. `*View.tsx` and `*View.css` are generated from `Pathfinder Wizard.dc.html` and `Pathfinder Report.dc.html` by `scripts/port.sh`.
-- **Flow:** eleven questions in three parts: About you (where you are, qualifications, subjects, predicted grades, GCSEs), What you've done (work experience, outside lessons, done before) and What you want (Tuesday afternoon, employer type, biggest worry plus an optional note). Then "Building your report" and the report.
+- **Flow:** ten questions in three parts, twelve for school leavers: About you (where you are; for school leavers, what they're doing now and their age; qualifications; subjects with a grade for each; GCSEs), What you've done (work experience, outside lessons, done before) and What you want (which of these sound like you, pick up to two; employer type; biggest worry plus an optional note). Then "Building your report" (about five seconds, naming the student's own top matches) and the report.
+- **Paths:** Year 12, Year 13 and Left school each get their own 12-month plan. Year 12 and 13 give predicted grades (or "no predictions yet"); school leavers give results. Grades are turned into UCAS points (best three A-level-sized grades, BTEC sizes counted) and checked against each scheme's points, subject and GCSE rules.
 - **Report:**
-  - Shown before details: the best-fit sector, the standing meter, a summary and "Also a fit", with the rest blurred behind the email gate. After details: matches ranked with reasons, the 12-month plan, stage by stage, the worry answer, backups, the CV check, a discovery-call card and a PDF.
+  - Shown before details: the best-fit sector, the standing meter, a one-sentence summary, "Also a fit", the top match's name and fit (its details stay blurred) and what's in the full report. The unlock form leads with the nearest application window. No "Now" prompt until after the unlock.
+  - After details: a call card first (photo, "Go through your N matches with Shreyash", the nearest window, a booking button), then the CV check, matches ranked with reasons, the 12-month plan, stage by stage, the worry answer, backups and a PDF. No course price in the report; the call does the selling.
+  - Booking: the call buttons open the booking page (`NEXT_PUBLIC_CAL_LINK`, Cal.com or Calendly) with name, email and the result filled in, and fall back to WhatsApp when it isn't set. Shreyash's photo is `FOUNDER_PHOTO` in `src/lib/site.ts` (initials until set).
   - The CV check takes an uploaded CV (PDF, Word or .txt, read on the visitor's device; PDFs via pdf.js) or four short answers. It finds strengths and gaps, then maps each gap to a part of the course.
-- **Leads:** `quiz_roadmap` when the report is unlocked, with all fields from `PF.leadFields`. `cv_check` holds the CV text (up to 6,000 characters) and the gaps. Both go through `src/lib/leads.ts` to `POST /api/lead`. Pop-up visitors skip the gate, and one lead is saved when the report loads.
+- **Leads:** `quiz_roadmap` when the report is unlocked (the Sheets script emails an alert for it), with all fields from `PF.leadFields`. `cv_check` holds the CV text (up to 6,000 characters) and the gaps. Both go through `src/lib/leads.ts` to `POST /api/lead`. Pop-up visitors skip the gate, and one lead is saved when the report loads.
 
 ### Pathfinder soft UI
 Bone ground and a softer rule (#E5DED5, set on `.pf2`). Buttons, chips and progress bars are pills (999px); cards, inputs and option rows 14px; multi-select ticks 6px. There's one soft shadow, on the unlock card. The main site keeps 2px radii.
@@ -131,11 +137,11 @@ Team replies to up to 4 questions per student per day. Not stated publicly. Publ
 - Competitive alternatives: doing it alone with free online practice tests and YouTube; school careers advice (covers the form, not the assessments); general tutors.
 - Unique attributes: all five stages in one place; a full mock assessment centre; assessed by working degree apprentices; their real application reviewed twice; the Deadline Line (24/7 WhatsApp to the team until the last deadline); the DegreeYourWay Guarantee.
 - Value themes: they walk into every stage having done it before; they apply to the right schemes in the right order; they never apply alone.
-- Best-fit customers: parents of Year 12/13 students (or 19–23s) aiming at Level 6 degree apprenticeships with large employers that use tests, video interviews and assessment centres.
+- Best-fit customers: parents of Year 12/13 students (or 19 to 23s) aiming at Level 6 degree apprenticeships with large employers that use tests, video interviews and assessment centres.
 - Market category: degree apprenticeship application coaching (a sub-category of admissions coaching; "this isn't UCAS").
 - Trend: graduate hiring down, apprenticeship hiring up; 11 applications per Level 6 place.
 - Positioning statement: For parents of students applying to degree apprenticeships, DegreeYourWay is the only preparation that covers all five stages, assessed by people who passed them.
 - Headline pattern: name the alternative, then the difference ("Most prep covers one stage. We cover all five.").
 
 ## Student handout
-`Get In Student Handout.dc.html` — one A4 page (doc-page, size a4) for school talks. Only linked from the For schools thank-you state, i.e. after the school's details are captured via saveLead('school_talk'). Never linked elsewhere. Needs: website address and a QR code image to the Pathfinder.
+`Get In Student Handout.dc.html`: one A4 page (doc-page, size a4) for school talks. Only linked from the For schools thank-you state, i.e. after the school's details are captured via saveLead('school_talk'). Never linked elsewhere. Needs: website address and a QR code image to the Pathfinder.

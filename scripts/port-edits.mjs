@@ -67,4 +67,10 @@ edit('src/components/HandoutView.tsx', [
   ['handout url', /\[Needs input: website address\]\/pathfinder/, '{v.pathfinderLabel}'],
   ['handout qr', /<image-slot[^\n]*<\/image-slot>/, '<div role="img" aria-label="QR code to the Pathfinder" style={{ width: "100%", height: "100%" }} dangerouslySetInnerHTML={{ __html: v.qrSvg }} />'],
 ]);
+// House style: no middots or em dashes in copy. Separators become commas, ranges become "to".
+for (const file of [V, 'src/components/HandoutView.tsx', 'src/components/pathfinder/PathfinderWizardView.tsx', 'src/components/pathfinder/PathfinderReportView.tsx']) {
+  if (!fs.existsSync(file)) continue;
+  const s = fs.readFileSync(file, 'utf8');
+  fs.writeFileSync(file, s.replace(/(\d)\u2013(\d)/g, '$1 to $2').replace(/([A-Za-z]+)\u2013([A-Za-z]+)/g, '$1 to $2').replace(/ \u00b7 /g, ', ').replace(/\s*\u2014\s*/g, ', '));
+}
 console.log('port edits applied');

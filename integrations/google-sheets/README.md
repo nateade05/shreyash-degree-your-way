@@ -22,7 +22,8 @@ Setup takes about 5 minutes.
    with the column headings.
 
 For email alerts: open **Project Settings (gear) → Script properties → Add property**, and set
-`NOTIFY_EMAIL` to your address.
+`NOTIFY_EMAIL` to your address. You'll get an email for every booking, call request, school talk
+and Pathfinder report unlock.
 
 ## 3. Publish it as a web app
 

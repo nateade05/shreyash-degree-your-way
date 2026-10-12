@@ -1,5 +1,5 @@
 /**
- * DegreeYourWay — lead inbox for Google Sheets.
+ * DegreeYourWay: lead inbox for Google Sheets.
  *
  * Receives every form submission from the website (POST /api/lead forwards it here) and adds it
  * as a row. Setup: see integrations/google-sheets/README.md.
@@ -27,16 +27,20 @@ var COLUMNS = [
   ['role', 'Role'],
   ['dates', 'Preferred dates'],
   ['year', 'Year'],
+  ['now', 'Doing now'],
+  ['age', 'Age'],
   ['stage', 'Stage'],
   ['place', 'Place'],
   ['result', 'Pathfinder result'],
   ['also', 'Also a fit'],
   ['quals', 'Qualifications'],
   ['subjects', 'Subjects'],
-  ['grades', 'Predicted grades'],
+  ['grades', 'Grades'],
+  ['ucas', 'UCAS points (est.)'],
   ['gcse_maths', 'GCSE Maths'],
   ['gcse_english', 'GCSE English'],
-  ['tuesday', 'Tuesday afternoon'],
+  ['gcse_resit', 'Resitting GCSE'],
+  ['likes', 'Sounds like them'],
   ['experience', 'Work experience'],
   ['extras', 'Outside lessons'],
   ['tests_done', 'Done before'],
@@ -68,8 +72,9 @@ var SOURCE_LABELS = {
   cv_check: 'Pathfinder CV check',
 };
 
-// Forms that deserve an email the moment they arrive.
-var NOTIFY_SOURCES = { booking: true, discovery_call: true, school_talk: true };
+// Forms that deserve an email the moment they arrive. A Pathfinder report unlock is a high-intent
+// lead, so it alerts too (the CV check that may follow it doesn't, to avoid a second email).
+var NOTIFY_SOURCES = { booking: true, discovery_call: true, school_talk: true, quiz_roadmap: true };
 
 function doPost(e) {
   var props = PropertiesService.getScriptProperties();

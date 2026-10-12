@@ -11,138 +11,245 @@ const PF = (function () {
   const CHECKED = '1 October 2026';
   const WA = SITE.whatsapp; // PORT: the site's single WhatsApp setting
 
-  const Q = {
-    stage: ['Year 12', 'Year 13', 'Left school, aged 19 to 23', 'Other'],
-    quals: ['A-levels', 'BTEC', 'T-level', 'A mix', 'Not sure'],
-    groups: [
+  // Subjects by qualification type: 'a' A-level, 'btec' BTEC, 't' T-level.
+  const SUBJECTS = {
+    a: [
       ['Maths and sciences', ['Maths', 'Further Maths', 'Physics', 'Chemistry', 'Biology', 'Computer Science']],
       ['Business and money', ['Economics', 'Business', 'Accounting']],
       ['Humanities and languages', ['English', 'History', 'Politics', 'Law', 'Psychology', 'Sociology', 'Geography', 'A language']],
-      ['Applied, technical and creative', ['Design and Technology', 'Engineering (BTEC)', 'IT (BTEC)', 'Applied Science', 'Health and Social Care', 'Art or Design', 'Other']]
+      ['Creative and technical', ['Design and Technology', 'Art or Design', 'Other']]
     ],
-    grades: ['Mostly A* and A', 'Mostly A and B', 'Mostly B and C', 'Mostly C and D', 'D or below', "Don't know yet"],
-    gcse: ['9', '8', '7', '6', '5', '4', '3', 'Resit'],
-    tue: ['Work out why a business is losing money', 'Build or fix something that has to work', 'Write code that other people use', 'Argue a case and win it', 'Look after someone who needs help', 'Wear a uniform and keep people safe'],
-    exp: ['Part-time job', 'Work experience week', 'Insight day or virtual programme', 'Internship', 'My own project or business', 'None yet'],
+    btec: [['BTECs', ['Business (BTEC)', 'IT (BTEC)', 'Engineering (BTEC)', 'Applied Science (BTEC)', 'Health and Social Care (BTEC)', 'Sport (BTEC)', 'Other BTEC']]],
+    t: [['T-levels', ['Digital (T-level)', 'Engineering (T-level)', 'Finance or Accounting (T-level)', 'Legal Services (T-level)', 'Health or Science (T-level)', 'Management and Administration (T-level)', 'Other T-level']]]
+  };
+  const KIND_OF = {};
+  Object.keys(SUBJECTS).forEach(k => SUBJECTS[k].forEach(([, list]) => list.forEach(s => { KIND_OF[s] = k; })));
+  const groupsFor = quals => quals === 'BTEC' ? SUBJECTS.btec : quals === 'T-level' ? SUBJECTS.t : quals === 'A mix' ? SUBJECTS.a.concat(SUBJECTS.btec) : SUBJECTS.a;
+  // Grades and UCAS tariff points per A-level-sized unit. A T-level is three units (D* = 168 in all).
+  const SCALES = {
+    a: { grades: ['A*', 'A', 'B', 'C', 'D', 'E'], names: ['A*', 'A', 'B', 'C', 'D', 'E'], pts: [56, 48, 40, 32, 24, 16] },
+    btec: { grades: ['D*', 'D', 'M', 'P'], names: ['Distinction*', 'Distinction', 'Merit', 'Pass'], pts: [56, 48, 32, 16] },
+    t: { grades: ['D*', 'D', 'M', 'P'], names: ['Distinction*', 'Distinction', 'Merit', 'Pass'], pts: [56, 48, 40, 32] }
+  };
+  // A BTEC's size, in A-levels. For a Diploma or Extended Diploma the student picks their most common grade.
+  const BTEC_SIZES = [[1, 'Ext. Certificate'], [2, 'Diploma'], [3, 'Ext. Diploma']];
+
+  const left = p => p.stage === 'Left school';
+  const NO_IDEA = 'Honestly, no idea yet';
+  // Things a 17-year-old has actually done or would choose, each pointing at the sectors it suggests.
+  const LIKES = [
+    { label: 'I end up sorting out the money or the plan', why: 'you sort out the money and the plan', w: { 'Accountancy and consulting': 3, 'Finance and banking': 2 } },
+    { label: 'I follow business, money or markets news', why: 'you follow business and the markets', w: { 'Finance and banking': 4, 'Accountancy and consulting': 1 } },
+    { label: 'I take things apart, fix them or build things', why: 'you like building and fixing things', w: { 'Engineering': 4 } },
+    { label: "I've made a website, game, app or mod", why: "you've already made things with code", w: { 'Technology': 4 } },
+    { label: 'I like puzzles, logic problems or maths challenges', why: 'you like logic problems', w: { 'Technology': 2, 'Engineering': 1, 'Finance and banking': 1, 'Accountancy and consulting': 1 } },
+    { label: 'I win arguments, or like writing essays that persuade', why: 'you like making a case', w: { 'Law': 4 } },
+    { label: 'I follow court cases, crime or politics', why: 'you follow how rules and justice work', w: { 'Law': 3, 'Health and public service': 1 } },
+    { label: "People come to me when something's wrong", why: 'people come to you for help', w: { 'Health and public service': 4 } },
+    { label: "I'd like a job where I keep people safe", why: 'you want to keep people safe', w: { 'Health and public service': 4 } },
+    { label: 'I like organising people and running things', why: 'you like organising and running things', w: { 'Accountancy and consulting': 3, 'Finance and banking': 1 } },
+    { label: 'I care about energy, transport or the environment', why: 'you care about energy, transport and the environment', w: { 'Engineering': 3, 'Health and public service': 1 } },
+    { label: 'I like drawing, designing or making things look good', why: 'you like design', w: { 'Engineering': 2, 'Technology': 2 } },
+    { label: NO_IDEA, why: '', w: {} }
+  ];
+
+  const Q = {
+    stage: ['Year 12', 'Year 13', 'Left school'],
+    now: ['Working full-time', 'Working part-time', 'At college', 'Started university and left', 'Taking a gap year', 'Something else'],
+    age: ['18', '19', '20', '21', '22', '23 or over'],
+    quals: ['A-levels', 'BTEC', 'T-level', 'A mix'],
+    gcse: ['9', '8', '7', '6', '5', '4', '3 or below'],
+    exp: ['Part-time job', 'Full-time job', 'Work experience week', 'Insight day or virtual programme', 'Internship', 'My own project or business', 'None yet'],
     extras: ['Sports team', 'Captain, prefect or head student', 'Ran a club or society', 'Volunteering', 'Music, drama or art', 'Competitions (debate, maths, enterprise)', 'Coding or making things', 'None yet'],
     tests: ['Online tests (numerical, verbal, logic)', 'Situational judgement test', 'Video interview', 'Assessment centre', 'Had an offer', 'None yet'],
-    size: ['Big names', 'Smaller or regional firms', "Don't mind"],
+    likes: LIKES.map(l => l.label),
+    size: ['Well-known firms', 'Smaller or local firms', 'No preference'],
     worry: ['My grades', 'No experience', 'Online tests', 'Interviews', 'Picking the right sector', 'My parents are unsure', 'Something else']
   };
+  const LABELS = { 'Left school': "I've left school" };
+  const SUBS = { 'Well-known firms': 'Big intakes, very competitive, often in London.', 'Smaller or local firms': 'Fewer applicants, often nearer home.' };
 
-  // Questions in order. part: 0 About you, 1 What you've done, 2 What you want.
+  // Questions in order. part: 0 About you, 1 What you've done, 2 What you want. `when` hides a
+  // question for other paths; title, help and opts may depend on the answers so far.
   const QUESTIONS = [
     { id: 'stage', part: 0, kind: 'single', opts: Q.stage, title: 'Where are you now?', short: 'Where you are' },
-    { id: 'quals', part: 0, kind: 'single', opts: Q.quals, title: 'What are you taking?', short: 'Qualifications' },
-    { id: 'subjects', part: 0, kind: 'subjects', title: 'Pick your subjects.', help: "Tap everything you're taking.", short: 'Subjects' },
-    { id: 'grades', part: 0, kind: 'single', opts: Q.grades, title: 'What grades are you predicted?', help: 'Or the BTEC equivalent. D* is an A*, D is an A, M is a C.', short: 'Predicted grades' },
-    { id: 'gcse', part: 0, kind: 'gcse', title: 'GCSE Maths and English?', help: "Several schemes filter on these before anyone reads your application. Use your predicted grade if you haven't sat them yet.", short: 'GCSE Maths and English' },
-    { id: 'exp', part: 1, kind: 'multi', opts: Q.exp, title: "What work experience have you done?", help: 'Pick all that apply. A Saturday job counts.', short: 'Work experience' },
-    { id: 'extras', part: 1, kind: 'multi', opts: Q.extras, title: 'What do you do outside lessons?', help: 'Pick all that apply.', short: 'Outside lessons' },
-    { id: 'tests', part: 1, kind: 'multi', opts: Q.tests, title: 'Which of these have you done before?', help: 'In any application, for any employer.', short: 'Done before' },
-    { id: 'tue', part: 2, kind: 'single', opts: Q.tue, title: 'Which would you rather do on a Tuesday afternoon?', short: 'Tuesday afternoon' },
-    { id: 'size', part: 2, kind: 'single', opts: Q.size, title: 'What kind of employer?', short: 'Employer type' },
+    { id: 'now', part: 0, kind: 'single', opts: Q.now, when: left, title: 'What are you doing now?', short: 'Doing now' },
+    { id: 'age', part: 0, kind: 'single', opts: Q.age, when: left, title: 'How old are you?', help: 'A few schemes have an upper age limit.', short: 'Age' },
+    { id: 'quals', part: 0, kind: 'single', opts: Q.quals, title: p => left(p) ? 'What did you take after GCSEs?' : 'What are you taking?', short: 'Qualifications' },
+    { id: 'subjects', part: 0, kind: 'subjects', title: p => left(p) ? 'Which subjects did you take?' : 'Which subjects are you taking?', help: 'Tap all that apply.', short: 'Subjects' },
+    { id: 'grades', part: 0, kind: 'grades', title: p => left(p) ? 'What did you get?' : 'What are your predicted grades?', help: 'One tap for each subject.', short: 'Grades' },
+    { id: 'gcse', part: 0, kind: 'gcse', title: 'Your GCSE Maths and English.', help: 'Several schemes check these automatically before anyone reads your application.', short: 'GCSE Maths and English' },
+    { id: 'exp', part: 1, kind: 'multi', none: 'None yet', opts: p => (left(p) ? Q.exp : Q.exp.filter(x => x !== 'Full-time job')).filter(x => x !== 'None yet').concat(Q.extras), title: 'What have you done so far?', help: p => left(p) ? 'Pick everything that applies, including the job you have now.' : 'Pick everything that applies, in or out of school. A Saturday job counts.', short: 'Done so far' },
+    { id: 'tests', part: 1, kind: 'multi', none: 'None yet', opts: Q.tests, title: 'Which of these have you done before?', help: 'In any application, for any employer.', short: 'Done before' },
+    { id: 'likes', part: 2, kind: 'multi', none: NO_IDEA, max: 2, opts: Q.likes, title: 'Which of these sound like you?', help: "Pick up to two. If none of them fit, pick the last one.", short: 'Sounds like you' },
+    { id: 'size', part: 2, kind: 'single', opts: Q.size, title: 'What kind of employer would you prefer?', short: 'Employer type' },
     { id: 'worry', part: 2, kind: 'single', opts: Q.worry, title: 'What worries you most about applying?', help: 'Your report answers this directly.', short: 'Biggest worry', note: true }
   ];
   const PARTS = ['About you', "What you've done", 'What you want'];
+  const resolve = (v, p) => typeof v === 'function' ? v(p) : v;
+  const questionsFor = p => QUESTIONS.filter(q => !q.when || q.when(p)).map(q => ({ ...q, title: resolve(q.title, p), help: resolve(q.help, p), opts: resolve(q.opts, p) }));
 
+  // The usual entry bar per sector: UCAS points from the best three A-level-sized grades, and the
+  // lower of GCSE Maths and English.
   const SECTORS = {
-    'Finance and banking': { band: 1, gcse: 6 },
-    'Accountancy and consulting': { band: 2, gcse: 5 },
-    'Technology': { band: 1, gcse: 4 },
-    'Engineering': { band: 2, gcse: 4 },
-    'Law': { band: 0, gcse: 6 },
-    'Health and public service': { band: 3, gcse: 4 }
+    'Finance and banking': { ucas: 120, gcse: 6 },
+    'Accountancy and consulting': { ucas: 112, gcse: 5 },
+    'Technology': { ucas: 120, gcse: 4 },
+    'Engineering': { ucas: 112, gcse: 4 },
+    'Law': { ucas: 136, gcse: 6 },
+    'Health and public service': { ucas: 64, gcse: 4 }
   };
 
-  // band: weakest Q.grades index that meets the bar. open: [first month, last month] of the window if known (1-12).
-  const S = (id, sector, emp, scheme, bar, band, gcse, win, o) => Object.assign({ id, sector, emp, scheme, bar, band, gcse, win, size: 'big', needs: null, open: null, stages: ['form', 'tests', 'video', 'centre'] }, o || {});
+  // ucas: points needed (best three A-level-sized grades). Where the employer gives no number, an
+  // estimate from the bar text. open: [first month, last month] of the window if known (1-12).
+  // Options: needs (any one subject), subjMin (one of these subjects at this A-level grade),
+  // minUnits (how many A-level-sized qualifications), maxAge, noBar (no minimum grades published).
+  const S = (id, sector, emp, scheme, bar, ucas, gcse, win, o) => Object.assign({ id, sector, emp, scheme, bar, ucas, gcse, win, size: 'big', needs: null, open: null, stages: ['form', 'tests', 'video', 'centre'] }, o || {});
   const SCHEMES = [
-    S('barclays', 'Finance and banking', 'Barclays', 'Business Banking, Level 6', 'BBB, GCSE Maths 6', 2, 6, 'opens September', { open: [9, 11] }),
-    S('lloyds', 'Finance and banking', 'Lloyds', 'Apprenticeships', 'GCSE Maths and English 4', 3, 4, 'opens 3 November', { open: [11, 1] }),
-    S('jpm-fs', 'Finance and banking', 'JPMorgan', 'Technology and Financial Services', 'BBB with Maths or Computing', 2, 4, 'not yet published', { needs: ['Maths', 'Further Maths', 'Computer Science', 'IT (BTEC)'] }),
-    S('gs-ficc', 'Finance and banking', 'Goldman Sachs', 'FICC and Equities degree apprenticeship (Applied Finance, Queen Mary)', 'Queen Mary entry requirements', 1, 5, '2027 intake opens autumn 2026', { open: [10, 1] }),
-    S('deloitte', 'Accountancy and consulting', 'Deloitte', 'BrightStart', '104 UCAS points', 2, 4, 'not yet published, closes early'),
-    S('kpmg', 'Accountancy and consulting', 'KPMG', 'Audit, Tax, Consulting, Technology', '120 UCAS points, GCSE Maths and English 5', 2, 5, 'final-stage days from 17 November', { open: [10, 11] }),
-    S('ey', 'Accountancy and consulting', 'EY', 'Assurance, Consulting, Tax', 'three A-levels, GCSE Maths and English 4', 3, 4, 'not yet published'),
-    S('pwc-fs', 'Accountancy and consulting', 'PwC', 'Flying Start Accounting (sponsored degree, not an apprenticeship)', 'AAB at Reading; varies by university', 1, 6, 'apply through UCAS; PwC results mid-March to early April', { open: [10, 1] }),
-    S('amazon', 'Technology', 'Amazon', 'Software Development Engineer, Level 6', 'ABB with Maths or Computer Science', 1, 4, 'opens February', { open: [2, 3], needs: ['Maths', 'Further Maths', 'Computer Science'] }),
-    S('jpm-tech', 'Technology', 'JPMorgan', 'Technology, Level 6', 'BBB with Maths or Computing', 2, 4, 'not yet published', { needs: ['Maths', 'Further Maths', 'Computer Science', 'IT (BTEC)'] }),
-    S('capgemini', 'Technology', 'Capgemini', 'Digital and Technology Solutions', 'three A-levels at C, seven GCSEs at 4', 3, 4, 'not yet published'),
-    S('ibm', 'Technology', 'IBM', 'Digital and Technology Solutions, Level 6', '120 UCAS points (BBB), GCSE Maths and English 4', 2, 4, 'last cycle open for one week in February', { open: [2, 2] }),
-    S('gs-eng', 'Technology', 'Goldman Sachs', 'Engineering degree apprenticeship (Queen Mary or Warwick)', 'university entry requirements', 1, 5, '2027 intake opens autumn 2026', { open: [10, 1] }),
-    S('bae', 'Engineering', 'BAE Systems', 'Degree apprenticeships', '96 UCAS points, five GCSEs including Maths and English', 3, 4, 'opens January, six weeks', { open: [1, 2] }),
-    S('jlr', 'Engineering', 'JLR', 'Level 6 Engineering', 'A-level Maths at B plus a STEM subject', 2, 4, 'not yet published', { needs: ['Maths', 'Further Maths'] }),
-    S('networkrail', 'Engineering', 'Network Rail', 'Level 6 Engineering', 'BBC with Maths and a science, or DMM BTEC', 2, 4, 'not yet published', { needs: ['Maths', 'Further Maths', 'Engineering (BTEC)'] }),
-    S('rr', 'Engineering', 'Rolls-Royce', 'Degree apprenticeships (engineering, digital, business)', 'A-levels or equivalent; some schemes ask for AAB', 1, 4, 'offers usually March to April', { needs: ['Maths', 'Further Maths', 'Physics', 'Engineering (BTEC)'] }),
-    S('slaughter', 'Law', 'Slaughter and May', 'Solicitor apprenticeship', 'AAB, seven GCSEs at 6', 1, 6, '12 October to 6 January', { open: [10, 1] }),
-    S('aos', 'Law', 'A&O Shearman', 'Solicitor apprenticeship', 'AAB, seven GCSEs at 6', 1, 6, '1 December to 17 February', { open: [12, 2] }),
-    S('weightmans', 'Law', 'Weightmans', 'Solicitor apprenticeship', '120 UCAS points, five GCSEs at 4, aged 16 to 21', 2, 4, '28 September to 22 October', { open: [9, 10], size: 'mid' }),
-    S('nhs', 'Health and public service', 'NHS', 'Registered Nurse Degree Apprenticeship', 'Level 3 plus Maths and English', 3, 4, 'trust by trust, all year', { size: 'mid' }),
-    S('police', 'Health and public service', 'Police', 'Police Constable Degree Apprenticeship', 'two A-levels or Level 3, GCSE English 4', 4, 4, 'rolling', { size: 'mid' }),
-    S('civil', 'Health and public service', 'Civil Service', 'Apprenticeships, Levels 2 to 7', '16 and over', 4, 4, 'advertised through the year')
+    S('barclays', 'Finance and banking', 'Barclays', 'Business Banking, Level 6', 'BBB, GCSE Maths 6', 120, 6, '2027 intake closed 25 September 2026; usually opens in early September', { open: [9, 9] }),
+    S('lloyds', 'Finance and banking', 'Lloyds', 'Apprenticeships', 'GCSE Maths and English 4', 0, 4, 'opens 3 November', { open: [11, 1] }),
+    S('jpm-fs', 'Finance and banking', 'JPMorgan', 'Technology and Financial Services', 'BBB with Maths or Computing', 120, 4, 'not yet published', { needs: ['Maths', 'Further Maths', 'Computer Science', 'IT (BTEC)', 'Digital (T-level)'] }),
+    S('gs-ficc', 'Finance and banking', 'Goldman Sachs', 'FICC and Equities degree apprenticeship (Applied Finance, Queen Mary)', 'Queen Mary entry requirements', 128, 5, '2027 intake opens autumn 2026', { open: [10, 1] }),
+    S('deloitte', 'Accountancy and consulting', 'Deloitte', 'BrightStart', '104 UCAS points', 104, 4, 'not yet published, closes early'),
+    S('kpmg', 'Accountancy and consulting', 'KPMG', 'Audit, Tax, Consulting, Technology', '120 UCAS points, GCSE Maths and English 5', 120, 5, 'final-stage days from 17 November', { open: [10, 11] }),
+    S('ey', 'Accountancy and consulting', 'EY', 'Assurance, Consulting, Tax', 'three A-levels, GCSE Maths and English 4', 48, 4, 'not yet published', { minUnits: 3 }),
+    S('pwc-fs', 'Accountancy and consulting', 'PwC', 'Flying Start Accounting (sponsored degree, not an apprenticeship)', 'AAB at Reading; varies by university', 136, 6, 'apply through UCAS; PwC results mid-March to early April', { open: [10, 1] }),
+    S('amazon', 'Technology', 'Amazon', 'Software Development Engineer, Level 6', 'ABB with Maths or Computer Science', 128, 4, 'opens February', { open: [2, 3], needs: ['Maths', 'Further Maths', 'Computer Science'] }),
+    S('jpm-tech', 'Technology', 'JPMorgan', 'Technology, Level 6', 'BBB with Maths or Computing', 120, 4, 'not yet published', { needs: ['Maths', 'Further Maths', 'Computer Science', 'IT (BTEC)', 'Digital (T-level)'] }),
+    S('capgemini', 'Technology', 'Capgemini', 'Digital and Technology Solutions', 'three A-levels at C, seven GCSEs at 4', 96, 4, 'not yet published', { minUnits: 3 }),
+    S('ibm', 'Technology', 'IBM', 'Digital and Technology Solutions, Level 6', '120 UCAS points (BBB), GCSE Maths and English 4', 120, 4, 'last cycle open for one week in February', { open: [2, 2] }),
+    S('gs-eng', 'Technology', 'Goldman Sachs', 'Engineering degree apprenticeship (Queen Mary or Warwick)', 'university entry requirements', 128, 5, '2027 intake opens autumn 2026', { open: [10, 1] }),
+    S('bae', 'Engineering', 'BAE Systems', 'Degree apprenticeships', '96 UCAS points, five GCSEs including Maths and English', 96, 4, 'opens January, six weeks', { open: [1, 2] }),
+    S('jlr', 'Engineering', 'JLR', 'Level 6 Engineering', 'A-level Maths at B plus a STEM subject', 0, 4, 'not yet published', { needs: ['Maths', 'Further Maths'], subjMin: { subj: ['Maths', 'Further Maths'], min: 'B' }, minUnits: 2 }),
+    S('networkrail', 'Engineering', 'Network Rail', 'Level 6 Engineering', 'BBC with Maths and a science, or DMM BTEC', 112, 4, 'not yet published', { needs: ['Maths', 'Further Maths', 'Engineering (BTEC)', 'Engineering (T-level)'] }),
+    S('rr', 'Engineering', 'Rolls-Royce', 'Degree apprenticeships (engineering, digital, business)', 'A-levels or equivalent; some schemes ask for AAB', 128, 4, 'offers usually March to April', { needs: ['Maths', 'Further Maths', 'Physics', 'Engineering (BTEC)', 'Engineering (T-level)'] }),
+    S('slaughter', 'Law', 'Slaughter and May', 'Solicitor apprenticeship', 'AAB, seven GCSEs at 6', 136, 6, '12 October to 6 January', { open: [10, 1] }),
+    S('aos', 'Law', 'A&O Shearman', 'Solicitor apprenticeship', 'AAB, seven GCSEs at 6', 136, 6, '1 December to 17 February', { open: [12, 2] }),
+    S('weightmans', 'Law', 'Weightmans', 'Solicitor apprenticeship', '120 UCAS points, five GCSEs at 4, aged 16 to 21', 120, 4, '28 September to 22 October', { open: [9, 10], size: 'mid', maxAge: 21 }),
+    S('nhs', 'Health and public service', 'NHS', 'Registered Nurse Degree Apprenticeship', 'Level 3 plus Maths and English', 48, 4, 'trust by trust, all year', { size: 'mid' }),
+    S('police', 'Health and public service', 'Police', 'Police Constable Degree Apprenticeship', 'two A-levels or Level 3, GCSE English 4', 32, 4, 'rolling', { size: 'mid', minUnits: 2 }),
+    S('civil', 'Health and public service', 'Civil Service', 'Apprenticeships, Levels 2 to 7', '16 and over', 0, 4, 'advertised through the year'),
+    // Added 12 October 2026, each checked against the employer's posting or a live listing for the
+    // 2027 intake. Where no points are published, ucas is an estimate from the bar text (marked "est.").
+    S('hsbc', 'Finance and banking', 'HSBC UK', 'Commercial or Retail Banking degree apprenticeship (BSc, University of Exeter)', 'BCC, five GCSEs including Maths and English at 4', 104, 4, 'listed on Find an Apprenticeship; November 2027 start'),
+    S('natwest', 'Finance and banking', 'NatWest', 'Financial Services Professional degree apprenticeship (Level 6)', '80 UCAS points', 80, 0, '2027 dates not yet published; closes once the cohort is full'),
+    S('barclays-tech', 'Technology', 'Barclays', 'Technology Developer degree apprenticeship (Digital and Technology Solutions)', 'BBB, GCSE Maths and English 4', 120, 4, '2027 intake closed 25 September 2026; usually opens in early September', { open: [9, 9] }),
+    S('accenture', 'Technology', 'Accenture', 'Technology degree apprenticeship (software, data, cyber)', '104 UCAS points, five GCSEs including Maths and English at 4', 104, 4, 'Newcastle April 2027 intake closed 15 July 2026; check for other intakes'),
+    S('intel', 'Technology', 'MI5, MI6 and GCHQ', 'Software Engineering degree apprenticeship (London or Manchester)', '96 UCAS points, GCSE Maths and English 4, British citizens only', 96, 4, 'opens 16 October 2026', { open: [10, 10] }),
+    S('thales-sw', 'Technology', 'Thales', 'Software Engineering degree apprenticeship (Digital and Technology Solutions)', 'A-level Maths plus another STEM subject', 96 /* est. */, 0, 'closes 17 February 2027', { open: [10, 2], needs: ['Maths', 'Further Maths'], minUnits: 2 }),
+    S('thales-sys', 'Engineering', 'Thales', 'Systems Engineering degree apprenticeship (Level 6)', 'A-level Maths plus another STEM subject', 96 /* est. */, 0, 'closes 17 February 2027', { open: [10, 2], needs: ['Maths', 'Further Maths'], minUnits: 2 }),
+    S('airbus', 'Engineering', 'Airbus', 'Engineering degree apprenticeships (Broughton, Filton, Portsmouth)', '112 UCAS points with A-level Maths at B and Physics or Chemistry at C, or a Distinction Engineering BTEC; GCSE Maths and English 4', 112, 4, 'closes 26 October 2026', { open: [9, 10], needs: ['Maths', 'Further Maths', 'Engineering (BTEC)', 'Engineering (T-level)'], subjMin: { subj: ['Maths', 'Further Maths'], min: 'B' } }),
+    S('nationalgrid', 'Engineering', 'National Grid', 'Degree apprenticeships (engineering and business, Level 6)', 'a Level 3 qualification (A-levels, BTEC or equivalent)', 48 /* est. */, 0, 'register interest; 2027 dates not yet published'),
+    S('arup', 'Engineering', 'Arup', 'Level 6 engineering degree apprenticeships (several UK offices)', '112 UCAS points, or A-level Maths plus a science', 112, 0, 'dates not yet published', { needs: ['Maths', 'Further Maths', 'Physics', 'Engineering (BTEC)', 'Engineering (T-level)'] }),
+    S('bbc', 'Engineering', 'BBC', 'Broadcast and Media Systems Engineer degree apprenticeship', '112 UCAS points with A-level Maths or an Engineering BTEC, GCSE Maths and English 4', 112, 4, 'dates not yet published', { needs: ['Maths', 'Further Maths', 'Engineering (BTEC)', 'Engineering (T-level)'] }),
+    S('bdo', 'Accountancy and consulting', 'BDO', 'School leaver apprenticeship: Advisory or Tax (ACA, CTA or ATT; not a degree)', 'three A-levels at A* to C, GCSE Maths and English 4', 96, 4, 'Tax closes 15 November 2026; starts 20 September 2027', { open: [9, 11], minUnits: 3, size: 'mid' }),
+    S('rsm', 'Accountancy and consulting', 'RSM UK', 'School leaver programme: audit, tax or consulting (professional qualification, not a degree)', '112 UCAS points from three A-levels', 112, 0, 'opened 1 September 2026; closing date not published', { open: [9, 11], minUnits: 3, size: 'mid' }),
+    S('gt', 'Accountancy and consulting', 'Grant Thornton', 'Audit school leaver programme (AAT then ACA; not a degree)', 'flexible: grades are weighed alongside your strengths', 0, 0, '2027 dates not yet published', { size: 'mid', noBar: true }),
+    S('saffery', 'Accountancy and consulting', 'Saffery', 'School leaver trainee: accounts, audit or tax (ACA, ATT or CTA; not a degree)', '120 UCAS points, GCSE Maths and English 6', 120, 6, 'opened 15 September 2026; closing date not published', { open: [9, 11], size: 'mid' }),
+    S('burges', 'Law', 'Burges Salmon', 'Solicitor apprenticeship, Bristol', 'BBB or 120 UCAS points, GCSE Maths and English 6', 120, 6, 'closes 9 November 2026', { open: [9, 11], size: 'mid' }),
+    S('mishcon', 'Law', 'Mishcon de Reya', 'Solicitor apprenticeship, London', 'about BBB and six GCSEs at 4 (flexible)', 120, 4, '28 September to 27 November 2026', { open: [9, 11] }),
+    S('pinsent', 'Law', 'Pinsent Masons', 'Solicitor apprenticeship (Birmingham, Leeds, London, Manchester)', 'ABB or 128 UCAS points, seven GCSEs at 5 including Maths and English', 128, 5, 'opens autumn 2026; closing dates vary by office'),
+    S('mayer', 'Law', 'Mayer Brown', 'Solicitor apprenticeship, London', 'no minimum grades published', 120 /* est. */, 0, '1 September 2026 to 14 February 2027', { open: [9, 2], noBar: true }),
+    S('freshfields', 'Law', 'Freshfields', 'Solicitor apprenticeship, London', 'AAB, seven GCSEs at 6 including Maths and English', 136, 6, 'reopens autumn 2026'),
+    S('dla', 'Law', 'DLA Piper', 'Solicitor apprenticeship (London, Leeds)', 'three A-levels at C, five GCSEs at 4 including Maths and English', 96, 4, '2027 dates not yet published; August 2027 start', { minUnits: 3 })
   ];
 
+  // How strongly each subject or activity points at each sector. The "sound like you" answers are in LIKES.
   const W = {
-    'Work out why a business is losing money': { 'Accountancy and consulting': 4, 'Finance and banking': 3 },
-    'Build or fix something that has to work': { 'Engineering': 4 },
-    'Write code that other people use': { 'Technology': 4 },
-    'Argue a case and win it': { 'Law': 4 },
-    'Look after someone who needs help': { 'Health and public service': 4 },
-    'Wear a uniform and keep people safe': { 'Health and public service': 4 },
     'Maths': { 'Finance and banking': 1, 'Accountancy and consulting': 1, 'Engineering': 1, 'Technology': 0.5 },
     'Further Maths': { 'Engineering': 1, 'Finance and banking': 1, 'Technology': 1 },
     'Physics': { 'Engineering': 2 }, 'Chemistry': { 'Engineering': 1, 'Health and public service': 1 }, 'Biology': { 'Health and public service': 2 },
     'Computer Science': { 'Technology': 3 }, 'Economics': { 'Finance and banking': 2, 'Accountancy and consulting': 1 }, 'Business': { 'Accountancy and consulting': 2, 'Finance and banking': 1 },
     'Accounting': { 'Accountancy and consulting': 3 }, 'English': { 'Law': 1 }, 'History': { 'Law': 2 }, 'Politics': { 'Law': 2, 'Health and public service': 0.5 }, 'Law': { 'Law': 3 },
     'Psychology': { 'Health and public service': 2, 'Law': 0.5 }, 'Sociology': { 'Health and public service': 2 }, 'Geography': { 'Engineering': 0.5, 'Health and public service': 0.5 },
-    'Design and Technology': { 'Engineering': 2 }, 'Engineering (BTEC)': { 'Engineering': 3 }, 'Health and Social Care': { 'Health and public service': 3 }, 'Applied Science': { 'Health and public service': 1, 'Engineering': 1 },
-    'IT (BTEC)': { 'Technology': 3 }, 'Art or Design': { 'Technology': 1 }, 'A language': { 'Law': 1, 'Accountancy and consulting': 0.5 },
+    'Design and Technology': { 'Engineering': 2 }, 'Art or Design': { 'Technology': 1 }, 'A language': { 'Law': 1, 'Accountancy and consulting': 0.5 },
+    'Business (BTEC)': { 'Accountancy and consulting': 2, 'Finance and banking': 1 }, 'IT (BTEC)': { 'Technology': 3 }, 'Engineering (BTEC)': { 'Engineering': 3 },
+    'Applied Science (BTEC)': { 'Health and public service': 1, 'Engineering': 1 }, 'Health and Social Care (BTEC)': { 'Health and public service': 3 }, 'Sport (BTEC)': { 'Health and public service': 1 },
+    'Digital (T-level)': { 'Technology': 3 }, 'Engineering (T-level)': { 'Engineering': 3 }, 'Finance or Accounting (T-level)': { 'Accountancy and consulting': 3, 'Finance and banking': 2 },
+    'Legal Services (T-level)': { 'Law': 3 }, 'Health or Science (T-level)': { 'Health and public service': 3 }, 'Management and Administration (T-level)': { 'Accountancy and consulting': 2, 'Health and public service': 0.5 },
     'Coding or making things': { 'Technology': 1, 'Engineering': 1 }, 'Competitions (debate, maths, enterprise)': { 'Law': 0.5, 'Finance and banking': 0.5 }, 'Volunteering': { 'Health and public service': 0.5 }
   };
 
-  const blank = () => ({ stage: null, quals: null, subjects: [], other: '', grades: null, maths: null, english: null, exp: [], extras: [], tests: [], tue: null, size: null, worry: null, worryNote: '' });
+  const blank = () => ({ stage: null, now: null, age: null, quals: null, subjects: [], other: '', grades: {}, sizes: {}, noPred: false, maths: null, english: null, resit: false, exp: [], extras: [], tests: [], likes: [], size: null, worry: null, worryNote: '' });
 
   const answered = (p, id) => {
     if (id === 'gcse') return p.maths != null && p.english != null;
+    if (id === 'subjects') return p.subjects.length > 0;
+    if (id === 'grades') return p.noPred || (p.subjects.length > 0 && p.subjects.every(s => p.grades[s]));
     const v = p[id];
     return Array.isArray(v) ? v.length > 0 : v != null && v !== '';
   };
   const real = a => (a || []).filter(x => x !== 'None yet');
+  // "What have you done so far?" holds both work experience and outside-lessons answers.
+  const doneOf = p => real([...(p.exp || []), ...(p.extras || [])]);
+  const extrasOf = p => doneOf(p).filter(x => Q.extras.includes(x));
+  const workOf = p => doneOf(p).filter(x => Q.exp.includes(x));
   const listText = l => l.length <= 1 ? (l[0] || '') : l.slice(0, -1).join(', ') + ' and ' + l[l.length - 1];
-  const gnum = i => i == null ? null : Q.gcse[i] === 'Resit' ? 3 : Number(Q.gcse[i]);
+  const gnum = i => i == null ? null : Q.gcse[i] === '3 or below' ? 3 : Number(Q.gcse[i]);
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const inWindow = (m, o) => o && (o[0] <= o[1] ? m >= o[0] && m <= o[1] : m >= o[0] || m <= o[1]);
 
+  // ---- Grades
+  const kindOf = s => KIND_OF[s] || 'a';
+  const sizeOf = (p, s) => kindOf(s) === 't' ? 3 : kindOf(s) === 'btec' ? (p.sizes[s] || (p.quals === 'BTEC' ? 3 : 1)) : 1;
+  const graded = p => !p.noPred && p.subjects.some(s => p.grades[s]);
+  const gradeRank = (p, s) => p.grades[s] ? SCALES[kindOf(s)].grades.indexOf(p.grades[s]) : -1;
+  // Every A-level-sized unit's points, best first.
+  function units(p) {
+    const u = [];
+    p.subjects.forEach(s => { const r = gradeRank(p, s); if (r < 0) return; for (let i = 0; i < sizeOf(p, s); i++) u.push(SCALES[kindOf(s)].pts[r]); });
+    return u.sort((a, b) => b - a);
+  }
+  const ucasOf = p => graded(p) ? units(p).slice(0, 3).reduce((a, b) => a + b, 0) : null;
+  const subjName = (p, s) => s === 'Other' && p.other.trim() ? p.other.trim() : s;
+  const gradesText = p => p.noPred ? 'No predictions yet' : p.subjects.map(s => subjName(p, s) + ' ' + (p.grades[s] || '?') + (kindOf(s) === 'btec' ? ' (' + BTEC_SIZES[sizeOf(p, s) - 1][1] + ')' : '')).join(', ');
+  // A strong grade makes a subject count for more when picking the sector; a weak one for less.
+  const strength = (p, s) => { const r = p.noPred ? -1 : gradeRank(p, s); return r < 0 ? 1 : r <= 1 ? 1.5 : (kindOf(s) === 'a' ? r >= 4 : r >= 3) ? 0.75 : 1; };
+
+  const likesOf = p => (p.likes || []).filter(x => x !== NO_IDEA).map(l => LIKES.find(x => x.label === l)).filter(Boolean);
+  const unsure = p => (p.likes || []).includes(NO_IDEA);
+
   function sectorScores(p) {
     const sc = {}; Object.keys(SECTORS).forEach(k => sc[k] = 0);
-    [p.tue, p.tue, ...p.subjects, ...p.extras].forEach(a => { const w = W[a] || {}; Object.keys(w).forEach(k => sc[k] += w[k]); });
+    const add = (w, f) => Object.keys(w || {}).forEach(k => sc[k] += w[k] * f);
+    likesOf(p).forEach(l => add(l.w, 2));
+    p.subjects.forEach(s => add(W[s], strength(p, s)));
+    extrasOf(p).forEach(e => add(W[e], 1));
     return sc;
   }
 
   function expLevel(p) {
-    const n = real(p.exp).length + real(p.extras).length;
+    const n = doneOf(p).length;
     return n === 0 ? 'none' : n <= 2 ? 'some' : 'strong';
   }
 
+  const gapFor = short => short <= 0 ? 0 : short <= 24 ? 1 : 2; // 24 points is about three grade steps
+  const gcseShortOf = (p, bar) => p.maths != null && p.english != null && Math.min(gnum(p.maths), gnum(p.english)) < bar;
+
   function fitOf(p, s) {
-    const band = Q.grades.indexOf(p.grades);
-    const known = band >= 0 && band <= 4;
-    const g = Math.min(gnum(p.maths) ?? 9, gnum(p.english) ?? 9);
-    let gap = known ? band - s.band : 0;
-    const gcseShort = (p.maths != null && p.english != null) && g < s.gcse;
+    const known = graded(p);
+    let gap = 0;
+    if (known) {
+      gap += gapFor(s.ucas - ucasOf(p));
+      if (s.minUnits && units(p).length < s.minUnits) gap += 1;
+      if (s.subjMin) {
+        const r = Math.min(...s.subjMin.subj.map(x => p.subjects.includes(x) && gradeRank(p, x) >= 0 ? gradeRank(p, x) : 99));
+        if (r !== 99 && r > SCALES.a.grades.indexOf(s.subjMin.min)) gap += 1;
+      }
+    }
+    const gcseShort = gcseShortOf(p, s.gcse);
     if (gcseShort) gap += 1;
     const hasNeed = !s.needs || s.needs.some(n => p.subjects.includes(n));
     if (!hasNeed && p.subjects.length) gap += 1;
-    return { gap, known, gcseShort, hasNeed };
+    const age = p.age === '23 or over' ? 23 : Number(p.age);
+    const tooOld = !!(s.maxAge && left(p) && p.age && age > s.maxAge);
+    return { gap, known, gcseShort, hasNeed, tooOld };
   }
 
   function standingOf(p, sector) {
-    const band = Q.grades.indexOf(p.grades);
-    if (band < 0 || band === 5) return 'grades not entered';
-    let gap = band - SECTORS[sector].band;
-    const g = Math.min(gnum(p.maths) ?? 4, gnum(p.english) ?? 4);
-    if (g < SECTORS[sector].gcse) gap += 1;
+    if (!graded(p)) return 'grades not entered';
+    let gap = gapFor(SECTORS[sector].ucas - ucasOf(p));
+    if (gcseShortOf(p, SECTORS[sector].gcse)) gap += 1;
     return gap <= 0 ? 'on the bar' : gap === 1 ? 'a few grades short' : 'not there yet';
   }
 
@@ -151,20 +258,27 @@ const PF = (function () {
     const max = Math.max(1, ...Object.values(sc));
     const order = Object.keys(sc).sort((a, b) => sc[b] - sc[a]);
     const m = new Date().getMonth() + 1;
-    const sizeWant = p.size === 'Big names' ? 'big' : p.size === 'Smaller or regional firms' ? 'mid' : null;
+    const sizeWant = p.size === 'Well-known firms' ? 'big' : p.size === 'Smaller or local firms' ? 'mid' : null;
+    // Unsure students get matches spread across their top sectors rather than one.
+    const pull = unsure(p) ? 2 : 4;
+    const yours = left(p) ? 'Your results meet it.' : 'Your predicted grades meet it.';
     return SCHEMES.map(s => {
       const f = fitOf(p, s);
-      const total = (sc[s.sector] / max) * 4 - Math.max(0, f.gap) * 1.1 + (f.gap <= 0 ? 0.6 : 0) + (sizeWant && s.size === sizeWant ? 0.4 : 0) + (inWindow(m, s.open) ? 0.2 : 0);
+      if (f.tooOld) return null;
+      const total = (sc[s.sector] / max) * pull - Math.max(0, f.gap) * 1.1 + (f.gap <= 0 ? 0.6 : 0) + (sizeWant && s.size === sizeWant ? 0.4 : 0) + (inWindow(m, s.open) ? 0.2 : 0);
       const reasons = [];
-      if (s.sector === order[0] && p.tue) reasons.push('Fits what you said you\'d enjoy: ' + p.tue.charAt(0).toLowerCase() + p.tue.slice(1) + '.');
+      const like = likesOf(p).find(l => (l.w[s.sector] || 0) >= 2);
+      if (like) reasons.push('Fits what you told us: ' + like.why + '.');
+      else if (s.sector === order[0]) reasons.push('In your best-fit sector, going on your subjects' + (extrasOf(p).length ? ' and what you do outside lessons.' : '.'));
       else if (s.sector === order[1]) reasons.push('In your second-best sector, ' + s.sector.toLowerCase() + '.');
-      if (f.known) reasons.push(f.gap <= 0 ? 'Asks for ' + s.bar + '. Your predictions meet it.' : f.gap === 1 ? 'Asks for ' + s.bar + '. You\'re about one step short' + (f.gcseShort ? ' on GCSEs' : '') + '.' : 'Asks for ' + s.bar + '. A stretch on current predictions.');
-      if (s.needs && f.hasNeed) reasons.push('Wants ' + s.needs.filter(x => p.subjects.includes(x))[0] + ', which you take.');
+      const asks = s.noBar ? 'No minimum grades published.' : 'Asks for ' + s.bar + '.';
+      if (f.known) reasons.push(f.gap <= 0 ? (s.noBar ? asks : asks + ' ' + yours) : f.gap === 1 ? asks + ' You\'re about one step short' + (f.gcseShort ? ' on GCSEs' + (p.resit ? ', which your resit could fix' : '') : '') + '.' : asks + ' A stretch on ' + (left(p) ? 'your results.' : 'current predictions.'));
+      if (s.needs && f.hasNeed) reasons.push('Wants ' + s.needs.filter(x => p.subjects.includes(x))[0] + ', which you ' + (left(p) ? 'took.' : 'take.'));
       if (s.needs && !f.hasNeed && p.subjects.length) reasons.push('Usually wants ' + listText(s.needs.slice(0, 2)) + '. You haven\'t listed either.');
       if (inWindow(m, s.open)) reasons.push('Window open now: ' + s.win + '.');
       const fit = !f.known ? 'Check grades' : f.gap <= 0 ? 'Strong fit' : f.gap === 1 ? 'Reach' : 'Stretch';
       return { ...s, total, gap: f.gap, fit, reasons: reasons.slice(0, 3), unverified: false };
-    }).sort((a, b) => b.total - a.total).slice(0, n || 5);
+    }).filter(Boolean).sort((a, b) => b.total - a.total).slice(0, n || 5);
   }
 
   const WORRY = {
@@ -202,14 +316,15 @@ const PF = (function () {
   }
 
   function planOf(p, ms) {
-    const y12 = p.stage === 'Year 12';
+    const y12 = p.stage === 'Year 12', lft = left(p);
     const now = new Date();
     const thin = expLevel(p) === 'none';
     const noTests = !real(p.tests).length;
+    const testsLine = noTests ? 'Start online test practice: 20 minutes, three times a week.' : 'Keep online test practice going once a week.';
     const Y13 = {
       9: ['Pick your first five schemes from your matches and note each window.', 'Write your six stories (see Application form below).'],
       10: ['Pick your first five schemes from your matches and note each window.', 'Write your six stories (see Application form below).'],
-      11: ['Send your first two applications. Early ones get read before windows fill.', noTests ? 'Start online test practice: 20 minutes, three times a week.' : 'Keep online test practice going once a week.'],
+      11: ['Send your first two applications. Early ones get read before windows fill.', testsLine],
       12: ['Record yourself answering five video-interview questions and watch it back.', 'Read business news for ten minutes a day. Keep three stories about your sector.'],
       1: ['Second wave of applications.', 'Keep one evening a week for applications so revision doesn\'t stop.'],
       2: ['Practise a group task with friends: one case, 20 minutes, one person timing.', 'Chase any application you haven\'t heard back on in four weeks.'],
@@ -234,13 +349,30 @@ const PF = (function () {
       8: ['Draft your application answers and get someone to read them.'],
       9: ['Windows open. Apply in the first week to schemes that close early.']
     };
-    const base = y12 ? Y12 : Y13;
+    // Left school: results are in, so there are no exams to plan around, and rolling schemes take
+    // applications all year.
+    const LEFT = {
+      9: ['Pick your first five schemes from your matches and note each window.', 'Write your six stories, using what you\'ve done since school as well as school itself.'],
+      10: ['Pick your first five schemes from your matches and note each window.', 'Write your six stories, using what you\'ve done since school as well as school itself.'],
+      11: ['Send your first two applications. Early ones get read before windows fill.', testsLine],
+      12: ['Record yourself answering five video-interview questions and watch it back.', 'Read business news for ten minutes a day. Keep three stories about your sector.'],
+      1: ['Second wave of applications.', 'Ask a manager or teacher now if they\'ll be your referee.'],
+      2: ['Practise a group task with friends: one case, 20 minutes, one person timing.', 'Chase any application you haven\'t heard back on in four weeks.'],
+      3: ['Assessment centres. Prepare two questions for each firm.', 'Debrief after each one: what went well, what to change next time.'],
+      4: ['Offers arrive. Compare salary, location, the degree and what apprentices say on RateMyApprenticeship.', 'No offer yet? Rolling schemes recruit all year, so keep applying.'],
+      5: ['Keep applying to rolling schemes. NHS trusts, the police and the Civil Service advertise through the year.'],
+      6: ['Reply to every offer in writing. Decline the ones you won\'t take politely; you may apply to them again later.'],
+      7: ['Accept one offer in writing.', 'If you\'re working, check your notice period and hand it in with time to spare.'],
+      8: ['Ask your employer what to read or set up before you start.'],
+    };
+    const base = y12 ? Y12 : lft ? LEFT : Y13;
     const out = [];
     for (let i = 0; i < 12; i++) {
       const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
       const m = d.getMonth() + 1;
-      const items = [...(base[m] || (m === 9 && !y12 ? ['Start your apprenticeship.'] : []))];
-      if (!y12) ms.forEach(s => { if (s.open && s.open[0] === m && !(i === 0 && false)) items.push('Apply: ' + s.emp + ', ' + s.scheme.split(' (')[0] + ' (' + s.win + ').'); if (i === 0 && inWindow(m, s.open) && s.open[0] !== m) items.push('Open now: ' + s.emp + ' (' + s.win + ').'); });
+      // Year 13 and school leavers start in September; it's only "apply" season if that's this month.
+      const items = !y12 && m === 9 && i > 0 ? ['Start your apprenticeship.'] : [...(base[m] || [])];
+      if (!y12) ms.forEach(s => { if (s.open && s.open[0] === m) items.push('Apply: ' + s.emp + ', ' + s.scheme.split(' (')[0] + ' (' + s.win + ').'); if (i === 0 && inWindow(m, s.open) && s.open[0] !== m) items.push('Open now: ' + s.emp + ' (' + s.win + ').'); });
       if (y12 && m === 9) ms.slice(0, 3).forEach(s => items.push('Watch for: ' + s.emp + ', ' + s.win + '.'));
       if (items.length) out.push({ label: MONTHS[m - 1] + ' ' + d.getFullYear(), items, now: i === 0 });
     }
@@ -255,19 +387,33 @@ const PF = (function () {
     const ms = matches(p, 5);
     const ex = expLevel(p);
     const tests = real(p.tests);
-    const sl = sector.toLowerCase();
-    const gradeLine = {
-      'on the bar': 'your predicted grades meet the usual bar',
-      'a few grades short': 'your predictions are about one step below the usual bar',
-      'not there yet': 'the usual bar is above your predictions right now',
-      'grades not entered': 'you haven\'t got predictions yet, so the grade check is open'
-    }[standing];
+    const yours = left(p) ? 'your results' : 'your predicted grades';
+    // Say which part is short, A-level grades or GCSEs, rather than one label for both.
+    const bar = SECTORS[sector];
+    const low = [['Maths', p.maths], ['English', p.english]].filter(([, i]) => i != null && gnum(i) < bar.gcse).map(([n]) => n);
+    const gcseBit = low.length ? 'GCSE ' + listText(low) + (low.length > 1 ? ' are' : ' is') + ' below the ' + bar.gcse + ' most ' + sector.toLowerCase() + ' schemes ask for' + (p.resit ? ', which your resit could fix' : '') : '';
+    const ucasGap = graded(p) ? gapFor(bar.ucas - ucasOf(p)) : -1;
+    const gradeLine = ucasGap < 0 ? 'you haven\'t got predictions yet, so the grade check is open' + (gcseBit ? '. ' + gcseBit.charAt(0).toUpperCase() + gcseBit.slice(1) : '')
+      : ucasGap === 0 ? yours + ' meet the usual bar' + (gcseBit ? ', but ' + gcseBit : '')
+      : (ucasGap === 1 ? yours + ' are a few grades below the usual bar' : 'the usual bar is above ' + yours + ' right now') + (gcseBit ? ', and ' + gcseBit : '');
+    // The nearest application window among the matches, shown before the unlock form.
+    const mNow = new Date().getMonth() + 1;
+    const openNow = ms.find(x => inWindow(mNow, x.open));
+    const upcoming = ms.filter(x => x.open).sort((a, b) => ((a.open[0] - mNow + 12) % 12) - ((b.open[0] - mNow + 12) % 12))[0];
+    const deadline = p.stage === 'Year 12'
+      ? (upcoming ? 'You apply next autumn. ' + upcoming.emp + ' opens in ' + MONTHS[upcoming.open[0] - 1] + ', and several schemes close early.' : '')
+      : openNow ? openNow.emp + (/s$/.test(openNow.emp) ? '\'' : '\'s') + ' window is open now: ' + openNow.win + '.' : upcoming ? upcoming.emp + ' opens in ' + MONTHS[upcoming.open[0] - 1] + '.' : '';
+    const nowLine = { 'Started university and left': 'Starting a degree doesn\'t usually rule you out. Have a short, honest answer ready for why this route suits you better. ', 'Taking a gap year': 'Use the gap year for something you can talk about: a job, a project or a course. ' }[left(p) && p.now] || '';
     const expLine = { none: 'You haven\'t listed work experience or roles yet. That\'s the gap most applicants have and the quickest to close: one insight day and one role you can talk about, before your first application.', some: 'You have something to talk about already. The job now is turning it into answers that say what you did and what changed because of it.', strong: 'You\'ve done more than most applicants. Use it in every answer, with numbers.' }[ex];
     const testLine = tests.length ? 'You\'ve sat ' + listText(tests.filter(t => t !== 'Had an offer').map(t => t.split(' (')[0].toLowerCase())) + ' before, so the format won\'t be new.' : 'You haven\'t sat an online test or video interview yet. That\'s where most applications end, so practise before the real one.';
+    const notSure = unsure(p);
+    const opener = notSure
+      ? 'You said you don\'t know yet, which is normal. Going on your subjects' + (extrasOf(p).length ? ' and what you do outside lessons' : '') + ', ' + sector.toLowerCase() + ', and ' + also.toLowerCase() + ', are the closest fits. For ' + sector.toLowerCase() + ', ' + gradeLine + '. '
+      : sector + ' is your best fit and ' + gradeLine + '. ';
     return {
-      sector, also, standing, standingIdx: { 'not there yet': 0, 'a few grades short': 1, 'on the bar': 2 }[standing] ?? -1,
-      headline: sector + ', and you\'re ' + standing + '.',
-      read: sector + ' is your best fit and ' + gradeLine + '. ' + expLine + ' ' + testLine,
+      sector, also, standing, unsure: notSure, standingIdx: { 'not there yet': 0, 'a few grades short': 1, 'on the bar': 2 }[standing] ?? -1,
+      headline: notSure ? 'Two to start with: ' + sector + ' and ' + also.toLowerCase() + '.' : 'Your best fit: ' + sector + '.',
+      readShort: opener.trim(), read: opener + nowLine + expLine + ' ' + testLine, deadline,
       matches: ms,
       plan: planOf(p, ms),
       prep: prepOf(p),
@@ -279,10 +425,11 @@ const PF = (function () {
 
   function profileText(p) {
     return [
-      'Stage: ' + (p.stage || '?'), 'Qualifications: ' + (p.quals || '?'), 'Subjects: ' + (p.subjects.join(', ') || '?') + (p.other ? ' (other: ' + p.other + ')' : ''),
-      'Predicted grades: ' + (p.grades || '?'), 'GCSE Maths: ' + (Q.gcse[p.maths] || '?') + ', English: ' + (Q.gcse[p.english] || '?'),
-      'Work experience: ' + (p.exp.join(', ') || 'none'), 'Outside lessons: ' + (p.extras.join(', ') || 'none'), 'Done before: ' + (p.tests.join(', ') || 'none'),
-      'Would enjoy: ' + (p.tue || '?'), 'Employer preference: ' + (p.size || '?'), 'Biggest worry: ' + (p.worry || '?') + (p.worryNote ? ' — "' + p.worryNote + '"' : '')
+      'Stage: ' + (p.stage || '?') + (left(p) ? ' (now: ' + (p.now || '?') + ', age ' + (p.age || '?') + ')' : ''), 'Qualifications: ' + (p.quals || '?'),
+      (left(p) ? 'Results: ' : 'Predicted grades: ') + (gradesText(p) || '?') + (ucasOf(p) != null ? ' (about ' + ucasOf(p) + ' UCAS points)' : ''),
+      'GCSE Maths: ' + (Q.gcse[p.maths] || '?') + ', English: ' + (Q.gcse[p.english] || '?') + (p.resit ? ' (resitting)' : ''),
+      'Work experience: ' + (workOf(p).join(', ') || 'none'), 'Outside lessons: ' + (extrasOf(p).join(', ') || 'none'), 'Done before: ' + (p.tests.join(', ') || 'none'),
+      'Sounds like them: ' + ((p.likes || []).join('; ') || '?'), 'Employer preference: ' + (p.size || '?'), 'Biggest worry: ' + (p.worry || '?') + (p.worryNote ? ': "' + p.worryNote + '"' : '')
     ].join('\n');
   }
 
@@ -325,9 +472,10 @@ const PF = (function () {
   function leadFields(p, rep) {
     return {
       result: rep.headline, also: rep.also, advice_source: rep.source,
-      year: p.stage, quals: p.quals, subjects: p.subjects.join(', ') + (p.other ? ' (' + p.other + ')' : ''), grades: p.grades,
-      gcse_maths: Q.gcse[p.maths], gcse_english: Q.gcse[p.english], tuesday: p.tue,
-      experience: p.exp.join(', '), extras: p.extras.join(', '), tests_done: p.tests.join(', '), firm_size: p.size, worry: p.worry, worry_note: p.worryNote,
+      year: p.stage, now: p.now || '', age: p.age || '', quals: p.quals, subjects: p.subjects.map(s => subjName(p, s)).join(', '),
+      grades: gradesText(p), ucas: ucasOf(p) == null ? '' : String(ucasOf(p)),
+      gcse_maths: Q.gcse[p.maths], gcse_english: Q.gcse[p.english], gcse_resit: p.resit ? 'Yes' : '', likes: (p.likes || []).join('; '),
+      experience: workOf(p).join(', ') || (p.exp.includes('None yet') ? 'None yet' : ''), extras: extrasOf(p).join(', '), tests_done: p.tests.join(', '), firm_size: p.size, worry: p.worry, worry_note: p.worryNote,
       top_matches: rep.matches.filter(m => !m.unverified).map(m => m.emp + ' ' + m.scheme.split(' (')[0]).join('; ')
     };
   }
@@ -344,14 +492,14 @@ const PF = (function () {
     const doc = '<!doctype html><html><head><meta charset="utf-8"><title>DegreeYourWay Pathfinder report</title>' +
       '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400&family=Source+Sans+3:wght@400;600&display=swap">' +
       '<style>@page{size:A4;margin:16mm}body{font-family:"Source Sans 3",sans-serif;color:#30202A;margin:0;font-size:10.5pt;line-height:1.5}h1,h2{font-family:Newsreader,serif;font-weight:400;margin:0}h1{font-size:26pt;line-height:1.05}h2{font-size:15pt;margin:20pt 0 6pt;break-after:avoid}.k{font-size:8pt;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#716769}.bar{height:3pt;background:#823D48;width:40pt;margin:10pt 0 12pt}p{margin:6pt 0;color:#51444A}table{width:100%;border-collapse:collapse}td{padding:6pt 8pt 6pt 0;border-top:.6pt solid #D7CFC6;vertical-align:top;font-size:9.5pt}td.n{color:#716769;font-weight:600;width:18pt}i{color:#716769}ul{list-style:none;padding:0;margin:0}li{display:flex;gap:12pt;padding:6pt 0;border-top:.6pt solid #D7CFC6;break-inside:avoid}li span{font-weight:600;min-width:90pt;max-width:90pt}.call{margin-top:20pt;background:#30202A;color:#F4EFE6;padding:14pt 16pt;break-inside:avoid}.call h2{margin:0 0 4pt;color:#F4EFE6}.call p{color:#E4DCD9;margin:0}.foot{margin-top:14pt;font-size:8pt;color:#716769}</style></head><body>' +
-      '<div class="k">DegreeYourWay Pathfinder' + (name ? ' · Prepared for ' + esc(name) : '') + '</div><div class="bar"></div>' +
+      '<div class="k">DegreeYourWay Pathfinder' + (name ? ', prepared for ' + esc(name) : '') + '</div><div class="bar"></div>' +
       '<h1>' + esc(rep.headline) + '</h1><p>' + esc(rep.read) + '</p><p><span class="k">Also a fit</span>&nbsp; ' + esc(rep.also) + '</p>' +
       '<h2>Your matches, ranked</h2><table>' + rows + '</table>' +
       '<h2>Your 12 months</h2><ul>' + plan + '</ul>' +
       '<h2>Stage by stage</h2><ul>' + prep + '</ul>' +
       (rep.worry ? '<h2>' + esc(rep.worry.q) + '</h2><p>' + esc(rep.worry.body) + '</p>' : '') +
       '<h2>If it doesn\'t go to plan</h2><ul>' + back + '</ul>' +
-      '<div class="call"><h2>Free discovery call, 30 minutes</h2><p>Talk this report through with Shreyash Singh, who got offers from Deloitte, Goldman Sachs, PwC and Accenture. WhatsApp: 07463 870657. The DegreeYourWay course prepares you for every stage above.</p></div>' +
+      '<div class="call"><h2>Free discovery call, 30 minutes</h2><p>Talk this report through with Shreyash Singh, who got four offers from major firms and chose Deloitte. WhatsApp: 07463 870657.' + (SITE.courseOffer ? ' The DegreeYourWay course prepares you for every stage above.' : '') + '</p></div>' +
       '<div class="foot">Entry bars and dates checked ' + CHECKED + '. Always check the employer\'s page. Employers make every hiring decision.</div>' +
       '<' + SC + '>document.fonts.ready.then(function(){setTimeout(function(){window.print()},300)})</' + SC + '></body></html>';
     const w = window.open('', '_blank');
@@ -487,9 +635,9 @@ const PF = (function () {
     return { strengths: (j.strengths || []).slice(0, 3).map(clean), gaps: gaps.map(g => ({ ...g, title: clean(g.title), detail: clean(g.detail) })), source: 'ai' };
   }
 
-  const DEMO = { stage: 'Year 13', quals: 'A-levels', subjects: ['Maths', 'Economics', 'Business'], other: '', grades: 'Mostly A and B', maths: 1, english: 3, exp: ['Part-time job'], extras: ['Sports team', 'Volunteering'], tests: ['None yet'], tue: 'Work out why a business is losing money', size: 'Big names', worry: 'Online tests', worryNote: '' };
+  const DEMO = { stage: 'Year 13', now: null, age: null, quals: 'A-levels', subjects: ['Maths', 'Economics', 'Business'], other: '', grades: { Maths: 'A', Economics: 'B', Business: 'B' }, sizes: {}, noPred: false, maths: 1, english: 3, resit: false, exp: ['Part-time job', 'Sports team', 'Volunteering'], extras: [], tests: ['None yet'], likes: ['I follow business, money or markets news'], size: 'Well-known firms', worry: 'Online tests', worryNote: '' };
 
-  return { Q, QUESTIONS, PARTS, SECTORS, SCHEMES, CHECKED, blank, answered, report, matches, aiEnhance, askAdvisor, leadFields, wa, pdf, storeLead, push, listText, DEMO, COURSE, NO_CV_QS, readCvFile, ruleGaps, cvGaps };
+  return { Q, QUESTIONS, questionsFor, LABELS, SUBS, groupsFor, KIND_OF, SCALES, BTEC_SIZES, sizeOf, ucasOf, left, PARTS, SECTORS, SCHEMES, CHECKED, blank, answered, report, matches, aiEnhance, askAdvisor, leadFields, wa, pdf, storeLead, push, listText, DEMO, COURSE, NO_CV_QS, readCvFile, ruleGaps, cvGaps };
 })();
 
 export default PF;

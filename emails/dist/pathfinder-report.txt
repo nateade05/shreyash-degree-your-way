@@ -1,0 +1,26 @@
+PATHFINDER RESULTS
+
+{{{RESULT}}}
+
+Hi {{{NAME}}}, here’s a copy of your results, so you have them somewhere other than the browser.
+
+Also a fit: {{{ALSO}}}
+Top matches: {{{TOP_MATCHES}}}
+
+Your full report, with the 12-month plan, stage-by-stage tips and the PDF, stays in the browser you used. Open the Pathfinder (https://degreeyourway.example/pathfinder) on the same device to see it again.
+
+GO THROUGH YOUR MATCHES WITH SHREYASH
+A free 30-minute call. You’ll leave knowing which schemes to apply to first and what each stage will ask of you. Shreyash got offers from Deloitte, Goldman Sachs, PwC and Accenture.
+Book a free call: {{{CALL_URL}}}
+
+Entry bars and dates change. Always check the employer’s page. Employers make every hiring decision.
+
+Shreyash
+Founder, DegreeYourWay
+
+--
+
+DegreeYourWay, degree apprenticeship application coaching.
+WhatsApp 07463 870657 | https://degreeyourway.example
+
+You’re getting this because you unlocked your report in the DegreeYourWay Pathfinder.

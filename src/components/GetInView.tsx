@@ -71,44 +71,6 @@ export default function GetInView({ v }: { v: any }) {
         {v.isHome ? (
           <>
             {" "}
-            <section aria-label="Founding cohort" style={{ background: "var(--blackberry)", color: "var(--warm-white)" }} className="gi-bgbb">
-              {" "}
-              <div className="gi-pbanner" style={{ maxWidth: "1280px", margin: "0 auto", padding: "10px clamp(20px,5vw,64px)" }}>
-                {" "}
-                <div style={{ display: "flex", alignItems: "baseline", flexWrap: "wrap", gap: "4px 16px", minWidth: "0" }}>
-                  {" "}
-                  <span className="gi-pbk gi-up" style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--on-dark-label)" }}>
-                    Founding cohort
-                  </span>
-                  {" "}
-                  <span style={{ display: "flex", alignItems: "baseline", gap: "10px" }}>
-                    <span style={{ fontFamily: "'Newsreader',serif", fontSize: "26px", lineHeight: "1", letterSpacing: "-0.02em" }}>
-                      £595
-                    </span>
-                    <span className="gi-strike" style={{ fontFamily: "'Newsreader',serif", fontSize: "16px", color: "var(--on-dark-muted)" }}>
-                      £695
-                    </span>
-                  </span>
-                  {" "}
-                  <span className="gi-pbsub" style={{ fontSize: "14px", color: "var(--on-dark-muted)" }}>
-                    <span style={{ color: "var(--on-dark-label)", fontWeight: "600" }}>
-                      {"Save £100 · "}<span className="sc-interp">{v.seatsOnly}</span>
-                    </span>
-                    <span className="gi-pbdep">
-                      {" · £100 refundable deposit"}
-                    </span>
-                  </span>
-                  {" "}
-                </div>
-                {" "}
-                <button onClick={v.cta.panel} data-cta="call_booked" className="gi-btn" style={{ textTransform: "uppercase", letterSpacing: "0.08em", cursor: "pointer", whiteSpace: "nowrap", border: "0", font: "600 15px 'Source Sans 3',sans-serif", height: "44px", padding: "0 22px", borderRadius: "2px" }}>
-                  <span className="sc-interp">{v.ctaLabel}</span>
-                </button>
-                {" "}
-              </div>
-              {" "}
-            </section>
-            {" "}
             <section data-screen-label="01 Home" id="why" style={{ background: "var(--bone)" }} className="gi-bgbone">
               {" "}
               <div className="gi-hero gi-hero2" style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(36px,5vw,80px) clamp(20px,5vw,64px) clamp(32px,4vw,64px)" }}>
@@ -147,919 +109,87 @@ export default function GetInView({ v }: { v: any }) {
                   </p>
                   {" "}
                   <p style={{ margin: "16px 0 0", fontSize: "17px", lineHeight: "1.55", color: "var(--blackberry-soft)", maxWidth: "40ch" }}>
-                    This isn't UCAS. There are five stages, and we prepare your child for each one.
+                    {v.course ? "This isn't UCAS. There are five stages, and we prepare your child for each one." : "This isn't UCAS. Here's how degree apprenticeships work, and how to get one."}
                   </p>
                   {" "}
-                  <div style={{ marginTop: "24px", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
-                    <button type="button" onClick={v.goQuiz} data-cta="pathfinder" className="gi-pfcta">
+                  <div style={{ marginTop: "28px", display: "flex", flexDirection: "column", alignItems: "stretch", gap: "10px", maxWidth: "420px" }}>
+                    {v.course ? (<>
+                    <button onClick={v.cta.panel} data-cta="call_booked" className="gi-btn" style={{ textTransform: "uppercase", letterSpacing: "0.08em", cursor: "pointer", border: "0", background: "var(--oxblood)", color: "var(--warm-white)", font: "600 16px 'Source Sans 3',sans-serif", borderRadius: "2px", padding: "20px 24px" }}>
+                      <span className="sc-interp">{v.ctaLabel}</span>
+                    </button>
+                    <button type="button" onClick={v.goQuiz} data-cta="pathfinder" className="gi-pfcta gi-pfcta-alt" style={{ justifyContent: "center" }}>
                       <svg className="gi-pfico" width="18" height="18" viewBox="0 0 256 256" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="128" cy="128" r="96"></circle>
                         <polygon points="168 88 112 112 88 168 144 144 168 88" fill="currentColor" stroke="none"></polygon>
                       </svg>
-                      Try the Pathfinder
-                      <span className="gi-bprice">
-                        <span className="gi-bstrike">
-                          £20
-                        </span>
-                        Free
-                      </span>
+                      Try the free Pathfinder
                     </button>
-                    <span style={{ fontSize: "13px", color: "var(--muted)" }}>
-                      90 seconds. Your roadmap PDF.
-                    </span>
+                    </>) : (<>
+                    <button type="button" onClick={v.goQuiz} data-cta="pathfinder" className="gi-pfcta" style={{ justifyContent: "center" }}>
+                      <svg className="gi-pfico" width="18" height="18" viewBox="0 0 256 256" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="128" cy="128" r="96"></circle>
+                        <polygon points="168 88 112 112 88 168 144 144 168 88" fill="currentColor" stroke="none"></polygon>
+                      </svg>
+                      Try the free Pathfinder
+                    </button>
+                    <button onClick={v.cta.panel} data-cta="call_booked" className="gi-btn gi-btn-outline" style={{ textTransform: "uppercase", letterSpacing: "0.08em", cursor: "pointer", border: "0", background: "transparent", color: "var(--blackberry)", boxShadow: "inset 0 0 0 1px var(--blackberry)", font: "600 16px 'Source Sans 3',sans-serif", borderRadius: "2px", padding: "20px 24px" }}>
+                      <span className="sc-interp">{v.ctaLabel}</span>
+                    </button>
+                    </>)}
                   </div>
                   {" "}
                 </div>
                 {" "}
-                <div style={{ minWidth: "0", display: "flex", flexDirection: "column" }}>
-                  {" "}
-                  <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                    Same degree, two routes
-                  </span>
-                  {" "}
-                  <h2 style={{ margin: "10px 0 0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(26px,2.6vw,36px)", lineHeight: "1.12", letterSpacing: "-0.02em", color: "var(--blackberry)", textWrap: "balance" }}>
-                    {"University: "}
-                    <span style={{ color: "var(--loss)", whiteSpace: "nowrap" }}>
-                      −£47,900
+                <div className="gi-founder" style={{ minWidth: "0", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", textAlign: "left", gap: "clamp(16px,2vw,28px)", background: "var(--warm-white)", borderTop: "2px solid var(--blackberry)", padding: "clamp(24px,4vw,56px)", alignSelf: "stretch" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                    {v.founderPhoto ? (
+                      <img src={v.founderPhoto} alt="Shreyash Singh" width={120} height={120} style={{ width: "clamp(96px,11vw,160px)", height: "clamp(96px,11vw,160px)", borderRadius: "50%", objectFit: "cover", flex: "none" }} />
+                    ) : (
+                      <span aria-hidden="true" style={{ width: "clamp(96px,11vw,160px)", height: "clamp(96px,11vw,160px)", borderRadius: "50%", flex: "none", display: "grid", placeItems: "center", background: "var(--soft-tint)", fontFamily: "'Newsreader',serif", fontSize: "32px" }}>SS</span>
+                    )}
+                    <span style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                      <span style={{ fontSize: "18px", fontWeight: "600" }}>Shreyash Singh</span>
+                      <span style={{ fontSize: "14px", color: "var(--muted)" }}>Founder, Deloitte degree apprentice</span>
                     </span>
-                    {". Apprenticeship: "}
-                    <span style={{ color: "var(--gain)", whiteSpace: "nowrap" }}>
-                      +£96,000
-                    </span>
-                    .
-                  </h2>
-                  {" "}
-                  <div style={{ marginTop: "20px", background: "var(--warm-white)", borderTop: "2px solid var(--blackberry)", padding: "clamp(24px,3vw,40px)" }}>
-                    {" "}
-                    <div role="img" aria-label="University: £47,900 owed at the end. Degree apprentice: about £96,000 paid over four years, before tax." style={{ position: "relative" }}>
-                      {" "}
-                      <div aria-hidden="true" className="gi-axis" style={{ position: "absolute", inset: "0 0 32px 0", pointerEvents: "none" }}>
-                        {" "}
-                        <span style={{ position: "absolute", top: "0", bottom: "0", left: "0", width: "1px", background: "var(--rule)" }}></span>
-                        {" "}
-                        <span style={{ position: "absolute", top: "0", bottom: "0", left: "33.333%", width: "2px", marginLeft: "-1px", background: "var(--blackberry)" }} className="gi-bgbb"></span>
-                        {" "}
-                        <span style={{ position: "absolute", top: "0", bottom: "0", left: "66.667%", width: "1px", background: "var(--rule)" }}></span>
-                        {" "}
-                        <span style={{ position: "absolute", top: "0", bottom: "0", right: "0", width: "1px", background: "var(--rule)" }}></span>
-                        {" "}
-                      </div>
-                      {" "}
-                      <div className="gi-rows" style={{ position: "relative", display: "flex", flexDirection: "column", gap: "32px", padding: "8px 0 24px" }}>
-                        {" "}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                          {" "}
-                          <span className="gi-numlab" style={{ width: "33.333%", paddingRight: "16px", boxSizing: "border-box", textAlign: "right", fontSize: "16px", fontWeight: "600", lineHeight: "1.35", color: "var(--blackberry)" }}>
-                            University, owed at the end
-                          </span>
-                          {" "}
-                          <div className="gi-debtbar" style={{ marginLeft: "1.4%", width: "31.933%", height: "clamp(52px,5vw,64px)", background: "var(--loss)", display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: "16px", boxSizing: "border-box" }}>
-                            {" "}
-                            <span className="gi-debtval" style={{ fontFamily: "'Newsreader',serif", fontSize: "clamp(24px,2.4vw,32px)", lineHeight: "1", color: "var(--warm-white)", whiteSpace: "nowrap", fontVariantNumeric: "lining-nums" }}>
-                              −£47,900
-                            </span>
-                            {" "}
-                          </div>
-                          {" "}
-                        </div>
-                        {" "}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                          {" "}
-                          <span className="gi-paylab" style={{ marginLeft: "33.333%", paddingLeft: "16px", fontSize: "16px", fontWeight: "600", lineHeight: "1.35", color: "var(--blackberry)" }}>
-                            Degree apprentice, paid over four years, before tax
-                          </span>
-                          {" "}
-                          <div className="gi-paybar" style={{ marginLeft: "33.333%", width: "64%", height: "clamp(52px,5vw,64px)", background: "var(--gain)", display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: "16px", boxSizing: "border-box" }}>
-                            {" "}
-                            <span style={{ fontFamily: "'Newsreader',serif", fontSize: "clamp(24px,2.4vw,32px)", lineHeight: "1", color: "var(--warm-white)", whiteSpace: "nowrap", fontVariantNumeric: "lining-nums" }}>
-                              +£96,000
-                            </span>
-                            {" "}
-                          </div>
-                          {" "}
-                        </div>
-                        {" "}
-                      </div>
-                      {" "}
-                      <div aria-hidden="true" className="gi-axis" style={{ position: "relative", height: "32px", fontSize: "12px", color: "var(--muted)", fontVariantNumeric: "tabular-nums" }}>
-                        {" "}
-                        <span style={{ position: "absolute", left: "0", top: "8px" }}>
-                          −£50k
-                        </span>
-                        {" "}
-                        <span style={{ position: "absolute", left: "33.333%", top: "8px", transform: "translateX(-50%)", color: "var(--blackberry)", fontWeight: "600" }}>
-                          £0
-                        </span>
-                        {" "}
-                        <span style={{ position: "absolute", left: "66.667%", top: "8px", transform: "translateX(-50%)" }}>
-                          £50k
-                        </span>
-                        {" "}
-                        <span style={{ position: "absolute", right: "0", top: "8px" }}>
-                          £100k
-                        </span>
-                        {" "}
-                      </div>
-                      {" "}
-                    </div>
-                    {" "}
                   </div>
-                  {" "}
-                  <p style={{ margin: "12px 0 0", fontSize: "11px", lineHeight: "1.5", color: "var(--muted)", maxWidth: "120ch" }}>
-                    Debt: 2023 cohort, Commons Library. Pay: 4 years at the £24,000 median starting salary (ISE 2025), before tax.
+                  <p style={{ margin: "0", fontFamily: "'Newsreader',serif", fontSize: "clamp(24px,2.8vw,38px)", lineHeight: "1.15", letterSpacing: "-0.01em" }}>
+                    Applied from sixth form at 17, got four degree apprenticeship offers from major firms and chose Deloitte.
                   </p>
-                  {" "}
-                  <div className="gi-value" style={{ marginTop: "20px", paddingTop: "16px", borderTop: "1px solid var(--rule)" }}>
-                    {" "}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                      <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                        DegreeYourWay costs
-                      </span>
-                      <span style={{ fontFamily: "'Newsreader',serif", fontSize: "clamp(32px,3.4vw,44px)", lineHeight: "1", letterSpacing: "-0.03em", color: "var(--blackberry)" }}>
-                        £595
-                      </span>
-                    </div>
-                    {" "}
-                    <span aria-hidden="true" style={{ fontFamily: "'Newsreader',serif", fontSize: "26px", color: "var(--muted)" }}>
-                      →
-                    </span>
-                    {" "}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                      <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                        The place is worth
-                      </span>
-                      <span style={{ fontFamily: "'Newsreader',serif", fontSize: "clamp(32px,3.4vw,44px)", lineHeight: "1", letterSpacing: "-0.03em", color: "var(--gain)" }}>
-                        £143,900
-                      </span>
-                    </div>
-                    {" "}
-                  </div>
-                  {" "}
-                  <p style={{ margin: "10px 0 0", fontSize: "14px", lineHeight: "1.5", color: "var(--muted)" }}>
-                    Debt avoided plus four years' pay.
-                    <a href="https://commonslibrary.parliament.uk/research-briefings/sn01079/" target="_blank" rel="noopener" className="gi-src" style={{ fontSize: "11px", lineHeight: "1.45", color: "var(--muted)", textDecoration: "none", textUnderlineOffset: "3px" }}>
-                      Commons Library, Aug 2026
-                    </a>
-                  </p>
-                  {" "}
                 </div>
                 {" "}
               </div>
               {" "}
             </section>
             {" "}
-            <section aria-label="Run by degree apprentices from Deloitte, Goldman Sachs, Bloomberg and PwC" style={{ background: "var(--bone)", borderBottom: "1px solid var(--rule)" }} className="gi-bgbone">
-              {" "}
-              <div className="gi-cred" style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(20px,3vw,36px) clamp(20px,5vw,64px)" }}>
-                {" "}
+            <section aria-label="Offers our team has received" style={{ background: "var(--bone)", borderBottom: "1px solid var(--rule)" }} className="gi-bgbone">
+              <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(20px,3vw,36px) clamp(20px,5vw,64px)", display: "flex", flexDirection: "column", gap: "12px" }}>
                 <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                  Run by degree apprentices from
+                  Our team has had offers from
                 </span>
-                {" "}
-                <div className="gi-cred-logos">
-                  <img src="/assets/logo-deloitte-t.png" alt="Deloitte" className="gi-cred-logo" style={{ display: "block", mixBlendMode: "multiply" }} />
-                  <img src="/assets/logo-goldman-t.png" alt="Goldman Sachs" className="gi-cred-logo" style={{ display: "block", mixBlendMode: "multiply" }} />
-                  <img src="/assets/logo-bloomberg-t.png" alt="Bloomberg" className="gi-cred-logo" style={{ display: "block", mixBlendMode: "multiply" }} />
-                  <img src="/assets/logo-pwc-t.png" alt="PwC" className="gi-cred-logo" style={{ display: "block", mixBlendMode: "multiply" }} />
-                </div>
-                {" "}
-              </div>
-              {" "}
-            </section>
-            {" "}
-            <section aria-label="How it works" style={{ background: "var(--warm-white)" }}>
-              {" "}
-              <div className="gi-planwrap" style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(52px,7vw,96px) clamp(20px,5vw,64px)" }}>
-                {" "}
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px", minWidth: "0" }}>
-                  {" "}
-                  <p style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                    How it works
-                  </p>
-                  {" "}
-                  <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(32px,3.6vw,52px)", lineHeight: "1.04", letterSpacing: "-0.02em", textWrap: "balance", color: "var(--blackberry)", maxWidth: "13ch" }}>
-                    Three steps from not sure to ready.
-                  </h2>
-                  {" "}
-                  <p style={{ margin: "0", fontSize: "17px", lineHeight: "1.6", color: "var(--blackberry-soft)", maxWidth: "40ch" }}>
-                    The first two steps are free. Only book once you know it fits.
-                  </p>
-                  {" "}
-                  <div style={{ marginTop: "8px", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
-                    <button type="button" onClick={v.goQuiz} data-cta="plan" className="gi-pfcta">
-                      <svg className="gi-pfico" width="18" height="18" viewBox="0 0 256 256" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="128" cy="128" r="96"></circle>
-                        <polygon points="168 88 112 112 88 168 144 144 168 88" fill="currentColor" stroke="none"></polygon>
-                      </svg>
-                      Start step 1
-                      <span className="gi-bprice">
-                        <span className="gi-bstrike">
-                          £20
-                        </span>
-                        Free
-                      </span>
-                    </button>
-                    <span style={{ fontSize: "13px", color: "var(--muted)" }}>
-                      90 seconds. No payment.
-                    </span>
-                  </div>
-                  {" "}
-                </div>
-                {" "}
-                <div style={{ minWidth: "0", display: "flex", flexDirection: "column", gap: "24px" }}>
-                  {" "}
-                  <ol className="gi-plan" style={{ margin: "0", padding: "0", listStyle: "none" }}>
-                    {" "}
-                    {(v.planSteps || []).map((p: any, p_i: number) => (
-                      <Fragment key={p_i}>
-                        {" "}
-                        <li className={`gi-planstep ${p.cls}`}>
-                          {" "}
-                          <span className="gi-plandot" aria-hidden="true">
-                            <span className="sc-interp">{p.n}</span>
-                          </span>
-                          {" "}
-                          <details className="gi-faq gi-plandet" open={p.open}>
-                            {" "}
-                            <summary className="gi-plansum">
-                              <span style={{ display: "flex", flexDirection: "column", gap: "4px", minWidth: "0" }}>
-                                <span className="gi-plant">
-                                  <span className="sc-interp">{p.title}</span>
-                                </span>
-                                <span className="gi-planm">
-                                  {p.hasWas ? (
-                                    <>
-                                      <span className="gi-bstrike" style={{ marginRight: "6px", color: "var(--muted)" }}>
-                                        <span className="sc-interp">{p.was}</span>
-                                      </span>
-                                    </>
-                                  ) : null}
-                                  <span style={{ color: p.tagC }}>
-                                    <span className="sc-interp">{p.tag}</span>
-                                  </span>
-                                  {" · "}<span className="sc-interp">{p.meta}</span>
-                                </span>
-                              </span>
-                              <span aria-hidden="true" className="gi-plus">
-                                +
-                              </span>
-                            </summary>
-                            {" "}
-                            <div className="gi-ans" style={{ display: "flex", flexDirection: "column", gap: "12px", padding: "0 40px 20px 0" }}>
-                              {" "}
-                              <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.6", color: "var(--blackberry-soft)", maxWidth: "56ch" }}>
-                                <span className="sc-interp">{p.body}</span>
-                              </p>
-                              {" "}
-                              <p style={{ margin: "0", fontSize: "15px", lineHeight: "1.5", color: "var(--blackberry)" }}>
-                                <span style={{ fontWeight: "600" }}>
-                                  You leave with:
-                                </span>
-                                {" "}<span className="sc-interp">{p.get}</span>
-                              </p>
-                              {" "}
-                            </div>
-                            {" "}
-                          </details>
-                          {" "}
-                        </li>
-                        {" "}
-                      </Fragment>
-                    ))}
-                    {" "}
-                  </ol>
-                  {" "}
-                  <ul className="gi-promises" aria-label="Our promises" style={{ margin: "0", padding: "16px 0 0", listStyle: "none", borderTop: "1px solid var(--rule)" }}>
-                    {" "}
-                    {(v.planPromises || []).map((x: any, x_i: number) => (
-                      <Fragment key={x_i}>
-                        <li style={{ display: "flex", gap: "8px", alignItems: "baseline", fontSize: "15px", lineHeight: "1.45", color: "var(--blackberry)" }}>
-                          <span aria-hidden="true" style={{ color: "var(--gain)", fontWeight: "600" }}>
-                            ✓
-                          </span>
-                          <span className="sc-interp">{x}</span>
-                        </li>
-                      </Fragment>
-                    ))}
-                    {" "}
-                  </ul>
-                  {" "}
-                </div>
-                {" "}
-              </div>
-              {" "}
-            </section>
-            {" "}
-            <section style={{ background: "var(--bone)" }} className="gi-bgbone">
-              {" "}
-              <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(52px,7vw,96px) clamp(20px,5vw,64px)" }}>
-                {" "}
-                <div className="gi-jhead">
-                  {" "}
-                  <div style={{ minWidth: "0" }}>
-                    {" "}
-                    <p style={{ margin: "0 0 16px", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--blackberry)" }} className="gi-up">
-                      The five stages
-                    </p>
-                    {" "}
-                    <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(32px,3.6vw,52px)", lineHeight: "1.04", letterSpacing: "-0.02em", textWrap: "balance" }}>
-                      {"Most prep covers one stage. "}
-                      <span style={{ display: "block", color: "var(--oxblood)", fontStyle: "italic" }}>
-                        We cover all five.
-                      </span>
-                    </h2>
-                    {" "}
-                  </div>
-                  {" "}
-                  <p style={{ margin: "0", fontSize: "17px", lineHeight: "1.55", color: "var(--blackberry-soft)", maxWidth: "40ch", textWrap: "pretty" }}>
-                    Each one practised the way employers run it.
-                  </p>
-                  {" "}
-                </div>
-                {" "}
-                <ol className="gi-tl gi-car" data-cur={v.tlCur} ref={v.tlRef} onScroll={v.tlScroll} aria-label="The five stages" style={{ margin: "48px 0 0", padding: "0", listStyle: "none" }}>
-                  {" "}
-                  {(v.stagesTL || []).map((st: any, st_i: number) => (
-                    <Fragment key={st_i}>
-                      {" "}
-                      <li className={`gi-tls ${st.cls}`}>
-                        {" "}
-                        <div className="gi-tlrail" aria-hidden="true">
-                          <span className="gi-tldot"></span>
-                          <span className="gi-tlseg"></span>
-                        </div>
-                        {" "}
-                        <div className="gi-tlbody">
-                          {" "}
-                          <span className="gi-tltag">
-                            <span className="sc-interp">{st.tag}</span>
-                          </span>
-                          {" "}
-                          <span className="gi-tlnum">
-                            0<span className="sc-interp">{st.n}</span>
-                          </span>
-                          {" "}
-                          <span className="gi-tlname">
-                            <span className="sc-interp">{st.name}</span>
-                          </span>
-                          {" "}
-                          <span className="gi-tltext">
-                            <span className="sc-interp">{st.short}</span>
-                          </span>
-                          {" "}
-                        </div>
-                        {" "}
-                      </li>
-                      {" "}
-                    </Fragment>
+                <ul className="gi-offer-logos">
+                  {[["deloitte", "Deloitte"], ["goldman", "Goldman Sachs"], ["pwc", "PwC"], ["accenture", "Accenture"], ["dyson", "Dyson"]].map(([f, name]) => (
+                    <li key={f}><img src={`/assets/logo-${f}-t.png`} alt={name} className={f === "goldman" ? "is-square" : undefined} /></li>
                   ))}
-                  {" "}
-                </ol>
-                {" "}
-                <div className="gi-tlpager" role="group" aria-label="Choose a stage">
-                  {" "}
-                  {(v.tlDots || []).map((d: any, d_i: number) => (
-                    <Fragment key={d_i}>
-                      <button type="button" onClick={d.go} className={`gi-tlpip ${d.cls}`} aria-label={d.label} aria-current={d.cur}></button>
-                    </Fragment>
-                  ))}
-                  {" "}
-                </div>
-                {" "}
-                <div style={{ marginTop: "40px", paddingTop: "24px", borderTop: "1px solid var(--rule)" }}>
-                  {" "}
-                  <button onClick={v.goDays} className="gi-textbtn" style={{ all: "unset", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "12px", minHeight: "44px", fontSize: "15px", fontWeight: "600", letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--blackberry)" }}>
-                    {" "}
-                    <span className="gi-textbtn-l">
-                      See how we prepare for each stage
-                    </span>
-                    {" "}
-                    <span className="gi-textbtn-c" aria-hidden="true">
-                      →
-                    </span>
-                    {" "}
-                  </button>
-                  {" "}
-                </div>
-                {" "}
+                </ul>
               </div>
-              {" "}
             </section>
+            {v.course ? null : <Explainer v={v} />}
             {" "}
-            <section style={{ background: "var(--warm-white)" }}>
-              {" "}
-              <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(52px,7vw,96px) clamp(20px,5vw,64px)" }}>
-                {" "}
-                <p style={{ margin: "0 0 16px", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--blackberry)" }} className="gi-up">
-                  What your child leaves with
-                </p>
-                {" "}
-                <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(32px,3.6vw,52px)", lineHeight: "1.04", letterSpacing: "-0.02em", textWrap: "balance", maxWidth: "17ch" }}>
-                  By the end, your child leaves with:
-                </h2>
-                {" "}
-                <div className="gi-pack gi-pack3 gi-car" data-cur={v.pkCur} ref={v.pkRef} onScroll={v.pkScroll} style={{ marginTop: "56px" }}>
-                  {" "}
-                  <div>
-                    {" "}
-                    <div className="gi-paper" style={{ background: "var(--warm-white)", border: "1px solid var(--rule)", padding: "24px", display: "flex", flexDirection: "column", gap: "12px", minHeight: "250px", boxSizing: "border-box" }}>
-                      {" "}
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", alignItems: "center", lineHeight: "1", paddingBottom: "12px", borderBottom: "1px solid var(--blackberry)" }}>
-                        <span style={{ flex: "1 1 auto", minWidth: "0", whiteSpace: "nowrap" }}>
-                          Route Map
-                        </span>
-                        <span style={{ color: "var(--blackberry)" }}>
-                          Sample
-                        </span>
-                      </div>
-                      {" "}
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", paddingBottom: "8px", borderBottom: "1px solid var(--rule)", fontSize: "14px" }}>
-                        <span style={{ flex: "1 1 auto", minWidth: "0" }}>
-                          A · Professional services
-                        </span>
-                        <span style={{ fontWeight: "600", whiteSpace: "nowrap", flex: "0 0 auto" }}>
-                          Closes Nov
-                        </span>
-                      </div>
-                      {" "}
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", paddingBottom: "8px", borderBottom: "1px solid var(--rule)", fontSize: "14px" }}>
-                        <span style={{ flex: "1 1 auto", minWidth: "0" }}>
-                          B · Bank, technology
-                        </span>
-                        <span style={{ fontWeight: "600", whiteSpace: "nowrap", flex: "0 0 auto" }}>
-                          Closes Dec
-                        </span>
-                      </div>
-                      {" "}
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", paddingBottom: "8px", borderBottom: "1px solid var(--rule)", fontSize: "14px" }}>
-                        <span style={{ flex: "1 1 auto", minWidth: "0" }}>
-                          C · Engineering
-                        </span>
-                        <span style={{ fontWeight: "600", whiteSpace: "nowrap", flex: "0 0 auto" }}>
-                          Rolling
-                        </span>
-                      </div>
-                      {" "}
-                      <span style={{ fontSize: "14px", color: "var(--blackberry-soft)" }}>
-                        Apply to A first. Its tests open a week after applying.
-                      </span>
-                      {" "}
-                    </div>
-                    {" "}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "20px" }}>
-                      <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", color: "var(--blackberry)" }}>
-                        01
-                      </span>
-                      <span style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                        <span style={{ fontSize: "17px", fontWeight: "600" }}>
-                          A target scheme and deadline plan
-                        </span>
-                        <span style={{ fontSize: "16px", lineHeight: "1.45", color: "var(--blackberry-soft)" }}>
-                          Which schemes, in what order, sent within 48 hours.
-                        </span>
-                      </span>
-                    </div>
-                    {" "}
-                  </div>
-                  {" "}
-                  <div>
-                    {" "}
-                    <div className="gi-paper" style={{ background: "var(--warm-white)", border: "1px solid var(--rule)", padding: "24px", display: "flex", flexDirection: "column", gap: "12px", minHeight: "250px", boxSizing: "border-box" }}>
-                      {" "}
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", alignItems: "center", lineHeight: "1", paddingBottom: "12px", borderBottom: "1px solid var(--blackberry)" }}>
-                        <span style={{ flex: "1 1 auto", minWidth: "0", whiteSpace: "nowrap" }}>
-                          Assessment centre
-                        </span>
-                        <span style={{ color: "var(--blackberry)" }}>
-                          Sample
-                        </span>
-                      </div>
-                      {" "}
-                      {(v.scorecard || []).map((r: any, r_i: number) => (
-                        <Fragment key={r_i}>
-                          {" "}
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", paddingBottom: "8px", borderBottom: "1px solid var(--rule)", fontSize: "14px" }}>
-                            {" "}
-                            <span>
-                              <span className="sc-interp">{r.k}</span>
-                            </span>
-                            {" "}
-                            <span style={{ display: "flex", gap: "4px" }}>
-                              {(r.pips || []).map((p: any, p_i: number) => (
-                                <Fragment key={p_i}>
-                                  <span style={{ width: "16px", height: "7px", background: p }}></span>
-                                </Fragment>
-                              ))}
-                            </span>
-                            {" "}
-                          </div>
-                          {" "}
-                        </Fragment>
-                      ))}
-                      {" "}
-                      <span style={{ fontSize: "14px", lineHeight: "1.5", color: "var(--blackberry-soft)", fontStyle: "italic" }}>
-                        {"\"Strong case study. In the group, bring others in before you summarise.\""}
-                      </span>
-                      {" "}
-                    </div>
-                    {" "}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "20px" }}>
-                      <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", color: "var(--blackberry)" }}>
-                        02
-                      </span>
-                      <span style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                        <span style={{ fontSize: "17px", fontWeight: "600" }}>
-                          Mock assessment-centre feedback
-                        </span>
-                        <span style={{ fontSize: "16px", lineHeight: "1.45", color: "var(--blackberry-soft)" }}>
-                          Every exercise scored, in a written report.
-                        </span>
-                      </span>
-                    </div>
-                    {" "}
-                  </div>
-                  {" "}
-                  <div>
-                    {" "}
-                    <div className="gi-paper" style={{ background: "var(--warm-white)", border: "1px solid var(--rule)", padding: "24px", display: "flex", flexDirection: "column", gap: "12px", minHeight: "250px", boxSizing: "border-box" }}>
-                      {" "}
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", alignItems: "center", lineHeight: "1", paddingBottom: "12px", borderBottom: "1px solid var(--blackberry)" }}>
-                        <span style={{ flex: "1 1 auto", minWidth: "0", whiteSpace: "nowrap" }}>
-                          Application
-                        </span>
-                        <span style={{ color: "var(--blackberry)" }}>
-                          Sample
-                        </span>
-                      </div>
-                      {" "}
-                      <p style={{ margin: "0", fontFamily: "'Newsreader',serif", fontSize: "17px", lineHeight: "1.55" }}>
-                        {"I want to join because "}
-                        <span style={{ textDecoration: "line-through", color: "var(--muted)" }}>
-                          I am passionate about technology
-                        </span>
-                        {" "}
-                        <span style={{ background: "rgba(130,61,72,0.14)", padding: "1px 4px", WebkitBoxDecorationBreak: "clone", boxDecorationBreak: "clone" }}>
-                          I built a budgeting app for my sixth form's charity week.
-                        </span>
-                      </p>
-                      {" "}
-                      <span style={{ fontSize: "14px", lineHeight: "1.5", color: "var(--blackberry-soft)", paddingLeft: "12px", borderLeft: "2px solid var(--blackberry)" }}>
-                        Every scheme reads "passionate". Replace it with something you did.
-                      </span>
-                      {" "}
-                    </div>
-                    {" "}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "20px" }}>
-                      <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", color: "var(--blackberry)" }}>
-                        03
-                      </span>
-                      <span style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                        <span style={{ fontSize: "17px", fontWeight: "600" }}>
-                          A reviewed application
-                        </span>
-                        <span style={{ fontSize: "16px", lineHeight: "1.45", color: "var(--blackberry-soft)" }}>
-                          Their real application, reviewed twice, line by line.
-                        </span>
-                      </span>
-                    </div>
-                    {" "}
-                  </div>
-                  {" "}
-                </div>
-                {" "}
-                <div className="gi-pkpager" role="group" aria-label="Choose a document">
-                  {" "}
-                  {(v.pkDots || []).map((d: any, d_i: number) => (
-                    <Fragment key={d_i}>
-                      <button type="button" onClick={d.go} className={`gi-tlpip ${d.cls}`} aria-label={d.label} aria-current={d.cur}></button>
-                    </Fragment>
-                  ))}
-                  {" "}
-                </div>
-                {" "}
-                <div style={{ marginTop: "40px", paddingTop: "20px", borderTop: "1px solid var(--rule)", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "12px 40px" }}>
-                  {" "}
-                  <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.5", color: "var(--blackberry-soft)", maxWidth: "60ch" }}>
-                    Plus a test baseline, a scored video interview and a next-step plan.
-                  </p>
-                  {" "}
-                  <button onClick={v.goDays} className="gi-ghost" style={{ all: "unset", cursor: "pointer", fontSize: "16px", fontWeight: "600", color: "var(--blackberry)", textDecoration: "underline", textUnderlineOffset: "4px", whiteSpace: "nowrap" }}>
-                    {"See everything they'll leave with "}
-                    <span className="gi-arr" aria-hidden="true">
-                      →
-                    </span>
-                  </button>
-                  {" "}
-                </div>
-                {" "}
-              </div>
-              {" "}
-            </section>
-            {" "}
-            <section style={{ background: "var(--bone)" }} className="gi-bgbone">
-              {" "}
-              <div className="gi-profile gi-teach" style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(52px,7vw,96px) clamp(20px,5vw,64px)", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.1fr)", alignItems: "start" }}>
-                {" "}
-                <div style={{ minWidth: "0", display: "flex", flexDirection: "column", gap: "24px" }}>
-                  {" "}
-                  <p className="gi-t1 gi-up" style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }}>
-                    Who teaches them
-                  </p>
-                  {" "}
-                  <h2 className="gi-t2" style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(32px,3.6vw,52px)", lineHeight: "1.04", letterSpacing: "-0.02em", textWrap: "balance", maxWidth: "16ch" }}>
-                    Taught by people who got the offers.
-                  </h2>
-                  {" "}
-                  <p className="gi-t5" style={{ margin: "0", fontSize: "18px", lineHeight: "1.6", color: "var(--blackberry-soft)", maxWidth: "44ch", textWrap: "pretty" }}>
-                    Shreyash applied from sixth form at 17 and used this process to get four offers. Every assessor on the course has been through a real scheme and received an offer.
-                  </p>
-                  {" "}
-                  <div className="gi-t3" style={{ display: "flex", flexDirection: "column", gap: "2px", paddingTop: "16px", borderTop: "1px solid var(--rule)" }}>
-                    <span style={{ fontSize: "16px", fontWeight: "600", color: "var(--blackberry)" }}>
-                      Shreyash Singh
-                    </span>
-                    <span style={{ fontSize: "14px", color: "var(--muted)" }}>
-                      Founder · Deloitte degree apprentice, 2021–25
-                    </span>
-                  </div>
-                  {" "}
-                </div>
-                {" "}
-                <div style={{ minWidth: "0", display: "flex", flexDirection: "column", gap: "32px" }}>
-                  {" "}
-                  <div className="gi-t4" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                    {" "}
-                    <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                      Degree apprenticeship offers
-                    </span>
-                    {" "}
-                    <ul className="gi-offers" style={{ margin: "0", padding: "0", listStyle: "none", borderTop: "2px solid var(--blackberry)" }}>
-                      {" "}
-                      {(v.offerFirms || []).map((o: any, o_i: number) => (
-                        <Fragment key={o_i}>
-                          <li style={{ padding: "18px 0", borderBottom: "1px solid var(--rule)", fontFamily: "'Newsreader',serif", fontSize: "clamp(24px,2.4vw,32px)", lineHeight: "1.1", color: "var(--blackberry)" }}>
-                            <span className="sc-interp">{o}</span>
-                          </li>
-                        </Fragment>
-                      ))}
-                      {" "}
-                    </ul>
-                    {" "}
-                    <span style={{ fontSize: "14px", lineHeight: "1.5", color: "var(--muted)" }}>
-                      Ask to see the offer letters on your discovery call.
-                    </span>
-                    {" "}
-                  </div>
-                  {" "}
-                  <dl className="gi-t6" style={{ margin: "0", borderTop: "1px solid var(--rule)" }}>
-                    {" "}
-                    {(v.creds || []).map((c: any, c_i: number) => (
-                      <Fragment key={c_i}>
-                        {" "}
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 24px", padding: "14px 0", borderBottom: "1px solid var(--rule)" }}>
-                          {" "}
-                          <dt style={{ flex: "0 0 140px", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", paddingTop: "4px" }}>
-                            <span className="sc-interp">{c.k}</span>
-                          </dt>
-                          {" "}
-                          <dd style={{ margin: "0", flex: "1 1 220px", fontSize: "16px", lineHeight: "1.5", color: "var(--blackberry)" }}>
-                            <span className="sc-interp">{c.v}</span>
-                          </dd>
-                          {" "}
-                        </div>
-                        {" "}
-                      </Fragment>
-                    ))}
-                    {" "}
-                  </dl>
-                  {" "}
-                </div>
-                {" "}
-              </div>
-              {" "}
-            </section>
-            {" "}
-            <section aria-label="What success looks like" style={{ background: "var(--bone)" }} className="gi-bgbone">
-              {" "}
-              <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(52px,7vw,96px) clamp(20px,5vw,64px)", display: "flex", flexDirection: "column", gap: "40px" }}>
-                {" "}
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                  <p style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                    What success looks like
-                  </p>
-                  {" "}
-                  <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(32px,3.6vw,52px)", lineHeight: "1.04", letterSpacing: "-0.02em", textWrap: "balance", color: "var(--blackberry)", maxWidth: "20ch" }}>
-                    On the day of the real assessment centre, they've done it before.
-                  </h2>
-                </div>
-                {" "}
-                <div className="gi-ba" role="table" aria-label="Without and with DegreeYourWay">
-                  {" "}
-                  <div role="row" className="gi-bahead">
-                    <span role="columnheader">
-                      Without preparation
-                    </span>
-                    <span role="columnheader" style={{ color: "var(--gain)" }}>
-                      After DegreeYourWay
-                    </span>
-                  </div>
-                  {" "}
-                  {(v.baRows || []).map((r: any, r_i: number) => (
-                    <Fragment key={r_i}>
-                      {" "}
-                      <div role="row" className="gi-barow">
-                        <span role="cell" className="gi-bawo">
-                          <span className="sc-interp">{r.a}</span>
-                        </span>
-                        <span role="cell" className="gi-bawi">
-                          <span aria-hidden="true" style={{ color: "var(--gain)", fontWeight: "600" }}>
-                            ✓
-                          </span>
-                          {" "}<span className="sc-interp">{r.b}</span>
-                        </span>
-                      </div>
-                      {" "}
-                    </Fragment>
-                  ))}
-                  {" "}
-                </div>
-                {" "}
-                <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px 24px" }}>
-                  <button type="button" onClick={v.goQuiz} data-cta="pathfinder" className="gi-pfcta">
-                    <svg className="gi-pfico" width="18" height="18" viewBox="0 0 256 256" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="128" cy="128" r="96"></circle>
-                      <polygon points="168 88 112 112 88 168 144 144 168 88" fill="currentColor" stroke="none"></polygon>
-                    </svg>
-                    Try the Pathfinder
-                    <span className="gi-bprice">
-                      <span className="gi-bstrike">
-                        £20
-                      </span>
-                      Free
-                    </span>
-                  </button>
-                  <span style={{ fontSize: "14px", color: "var(--muted)" }}>
-                    See where your child stands in 90 seconds.
-                  </span>
-                </div>
-                {" "}
-              </div>
-              {" "}
-            </section>
-            {" "}
-            <section style={{ background: "var(--warm-white)", color: "var(--blackberry)", borderTop: "2px solid var(--blackberry)" }}>
-              {" "}
-              <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(64px,9vw,128px) clamp(20px,5vw,64px)" }}>
-                {" "}
-                <p style={{ margin: "0 0 16px", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--blackberry)" }} className="gi-up">
-                  Two promises
-                </p>
-                {" "}
-                <div className="gi-split gi-half" style={{ alignItems: "start" }}>
-                  {" "}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "24px", minWidth: "0" }}>
-                    {" "}
-                    <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(34px,4vw,58px)", lineHeight: "1", letterSpacing: "-0.02em", textWrap: "balance" }}>
-                      No offer within 12 months? Come back free.
-                    </h2>
-                    {" "}
-                    <ol style={{ margin: "0", padding: "0", listStyle: "none", borderTop: "1px solid var(--rule)" }}>
-                      {" "}
-                      {(v.guarSteps || []).map((g: any, g_i: number) => (
-                        <Fragment key={g_i}>
-                          {" "}
-                          <li style={{ display: "flex", gap: "16px", padding: "12px 0", borderBottom: "1px solid var(--rule)", fontSize: "16px", lineHeight: "1.45", color: "var(--blackberry-soft)", alignItems: "baseline" }}>
-                            <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.1em", color: "var(--blackberry)" }}>
-                              0<span className="sc-interp">{g.n}</span>
-                            </span>
-                            <span style={{ flex: "1 1 auto", minWidth: "0" }}>
-                              <span className="sc-interp">{g.text}</span>
-                            </span>
-                          </li>
-                          {" "}
-                        </Fragment>
-                      ))}
-                      {" "}
-                    </ol>
-                    {" "}
-                    <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.5", color: "var(--muted)" }}>
-                      Employers make every hiring decision. We guarantee the preparation, not the outcome.
-                    </p>
-                    {" "}
-                    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px 28px" }}>
-                      <button onClick={v.cta.promise} data-cta="call_booked" className="gi-btn gi-promcta gi-bgbb" style={{ textTransform: "uppercase", letterSpacing: "0.08em", cursor: "pointer", whiteSpace: "nowrap", border: "0", background: "var(--blackberry)", color: "var(--warm-white)", font: "600 16px 'Source Sans 3',sans-serif", padding: "20px 32px", borderRadius: "2px" }}>
-                        <span className="sc-interp">{v.ctaLabel}</span>
-                      </button>
-                      <button onClick={v.goTerms} className="gi-ghost" style={{ all: "unset", cursor: "pointer", fontSize: "16px", fontWeight: "600", color: "var(--blackberry)", textDecoration: "underline", textUnderlineOffset: "4px", whiteSpace: "nowrap" }}>
-                        {"Read the full guarantee "}
-                        <span className="gi-arr" aria-hidden="true">
-                          →
-                        </span>
-                      </button>
-                    </div>
-                    {" "}
-                    <span style={{ fontSize: "14px", color: "var(--muted)" }}>
-                      {"£100 deposit, refundable. "}<span className="sc-interp">{v.seatShort}</span>.
-                    </span>
-                    {" "}
-                  </div>
-                  {" "}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "24px", minWidth: "0", paddingLeft: "clamp(0px,3vw,48px)", borderLeft: "1px solid var(--rule)" }} className="gi-promise2">
-                    {" "}
-                    <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(34px,4vw,58px)", lineHeight: "1", letterSpacing: "-0.02em", textWrap: "balance" }}>
-                      The Deadline Line
-                    </h2>
-                    {" "}
-                    <p style={{ margin: "0", fontFamily: "'Newsreader',serif", fontSize: "clamp(22px,2vw,26px)", lineHeight: "1.3", color: "var(--blackberry)", maxWidth: "30ch" }}>
-                      Support until their last application deadline.
-                    </p>
-                    {" "}
-                    <p style={{ margin: "0", fontSize: "17px", lineHeight: "1.6", color: "var(--blackberry-soft)", maxWidth: "46ch" }}>
-                      WhatsApp our team 24/7 about applications, tests and interviews. Message 24/7. Replies within 24 hours, every day.
-                    </p>
-                    {" "}
-                    <ul style={{ margin: "0", padding: "0", listStyle: "none", borderTop: "1px solid var(--rule)" }}>
-                      {" "}
-                      <li style={{ padding: "12px 0", borderBottom: "1px solid var(--rule)", fontSize: "16px", lineHeight: "1.45", color: "var(--blackberry-soft)" }}>
-                        {"Application due? "}
-                        <span style={{ fontWeight: "600", color: "var(--blackberry)" }}>
-                          Ask.
-                        </span>
-                      </li>
-                      {" "}
-                      <li style={{ padding: "12px 0", borderBottom: "1px solid var(--rule)", fontSize: "16px", lineHeight: "1.45", color: "var(--blackberry-soft)" }}>
-                        {"Interview coming up? "}
-                        <span style={{ fontWeight: "600", color: "var(--blackberry)" }}>
-                          Ask.
-                        </span>
-                      </li>
-                      {" "}
-                      <li style={{ padding: "12px 0", borderBottom: "1px solid var(--rule)", fontSize: "16px", lineHeight: "1.45", color: "var(--blackberry-soft)" }}>
-                        {"Assessment centre next week? "}
-                        <span style={{ fontWeight: "600", color: "var(--blackberry)" }}>
-                          Ask.
-                        </span>
-                      </li>
-                      {" "}
-                    </ul>
-                    {" "}
-                  </div>
-                  {" "}
-                </div>
-                {" "}
-              </div>
-              {" "}
-            </section>
-            {" "}
-            <section aria-label="Questions parents ask" style={{ background: "var(--bone)" }} className="gi-bgbone">
-              {" "}
-              <div className="gi-faqwrap" style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(48px,6vw,80px) clamp(20px,5vw,64px)" }}>
-                {" "}
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px", minWidth: "0" }}>
-                  <p style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                    Questions parents ask
-                  </p>
-                  <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(28px,3vw,40px)", lineHeight: "1.1", letterSpacing: "-0.02em", color: "var(--blackberry)" }}>
-                    Before you book.
-                  </h2>
-                </div>
-                {" "}
-                <div style={{ minWidth: "0", borderTop: "1px solid var(--blackberry)" }}>
-                  {" "}
-                  {(v.faqTop || []).map((f: any, f_i: number) => (
-                    <Fragment key={f_i}>
-                      {" "}
-                      <details className="gi-faq" style={{ borderBottom: "1px solid var(--rule)" }}>
-                        {" "}
-                        <summary className="gi-faqsum">
-                          <span className="sc-interp">{f.q}</span>
-                          <span aria-hidden="true" className="gi-plus">
-                            +
-                          </span>
-                        </summary>
-                        {" "}
-                        <p className="gi-ans" style={{ margin: "0", padding: "0 40px 20px 0", fontSize: "16px", lineHeight: "1.6", color: "var(--blackberry-soft)", maxWidth: "62ch" }}>
-                          <span className="sc-interp">{f.a}</span>
-                        </p>
-                        {" "}
-                      </details>
-                      {" "}
-                    </Fragment>
-                  ))}
-                  {" "}
-                </div>
-                {" "}
-              </div>
-              {" "}
-            </section>
-            {" "}
+            {v.course ? (
             <section style={{ background: "var(--blackberry)", color: "var(--warm-white)" }} className="gi-bgbb">
               {" "}
               <div className="gi-final" style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(72px,9vw,136px) clamp(20px,5vw,64px)" }}>
                 {" "}
-                <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", lineHeight: "0.97", letterSpacing: "-0.025em", textWrap: "balance", fontSize: "clamp(40px,5vw,72px)" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                  <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", lineHeight: "0.97", letterSpacing: "-0.025em", textWrap: "balance", fontSize: "clamp(40px,5vw,72px)" }}>
                   Two days to practise what employers test.
                 </h2>
+                  <ul style={{ listStyle: "none", margin: "0", padding: "0", display: "flex", flexDirection: "column", gap: "12px", fontSize: "17px", lineHeight: "1.5", color: "var(--on-dark-body)", maxWidth: "46ch" }}>
+                    <li>Practice for every stage: online tests, a scored video interview, a full mock assessment centre and their real application, reviewed.</li>
+                    <li>Two days in London, run by people who got the offers.</li>
+                    <li>No offer within 12 months? Their next course is free. <a href="/terms" style={{ color: "inherit", textUnderlineOffset: "3px" }}>See the guarantee</a>.</li>
+                  </ul>
+                </div>
                 {" "}
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   {" "}
@@ -1095,7 +225,7 @@ export default function GetInView({ v }: { v: any }) {
                   </button>
                   {" "}
                   <span style={{ fontSize: "14px", color: "var(--on-dark-muted)", textAlign: "center" }}>
-                    {"£100 deposit to reserve · "}<span className="sc-interp">{v.seatShort}</span>
+                    {"£100 deposit to reserve, "}<span className="sc-interp">{v.seatShort}</span>
                   </span>
                   {" "}
                 </div>
@@ -1103,6 +233,28 @@ export default function GetInView({ v }: { v: any }) {
               </div>
               {" "}
             </section>
+            ) : (
+            <section style={{ background: "var(--blackberry)", color: "var(--warm-white)" }} className="gi-bgbb">
+              <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(64px,8vw,120px) clamp(20px,5vw,64px)", display: "flex", flexDirection: "column", gap: "24px", alignItems: "flex-start" }}>
+                <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", lineHeight: "1", letterSpacing: "-0.025em", textWrap: "balance", fontSize: "clamp(40px,5vw,72px)", maxWidth: "16ch" }}>
+                  Talk it through with someone who got in.
+                </h2>
+                <ul style={{ listStyle: "none", margin: "0", padding: "0", display: "flex", flexDirection: "column", gap: "12px", fontSize: "17px", lineHeight: "1.5", color: "var(--on-dark-body)", maxWidth: "46ch" }}>
+                  <li>A free 30-minute call with Shreyash.</li>
+                  <li>Which schemes fit, and what to do first.</li>
+                  <li>Parents welcome. No cost, no obligation.</li>
+                </ul>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", width: "100%", maxWidth: "640px" }}>
+                  <button onClick={v.cta.final} data-cta="call_booked" className="gi-btn" style={{ flex: "1 1 260px", textTransform: "uppercase", letterSpacing: "0.08em", cursor: "pointer", border: "0", background: "var(--oxblood)", color: "var(--warm-white)", font: "600 16px 'Source Sans 3',sans-serif", borderRadius: "2px", padding: "20px 24px" }}>
+                    <span className="sc-interp">{v.ctaLabel}</span>
+                  </button>
+                  <button type="button" onClick={v.goQuiz} data-cta="pathfinder" className="gi-btn gi-btn-ondark" style={{ flex: "1 1 260px", textTransform: "uppercase", letterSpacing: "0.08em", cursor: "pointer", border: "0", font: "600 16px 'Source Sans 3',sans-serif", borderRadius: "2px", padding: "20px 24px" }}>
+                    Try the free Pathfinder
+                  </button>
+                </div>
+              </div>
+            </section>
+            )}
             {" "}
           </>
         ) : null}
@@ -1115,7 +267,7 @@ export default function GetInView({ v }: { v: any }) {
               <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(36px,5vw,88px) clamp(20px,5vw,64px) clamp(40px,5vw,72px)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "20px" }}>
                 {" "}
                 <p style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                  The course · Two days · London
+                  The course, Two days, London
                 </p>
                 {" "}
                 <h1 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(40px,5.6vw,80px)", lineHeight: "1", letterSpacing: "-0.025em", maxWidth: "16ch", textWrap: "balance", color: "var(--blackberry)" }}>
@@ -1185,6 +337,7 @@ export default function GetInView({ v }: { v: any }) {
               </div>
               {" "}
             </section>
+            {v.course ? <MoneySection course /> : null}
             {" "}
             <section aria-label="Everything included" style={{ background: "var(--warm-white)" }}>
               {" "}
@@ -1193,7 +346,7 @@ export default function GetInView({ v }: { v: any }) {
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px", minWidth: "0" }}>
                   {" "}
                   <p style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                    Everything included · £595
+                    Everything included, £595
                   </p>
                   {" "}
                   <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(32px,3.6vw,52px)", lineHeight: "1.04", letterSpacing: "-0.02em", textWrap: "balance", color: "var(--blackberry)", maxWidth: "12ch" }}>
@@ -1209,7 +362,7 @@ export default function GetInView({ v }: { v: any }) {
                       <span className="sc-interp">{v.ctaLabel}</span>
                     </button>
                     <span style={{ fontSize: "14px", color: "var(--muted)" }}>
-                      £595 founding price · £100 off the £695 full price
+                      £595 founding price, £100 off the £695 full price
                     </span>
                   </div>
                   {" "}
@@ -1609,7 +762,7 @@ export default function GetInView({ v }: { v: any }) {
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px", minWidth: "0" }}>
                   {" "}
                   <p style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--on-dark-label)" }} className="gi-up">
-                    The Deadline Line · included
+                    The Deadline Line, included
                   </p>
                   {" "}
                   <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(32px,3.6vw,52px)", lineHeight: "1.04", letterSpacing: "-0.02em", textWrap: "balance", color: "var(--warm-white)", maxWidth: "14ch" }}>
@@ -1744,7 +897,7 @@ export default function GetInView({ v }: { v: any }) {
                   </h2>
                   <ul className="gi-endpromise" style={{ margin: "20px 0 0", padding: "0", listStyle: "none" }}>
                     <li>
-                      {"£595 founding price · "}<span className="sc-interp">{v.seatLine}</span>
+                      {"£595 founding price, "}<span className="sc-interp">{v.seatLine}</span>
                     </li>
                     <li>
                       £100 deposit, refundable
@@ -1815,13 +968,13 @@ export default function GetInView({ v }: { v: any }) {
                     </button>
                     {" "}
                     <span style={{ fontSize: "15px", color: "var(--muted)", textAlign: "center" }}>
-                      <span className="sc-interp">{v.seatShort}</span>{" · £100 deposit today, refundable"}
+                      <span className="sc-interp">{v.seatShort}</span>{", £100 deposit today, refundable"}
                     </span>
                     {" "}
                   </div>
                   {" "}
                   <p style={{ margin: "24px 0 0", fontSize: "15px", color: "var(--muted)" }}>
-                    With a 2–3 day placement and a reference: £950. Five seats.
+                    With a 2 or 3 day placement and a reference: £950. Five seats.
                   </p>
                   {" "}
                 </div>
@@ -2107,7 +1260,7 @@ export default function GetInView({ v }: { v: any }) {
                 </div>
                 {" "}
                 <p style={{ margin: "32px 0 0", padding: "20px 0", borderTop: "2px solid var(--blackberry)", fontFamily: "'Newsreader',serif", fontSize: "clamp(22px,2.2vw,28px)", lineHeight: "1.3" }}>
-                  Outside London, or 19–23? The online cohort, four evenings, £450.
+                  Outside London, or 19 to 23? The online cohort, four evenings, £450.
                 </p>
                 {" "}
               </div>
@@ -2186,7 +1339,7 @@ export default function GetInView({ v }: { v: any }) {
                   </div>
                   {" "}
                   <p style={{ margin: "0", fontSize: "15px", color: "var(--muted)" }}>
-                    {"£100 refundable deposit · DegreeYourWay Guarantee · "}<span className="sc-interp">{v.seatShort}</span>
+                    {"£100 refundable deposit, DegreeYourWay Guarantee, "}<span className="sc-interp">{v.seatShort}</span>
                   </p>
                   {" "}
                   <span style={{ fontSize: "15px", color: "var(--muted)" }}>
@@ -2255,7 +1408,7 @@ export default function GetInView({ v }: { v: any }) {
                             </option>
                             {" "}
                             <option value="19-23">
-                              Aged 19–23
+                              Aged 19 to 23
                             </option>
                             {" "}
                           </select>
@@ -2359,7 +1512,7 @@ export default function GetInView({ v }: { v: any }) {
               <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(36px,5vw,88px) clamp(20px,5vw,64px) clamp(40px,5vw,72px)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "20px" }}>
                 {" "}
                 <p style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                  For schools · Free
+                  For schools, free
                 </p>
                 {" "}
                 <h1 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(40px,5.6vw,80px)", lineHeight: "1", letterSpacing: "-0.025em", maxWidth: "16ch", textWrap: "balance", color: "var(--blackberry)" }}>
@@ -2559,7 +1712,7 @@ export default function GetInView({ v }: { v: any }) {
                     </span>
                     {" "}
                     <span style={{ marginTop: "auto", background: "var(--blackberry)", color: "var(--bone)", fontSize: "11px", fontWeight: "600", padding: "8px 10px", borderRadius: "2px" }} className="gi-bgbb">
-                      Free Pathfinder · QR code
+                      Free Pathfinder, QR code
                     </span>
                     {" "}
                   </div>
@@ -2590,7 +1743,7 @@ export default function GetInView({ v }: { v: any }) {
                     </span>
                     <span className="gi-hoLine">
                       <span style={{ fontWeight: "600", color: "var(--blackberry)" }}>
-                        Sep–Jan
+                        Sep to Jan
                       </span>
                       {" when windows open"}
                     </span>
@@ -2653,7 +1806,7 @@ export default function GetInView({ v }: { v: any }) {
                 {" "}
                 <div id="school-form" style={{ scrollMarginTop: "96px" }}>
                   <p style={{ margin: "0 0 16px", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--blackberry)" }} className="gi-up">
-                    Step 1 · Send your dates
+                    Step 1: Send your dates
                   </p>
                   <h2 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(32px,3.6vw,52px)", lineHeight: "1.04", letterSpacing: "-0.02em", textWrap: "balance", maxWidth: "12ch" }}>
                     Book a free talk.
@@ -2744,7 +1897,7 @@ export default function GetInView({ v }: { v: any }) {
                   {" No catch."}
                 </span>
                 <span>
-                  Parents who want more can book the course. The school is never asked to promote it.
+                  {v.course ? "Parents who want more can book the course. The school is never asked to promote it." : "Students who want more can book a free call with Shreyash. The school is never asked to promote anything."}
                 </span>
               </div>
               {" "}
@@ -2874,7 +2027,7 @@ export default function GetInView({ v }: { v: any }) {
               <div style={{ maxWidth: "680px", margin: "0 auto", padding: "clamp(56px,8vw,120px) clamp(20px,5vw,32px)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "20px" }}>
                 {" "}
                 <p style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
-                  Free call · 30 minutes
+                  Free call, 30 minutes
                 </p>
                 {" "}
                 <h1 style={{ margin: "0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(48px,6vw,80px)", lineHeight: "1", letterSpacing: "-0.025em", color: "var(--blackberry)" }}>
@@ -2890,12 +2043,6 @@ export default function GetInView({ v }: { v: any }) {
                 {" "}
                 <button type="button" onClick={v.goQuiz} data-cta="pathfinder" className="gi-pfcta">
                   Try the Pathfinder before the call
-                  <span className="gi-bprice">
-                    <span className="gi-bstrike">
-                      £20
-                    </span>
-                    Free
-                  </span>
                 </button>
                 {" "}
               </div>
@@ -2922,7 +2069,7 @@ export default function GetInView({ v }: { v: any }) {
                 </span>
               </span>
               <span style={{ fontSize: "12px", color: "var(--on-dark-label)", fontWeight: "600", letterSpacing: "0.06em" }}>
-                <span className="sc-interp">{v.mySave}</span>{" · "}<span className="sc-interp">{v.seatShort}</span>
+                <span className="sc-interp">{v.mySave}</span>{", "}<span className="sc-interp">{v.seatShort}</span>
               </span>
             </span>
             {" "}
@@ -2991,7 +2138,7 @@ export default function GetInView({ v }: { v: any }) {
                       {" "}
                       <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", paddingBottom: "8px", borderBottom: "1px solid var(--rule)", fontSize: "14px" }}>
                         <span style={{ flex: "1 1 auto", minWidth: "0" }}>
-                          A · Professional services
+                          A: Professional services
                         </span>
                         <span style={{ fontWeight: "600", whiteSpace: "nowrap", flex: "0 0 auto" }}>
                           Closes Nov
@@ -3000,7 +2147,7 @@ export default function GetInView({ v }: { v: any }) {
                       {" "}
                       <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", paddingBottom: "8px", borderBottom: "1px solid var(--rule)", fontSize: "14px" }}>
                         <span style={{ flex: "1 1 auto", minWidth: "0" }}>
-                          B · Bank, technology
+                          B: Bank, technology
                         </span>
                         <span style={{ fontWeight: "600", whiteSpace: "nowrap", flex: "0 0 auto" }}>
                           Closes Dec
@@ -3009,7 +2156,7 @@ export default function GetInView({ v }: { v: any }) {
                       {" "}
                       <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", paddingBottom: "8px", borderBottom: "1px solid var(--rule)", fontSize: "14px" }}>
                         <span style={{ flex: "1 1 auto", minWidth: "0" }}>
-                          C · Engineering
+                          C: Engineering
                         </span>
                         <span style={{ fontWeight: "600", whiteSpace: "nowrap", flex: "0 0 auto" }}>
                           Rolling
@@ -3415,9 +2562,9 @@ export default function GetInView({ v }: { v: any }) {
                   </h2>
                   {" "}
                   <p style={{ margin: "0", fontSize: "15px", lineHeight: "1.5", color: "var(--on-dark-body)" }}>
-                    {"Get a free 30-minute call with Shreyash, who used this process to get offers from "}
+                    {"Get a free 30-minute call with Shreyash, who applied from sixth form, got four offers from major firms and chose "}
                     <span style={{ color: "var(--warm-white)", fontWeight: "600" }}>
-                      Deloitte, Goldman Sachs, PwC and Accenture
+                      Deloitte
                     </span>
                     .
                   </p>
@@ -3459,12 +2606,6 @@ export default function GetInView({ v }: { v: any }) {
                     {" "}
                     <button type="submit" className="gi-btn gi-btn-ox" style={{ cursor: "pointer", border: "0", font: "600 16px 'Source Sans 3',sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", height: "52px", borderRadius: "2px", width: "100%" }}>
                       Book my discovery call
-                      <span className="gi-bprice">
-                        <span className="gi-bstrike">
-                          £50
-                        </span>
-                        Free
-                      </span>
                     </button>
                     {" "}
                     <div className="gi-oor" aria-hidden="true">
@@ -3479,17 +2620,8 @@ export default function GetInView({ v }: { v: any }) {
                         <polygon points="168 88 112 112 88 168 144 144 168 88" fill="currentColor" stroke="none"></polygon>
                       </svg>
                       Try the Pathfinder
-                      <span className="gi-bprice">
-                        <span className="gi-bstrike">
-                          £20
-                        </span>
-                        Free
-                      </span>
                     </button>
                     {" "}
-                    <span style={{ fontSize: "12px", lineHeight: "1.4", color: "var(--on-dark-muted)", textAlign: "center" }}>
-                      90 seconds · no details needed to start
-                    </span>
                     {" "}
                     <p style={{ margin: "0", fontSize: "13px", lineHeight: "1.5", color: "var(--on-dark-muted)" }}>
                       By sending this you agree to our {" "}<a href="/privacy" target="_blank" rel="noopener" style={{ color: "inherit", textUnderlineOffset: "3px" }}>privacy policy</a>.
@@ -3604,7 +2736,7 @@ export default function GetInView({ v }: { v: any }) {
                   Questions about DegreeYourWay
                 </span>
                 <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--on-dark-label)" }} className="gi-up">
-                  Instant answers · founder on WhatsApp
+                  Instant answers, founder on WhatsApp
                 </span>
               </div>
               {" "}
@@ -3696,9 +2828,9 @@ export default function GetInView({ v }: { v: any }) {
           {" "}
           <nav aria-label="Footer" style={{ display: "flex", flexWrap: "wrap", gap: "8px 20px", fontSize: "14px" }}>
             {" "}
-            <a href="/terms" onClick={v.goTermsLink} className="gi-ghost" style={{ all: "unset", cursor: "pointer", color: "var(--blackberry)", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+            {v.course ? (<a href="/terms" onClick={v.goTermsLink} className="gi-ghost" style={{ all: "unset", cursor: "pointer", color: "var(--blackberry)", textDecoration: "underline", textUnderlineOffset: "3px" }}>
               Terms and the Guarantee
-            </a>
+            </a>) : null}
             {" "}
             <a href="/pathfinder" onClick={v.goQuizLink} className="gi-ghost" style={{ all: "unset", cursor: "pointer", color: "var(--blackberry)", textDecoration: "underline", textUnderlineOffset: "3px" }}>
               Pathfinder
@@ -3719,5 +2851,190 @@ export default function GetInView({ v }: { v: any }) {
       {" "}
     </div>
     </>
+  );
+}
+
+// "Degree apprenticeships, explained": the home page while the course offer is hidden. Figures
+// match the sources already cited on the site (BBC FOI, Commons Library, ISE).
+function Explainer({ v }: { v: any }) {
+  const items: [string, string][] = [
+    ['What is it?', "A full-time job with a bachelor's degree built in. You work for the employer and study part-time, often one day a week or in blocks, for three to six years."],
+    ['Who pays?', "The employer pays the tuition, with government funding. You're paid a salary from day one, so there's no tuition fee loan."],
+    ['Who offers them?', 'Banks, accountancy and consulting firms, law firms, tech companies, engineering firms, the NHS, the police and the Civil Service.'],
+    ['When do you apply?', 'Directly to each employer, alongside UCAS if you like. Most open in the autumn of Year 13 and close between October and February. Some close within weeks.'],
+    ['How do you get in?', 'Usually five stages: an application form, online tests, a video interview, an assessment centre and a final interview. Most applications end at the online tests.'],
+    ['What do you need?', 'Usually three A-levels or equivalent, often 96 to 128 UCAS points, and GCSE Maths and English at 4 or above. Some ask for specific subjects.'],
+  ];
+  return (
+    <>
+      <section aria-labelledby="dya-h" style={{ background: "var(--warm-white)" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(48px,6vw,96px) clamp(20px,5vw,64px) clamp(24px,3vw,48px)" }}>
+          <p style={{ margin: "0", fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
+            The basics
+          </p>
+          <h2 id="dya-h" style={{ margin: "10px 0 0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(32px,3.6vw,52px)", lineHeight: "1.05", letterSpacing: "-0.02em" }}>
+            Degree apprenticeships, explained.
+          </h2>
+          <dl style={{ margin: "32px 0 0", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,320px),1fr))", gap: "0 40px", borderTop: "2px solid var(--blackberry)" }}>
+            {items.map(([q, a]) => (
+              <div key={q} style={{ padding: "20px 0", borderBottom: "1px solid var(--rule)" }}>
+                <dt style={{ fontSize: "17px", fontWeight: "600" }}>{q}</dt>
+                <dd style={{ margin: "6px 0 0", fontSize: "16px", lineHeight: "1.55", color: "var(--blackberry-soft)" }}>{a}</dd>
+              </div>
+            ))}
+          </dl>
+          <div style={{ marginTop: "28px", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px 20px" }}>
+            <button type="button" onClick={v.goQuiz} data-cta="pathfinder" className="gi-pfcta">
+              Find the schemes that fit you
+            </button>
+          </div>
+        </div>
+      </section>
+      <MoneySection course={false} />
+    </>
+  );
+}
+
+// University debt against four years of apprentice pay.
+function MoneySection({ course }: { course: boolean }) {
+  return (
+<section aria-label="Same degree, two routes" style={{ background: "var(--warm-white)" }}>
+  <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(40px,6vw,80px) clamp(20px,5vw,64px)" }}>
+    <div style={{ minWidth: "0", display: "flex", flexDirection: "column" }}>
+      {" "}
+      <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
+        Same degree, two routes
+      </span>
+      {" "}
+      <h2 style={{ margin: "10px 0 0", fontFamily: "'Newsreader',serif", fontWeight: "400", fontSize: "clamp(26px,2.6vw,36px)", lineHeight: "1.12", letterSpacing: "-0.02em", color: "var(--blackberry)", textWrap: "balance" }}>
+        {"University: "}
+        <span style={{ color: "var(--loss)", whiteSpace: "nowrap" }}>
+          −£47,900
+        </span>
+        {". Apprenticeship: "}
+        <span style={{ color: "var(--gain)", whiteSpace: "nowrap" }}>
+          +£96,000
+        </span>
+        .
+      </h2>
+      {" "}
+      <div style={{ marginTop: "20px", background: "var(--warm-white)", borderTop: "2px solid var(--blackberry)", padding: "clamp(24px,3vw,40px)" }}>
+        {" "}
+        <div role="img" aria-label="University: £47,900 owed at the end. Degree apprentice: about £96,000 paid over four years, before tax." style={{ position: "relative" }}>
+          {" "}
+          <div aria-hidden="true" className="gi-axis" style={{ position: "absolute", inset: "0 0 32px 0", pointerEvents: "none" }}>
+            {" "}
+            <span style={{ position: "absolute", top: "0", bottom: "0", left: "0", width: "1px", background: "var(--rule)" }}></span>
+            {" "}
+            <span style={{ position: "absolute", top: "0", bottom: "0", left: "33.333%", width: "2px", marginLeft: "-1px", background: "var(--blackberry)" }} className="gi-bgbb"></span>
+            {" "}
+            <span style={{ position: "absolute", top: "0", bottom: "0", left: "66.667%", width: "1px", background: "var(--rule)" }}></span>
+            {" "}
+            <span style={{ position: "absolute", top: "0", bottom: "0", right: "0", width: "1px", background: "var(--rule)" }}></span>
+            {" "}
+          </div>
+          {" "}
+          <div className="gi-rows" style={{ position: "relative", display: "flex", flexDirection: "column", gap: "32px", padding: "8px 0 24px" }}>
+            {" "}
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {" "}
+              <span className="gi-numlab" style={{ width: "33.333%", paddingRight: "16px", boxSizing: "border-box", textAlign: "right", fontSize: "16px", fontWeight: "600", lineHeight: "1.35", color: "var(--blackberry)" }}>
+                University, owed at the end
+              </span>
+              {" "}
+              <div className="gi-debtbar" style={{ marginLeft: "1.4%", width: "31.933%", height: "clamp(52px,5vw,64px)", background: "var(--loss)", display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: "16px", boxSizing: "border-box" }}>
+                {" "}
+                <span className="gi-debtval" style={{ fontFamily: "'Newsreader',serif", fontSize: "clamp(24px,2.4vw,32px)", lineHeight: "1", color: "var(--warm-white)", whiteSpace: "nowrap", fontVariantNumeric: "lining-nums" }}>
+                  −£47,900
+                </span>
+                {" "}
+              </div>
+              {" "}
+            </div>
+            {" "}
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {" "}
+              <span className="gi-paylab" style={{ marginLeft: "33.333%", paddingLeft: "16px", fontSize: "16px", fontWeight: "600", lineHeight: "1.35", color: "var(--blackberry)" }}>
+                Degree apprentice, paid over four years, before tax
+              </span>
+              {" "}
+              <div className="gi-paybar" style={{ marginLeft: "33.333%", width: "64%", height: "clamp(52px,5vw,64px)", background: "var(--gain)", display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: "16px", boxSizing: "border-box" }}>
+                {" "}
+                <span style={{ fontFamily: "'Newsreader',serif", fontSize: "clamp(24px,2.4vw,32px)", lineHeight: "1", color: "var(--warm-white)", whiteSpace: "nowrap", fontVariantNumeric: "lining-nums" }}>
+                  +£96,000
+                </span>
+                {" "}
+              </div>
+              {" "}
+            </div>
+            {" "}
+          </div>
+          {" "}
+          <div aria-hidden="true" className="gi-axis" style={{ position: "relative", height: "32px", fontSize: "12px", color: "var(--muted)", fontVariantNumeric: "tabular-nums" }}>
+            {" "}
+            <span style={{ position: "absolute", left: "0", top: "8px" }}>
+              −£50k
+            </span>
+            {" "}
+            <span style={{ position: "absolute", left: "33.333%", top: "8px", transform: "translateX(-50%)", color: "var(--blackberry)", fontWeight: "600" }}>
+              £0
+            </span>
+            {" "}
+            <span style={{ position: "absolute", left: "66.667%", top: "8px", transform: "translateX(-50%)" }}>
+              £50k
+            </span>
+            {" "}
+            <span style={{ position: "absolute", right: "0", top: "8px" }}>
+              £100k
+            </span>
+            {" "}
+          </div>
+          {" "}
+        </div>
+        {" "}
+      </div>
+      {" "}
+      <p style={{ margin: "12px 0 0", fontSize: "11px", lineHeight: "1.5", color: "var(--muted)", maxWidth: "120ch" }}>
+        Debt: 2023 cohort, Commons Library. Pay: 4 years at the £24,000 median starting salary (ISE 2025), before tax.
+      </p>
+      {" "}
+      <div className="gi-value" style={{ marginTop: "20px", paddingTop: "16px", borderTop: "1px solid var(--rule)" }}>
+        {" "}
+{course ? (<>
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
+            DegreeYourWay costs
+          </span>
+          <span style={{ fontFamily: "'Newsreader',serif", fontSize: "clamp(32px,3.4vw,44px)", lineHeight: "1", letterSpacing: "-0.03em", color: "var(--blackberry)" }}>
+            £595
+          </span>
+        </div>
+        {" "}
+        <span aria-hidden="true" style={{ fontFamily: "'Newsreader',serif", fontSize: "26px", color: "var(--muted)" }}>
+          →
+        </span>
+        </>) : null}
+        {" "}
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }} className="gi-up">
+            The place is worth
+          </span>
+          <span style={{ fontFamily: "'Newsreader',serif", fontSize: "clamp(32px,3.4vw,44px)", lineHeight: "1", letterSpacing: "-0.03em", color: "var(--gain)" }}>
+            £143,900
+          </span>
+        </div>
+        {" "}
+      </div>
+      {" "}
+      <p style={{ margin: "10px 0 0", fontSize: "14px", lineHeight: "1.5", color: "var(--muted)" }}>
+        Debt avoided plus four years' pay.
+        <a href="https://commonslibrary.parliament.uk/research-briefings/sn01079/" target="_blank" rel="noopener" className="gi-src" style={{ fontSize: "11px", lineHeight: "1.45", color: "var(--muted)", textDecoration: "none", textUnderlineOffset: "3px" }}>
+          Commons Library, Aug 2026
+        </a>
+      </p>
+      {" "}
+    </div>
+  </div>
+</section>
   );
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Prices and booking · DegreeYourWay',
+  title: 'Prices and booking | DegreeYourWay',
   description: 'Founding cohort £595 (full price £695). £100 refundable deposit, the DegreeYourWay Guarantee and the Deadline Line included.',
 };
 

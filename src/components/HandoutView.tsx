@@ -15,7 +15,7 @@ export default function HandoutView({ v }: { v: any }) {
         </span>
         {" "}
         <span style={{ fontSize: "8pt", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "#716769" }} className="gi-up">
-          For students · 1 of 2
+          For students, 1 of 2
         </span>
         {" "}
       </div>
@@ -180,7 +180,7 @@ export default function HandoutView({ v }: { v: any }) {
         <div style={{ display: "flex", flexDirection: "column", gap: "2mm" }}>
           {" "}
           <span style={{ fontSize: "8pt", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "#CDBFC3" }} className="gi-up">
-            Free · 90 seconds
+            Free, 90 seconds
           </span>
           {" "}
           <span style={{ fontFamily: "'Newsreader',serif", fontSize: "18pt", lineHeight: "1.1" }}>
@@ -214,7 +214,7 @@ export default function HandoutView({ v }: { v: any }) {
         </span>
         {" "}
         <span style={{ fontSize: "8pt", fontWeight: "600", letterSpacing: "0.12em", textTransform: "uppercase", color: "#716769" }} className="gi-up">
-          For students · 2 of 2
+          For students, 2 of 2
         </span>
         {" "}
       </div>
@@ -251,7 +251,7 @@ export default function HandoutView({ v }: { v: any }) {
             Deloitte, PwC, KPMG, EY, Accenture
           </span>
           <span style={{ padding: "2mm 0", borderBottom: "1px solid #D7CFC6" }}>
-            104–120 UCAS points
+            104 to 120 UCAS points
           </span>
           {" "}
           <span style={{ padding: "2mm 0", borderBottom: "1px solid #D7CFC6", fontWeight: "600" }}>
@@ -271,7 +271,7 @@ export default function HandoutView({ v }: { v: any }) {
             Amazon, Capgemini, Bloomberg
           </span>
           <span style={{ padding: "2mm 0", borderBottom: "1px solid #D7CFC6" }}>
-            ABB–BBB, often Maths
+            ABB to BBB, often Maths
           </span>
           {" "}
           <span style={{ padding: "2mm 0", borderBottom: "1px solid #D7CFC6", fontWeight: "600" }}>
@@ -312,7 +312,7 @@ export default function HandoutView({ v }: { v: any }) {
         {" "}
         <div style={{ borderTop: "2px solid #823D48", paddingTop: "2.5mm", display: "flex", flexDirection: "column", gap: "1mm" }}>
           <span style={{ fontWeight: "600", fontSize: "10pt" }}>
-            September–January
+            September to January
           </span>
           <span style={{ fontSize: "9pt", lineHeight: "1.4", color: "#51444A" }}>
             When most application windows open.
