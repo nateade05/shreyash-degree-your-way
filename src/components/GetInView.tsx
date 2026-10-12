@@ -1627,7 +1627,7 @@ export default function GetInView({ v }: { v: any }) {
                   </h2>
                   {" "}
                   <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.55", color: "var(--blackberry-soft)", maxWidth: "38ch" }}>
-                    Page 1 makes the case against university in pounds and years. Page 2 shows who hires, when, and how to pass each stage.
+                    Page 1 compares university and apprenticeships in pounds and years. Page 2 shows who hires, when, and how to pass each stage.
                   </p>
                   {" "}
                   <ul style={{ margin: "4px 0 0", padding: "0", listStyle: "none", display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -1824,7 +1824,7 @@ export default function GetInView({ v }: { v: any }) {
                         Open the student handout
                       </a>
                       <span style={{ fontSize: "13px", color: "var(--muted)" }}>
-                        One A4 page. Print a copy for each student.
+                        Two A4 pages. Print a copy for each student.
                       </span>
                       <a href={v.waSchoolHref} target="_blank" rel="noopener" className="gi-ghost" style={{ fontSize: "16px", fontWeight: "600", color: "var(--blackberry)", textUnderlineOffset: "4px" }}>
                         {"WhatsApp didn't open? Tap here "}

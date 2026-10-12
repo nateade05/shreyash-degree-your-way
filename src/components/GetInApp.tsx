@@ -415,7 +415,7 @@ export default class GetInApp extends React.Component<Props, any> {
       schoolSteps: [
         { n: 1, title: 'Send your dates', body: 'Use the form below. It takes a minute.' },
         { n: 2, title: 'We confirm in 24 hours', body: 'A date, a time and what we need from you.' },
-        { n: 3, title: 'We deliver', body: 'The talk, plus a one-page student handout sent once your details are in.' }
+        { n: 3, title: 'We deliver', body: 'The talk, plus a two-page student handout sent once your details are in.' }
       ],
       schoolBlocks: [
         { title: 'The talk', body: '30 minutes in school from a degree apprentice: what the schemes are, what they pay and what they test.', rule: 'var(--blackberry)' },

@@ -206,7 +206,7 @@ export default function PathfinderReportView({ v }: { v: any }) {
                       </h2>
                       {" "}
                       <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.55", color: "var(--blackberry-soft)" }}>
-                        Add your details to see every match, your month-by-month plan, how to prepare for each stage and your backups. We'll email you the PDF too.
+                        Add your details to see every match, your month-by-month plan, how to prepare for each stage and your backups.
                       </p>
                       {" "}
                     </div>
@@ -239,7 +239,7 @@ export default function PathfinderReportView({ v }: { v: any }) {
                       {" "}
                       <label style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "15px", fontWeight: "600" }}>
                         <span style={{ display: "flex", flexWrap: "wrap", gap: "4px 8px" }}>
-                          Send a copy to a parent
+                          A parent's email
                           <span style={{ fontWeight: "400", color: "var(--muted)" }}>
                             Optional
                           </span>
@@ -252,7 +252,7 @@ export default function PathfinderReportView({ v }: { v: any }) {
                       </button>
                       {" "}
                       <span style={{ fontSize: "14px", lineHeight: "1.5", color: "var(--muted)" }}>
-                        One email. No newsletter unless you ask.
+                        No newsletter unless you ask.
                       </span>
                       {" "}
                       {v.fail ? (
@@ -872,7 +872,7 @@ export default function PathfinderReportView({ v }: { v: any }) {
                         </h2>
                         {" "}
                         <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.55", color: "var(--blackberry-soft)" }}>
-                          {"A copy is on its way to "}<span className="sc-interp">{v.fEmail}</span>. You can also download it now.
+                          Download a copy to keep.
                         </p>
                         {" "}
                         <button type="button" onClick={v.download} style={{ all: "unset", boxSizing: "border-box", cursor: "pointer", height: "48px", padding: "0 20px", display: "inline-flex", alignItems: "center", gap: "10px", border: "1px solid var(--blackberry)", borderRadius: "999px", font: "600 14px 'Source Sans 3',sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--blackberry)", transition: "background-color 150ms ease-out,color 150ms ease-out,transform 120ms ease-out" }} className="dc-pathfinderreportview-h17 dc-pathfinderreportview-a18">
